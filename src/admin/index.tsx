@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Sidebar from './components/sidebar.tsx'
 import Dashboard from './pages/dashboard.tsx';
+import '../index.css';
+
 function Index() {
     return (
         <Router>
