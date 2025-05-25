@@ -3,18 +3,16 @@ import Sidebar from './components/sidebar.tsx'
 import Dashboard from './pages/dashboard.tsx';
 import '../index.css';
 
-function Index() {
+export const Index = ()=> {
     return (
-        <Router>
+   
             <div className="d-flex">
                 <Sidebar />
                 <div className="flex-grow-1 p-3">
-                    <Routes>
-                        <Route path="/" element={<Dashboard />} />
-                    </Routes>
+                    <Dashboard />
                 </div>
             </div>
-        </Router>
+      
     )
 }
 
