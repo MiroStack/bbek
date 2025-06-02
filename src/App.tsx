@@ -2,6 +2,13 @@ import './index.css';
 import Index from './admin/index.tsx'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { LandPage } from './landpage/landpage.tsx';
+import {HomePage} from './landpage/view/Home.tsx'
+import {AboutPage} from './landpage/view/About.tsx';
+import { BeOneOfUsPage } from './landpage/view/BeOneOfUs.tsx';
+import { EventPage } from './landpage/view/Event.tsx';
+import { GivePage } from './landpage/view/Give.tsx';
+import { MinistriesPage } from './landpage/view/Ministries.tsx';
+import { LivePage } from './landpage/view/Live.tsx';
 import Dashboard from './admin/pages/dashboard.tsx';
 import MemberRecord from './admin/pages/member_record.tsx';
 import Church_Leaders from './admin/pages/church_leaders.tsx';
@@ -22,7 +29,15 @@ function App() {
       <Router>
         <Routes>
           <Route path='/' element={<Navigate to="/landpage" />} />
-          <Route path='/landpage' element={<LandPage />} />
+          <Route path='/landpage' element={<LandPage />}>
+             <Route index  element={<HomePage/>} />
+             <Route index path="about" element={<AboutPage/>} />
+             <Route index path="beoneofus" element={<BeOneOfUsPage/>} />
+             <Route index path="event" element={<EventPage/>} />
+             <Route index path="live" element={<LivePage/>} />
+             <Route index path="give" element={<GivePage/>} />
+             <Route index path="ministries" element={<MinistriesPage/>} />
+          </Route>
 
           {/* Admin layout with nested routes */}
           <Route path="/admin" element={<Index />}>
