@@ -1,18 +1,16 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import Sidebar from './components/sidebar.tsx'
-import Dashboard from './pages/dashboard.tsx';
-import '../index.css';
 
-export const Index = ()=> {
+export const Index = () => {
     return (
-   
-            <div className="d-flex">
-                <Sidebar />
-                <div className="flex-grow-1 p-3">
-                    <Dashboard />
-                </div>
+        <div className="d-flex h-full w-100">
+            <Sidebar />
+            <div className='w-100 p-3'>
+                {/* Nested routes will render here */}
+                <Outlet></Outlet>
             </div>
-      
+        </div>
+
     )
 }
 
