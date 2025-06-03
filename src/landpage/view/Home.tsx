@@ -2,7 +2,7 @@ import { useState } from "react"
 
 export const HomePage = ()=>{
   const[counter, setCounter] = useState(0);
-  const inrement = ()=>{
+  const increment = ()=>{
     setCounter(counter + 1);
   }
   const[name, setName] = useState("");
@@ -19,7 +19,7 @@ export const HomePage = ()=>{
         </div>
         <p>{counter}</p>
         <p>{name}</p>
-        <button onClick={inrement}></button>
+        <button onClick={increment}></button>
         <input type="text" id="name" onChange={inputName}/>
     </>
   )
