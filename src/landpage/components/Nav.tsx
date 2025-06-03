@@ -22,7 +22,7 @@ export const Nav = () =>{
                 <Link to="/landpage/beoneofus" className="block text-white hover:!text-gray-200 active:!text-black bg-transparent">BE ONE OF US</Link>
             </ul>
 
-              <button className="text-black ml-auto">
+              <button className="bg-white text-black ml-auto">
                 Login
               </button>
               <div className="lg:hidden border border-white ml-3 p-2 cursor-pointer">
