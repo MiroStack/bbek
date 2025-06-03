@@ -1,0 +1,35 @@
+
+.hero-wrapper{
+    position: relative;
+    height: 100vh;
+    background-image: url(../../assets/img/hero.jpg);
+    background-size: cover;
+    background-position:center ;
+    background-repeat: no-repeat;
+    background-clip: border-box;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.hero-wrapper::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 1, 0.5);
+    z-index: 1;
+}
+
+.hero-wrapper > * {
+    z-index: 2;
+    position: relative;
+    color: var(--white200);
+
+}
+.wave-container{
+    position: absolute;
+    bottom: 1;
+}

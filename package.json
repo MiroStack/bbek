@@ -21,6 +21,7 @@
     "datatables.net": "^2.3.1",
     "datatables.net-dt": "^2.3.1",
     "jquery": "^3.7.1",
+    "motion": "^12.16.0",
     "react": "^19.1.0",
     "react-data-table-component": "^7.7.0",
     "react-dom": "^19.1.0",
