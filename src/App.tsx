@@ -33,6 +33,11 @@ import { UpcomingEventsPage } from './landpage/view/events/UpcomingEvents.tsx';
 import { YearlyEventsPage } from './landpage/view/events/YearlyEvents.tsx';
 import { WaterBaptismPage } from './landpage/view/beoneofus/WaterBaptism.tsx';
 import { SendPrayerPage } from './landpage/view/beoneofus/SendPrayer.tsx';
+import Message from './admin/pages/message.tsx';
+import Audit_Trail from './admin/pages/audit_trail.tsx';
+import Archives from './admin/pages/archives.tsx';
+import User_Account from './admin/pages/user_account.tsx';
+import Settings from './admin/pages/settings.tsx';
 function App() {
 
   return (
@@ -80,6 +85,11 @@ function App() {
             <Route index path="child-dedication" element={<Child_Dedication />} />
             <Route index path="marriage" element={<Marriage />} />
             <Route index path="marriage-record" element={<Marriage_Record />} />
+            <Route index path="message" element={<Message />} />
+            <Route index path="audit-trail" element={<Audit_Trail />} />
+            <Route index path="archives" element={<Archives />} />
+            <Route index path="user-account" element={<User_Account />} />
+            <Route index path="settings" element={<Settings />} />
           </Route>
 
 

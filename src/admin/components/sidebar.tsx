@@ -12,7 +12,7 @@ export default function Sidebar() {
     const { pathname } = location;
 
     return (
-        <div style={{ width: 350 }} className="vh-100 d-flex flex-column gap-2 p-3 border shadow-lg">
+        <div style={{ width: 350 }} className="p-3 border d-flex flex-column gap-2 vh-100 ">
             <Link to="/admin" className='navbar-brand text-center d-flex gap-2 align-items-center p-2'><img src={bbekLogo} style={{ width: 50 }} className="logo img-fluid" alt="Vite logo" />BBEK CHURCH</Link>
             <span className='border-bottom'></span>
             <span className='text-muted fw-bold'>MAIN</span>
@@ -157,31 +157,31 @@ export default function Sidebar() {
 
                 {showMaintenanceSubmenu && (
                     <div className="ps-5 d-flex flex-column gap-1">
-                        <Link className="dropdown-item w-100 text-muted" to="/">
-                            <div className='w-100 text-muted p-2 d-flex align-items-center me-2'>
+                        <Link to="/admin/message" className={`w-100 text-muted  ${pathname === '/admin/message' ? 'active' : ''}`}>
+                            <div className='w-100 p-2 d-flex align-items-center me-2'>
                                 <i className="col-3 text-center fa-solid fa-message"></i>
                                 <span>MESSAGES</span>
                             </div>
                         </Link>
-                        <Link className="dropdown-item w-100 text-muted" to="/">
+                        <Link to="/admin/audit-trail" className={`w-100 text-muted  ${pathname === '/admin/audit-trail' ? 'active' : ''}`}>
                             <div className='w-100 p-2 d-flex align-items-center me-2'>
                                 <i className="col-3 text-center fa-solid fa-file-lines"></i>
                                 <span>AUDIT TRAIL</span>
                             </div>
                         </Link>
-                        <Link className="dropdown-item w-100 text-muted" to="/">
+                        <Link to="/admin/archives" className={`w-100 text-muted  ${pathname === '/admin/archives' ? 'active' : ''}`}>
                             <div className='w-100 p-2 d-flex align-items-center me-2'>
                                 <i className="col-3 text-center fa-solid fa-box-archive"></i>
                                 <span>ARCHIVES</span>
                             </div>
                         </Link>
-                        <Link className="dropdown-item w-100 text-muted" to="/">
+                        <Link to="/admin/user-account" className={`w-100 text-muted  ${pathname === '/admin/user-account' ? 'active' : ''}`}>
                             <div className='w-100 p-2 d-flex align-items-center me-2'>
                                 <i className="col-3 text-center fa-solid fa-user-gear"></i>
                                 <span>USER ACCOUNTS</span>
                             </div>
                         </Link>
-                        <Link className="dropdown-item w-100 text-muted" to="/">
+                        <Link to="/admin/settings" className={`w-100 text-muted  ${pathname === '/admin/settings' ? 'active' : ''}`}>
                             <div className='w-100 p-2 d-flex align-items-center me-2'>
                                 <i className="col-3 text-center fa-solid fa-gear"></i>
                                 <span>SETTINGS</span>
@@ -191,7 +191,7 @@ export default function Sidebar() {
                 )}
             </div>
 
-            <div className="mt-auto p-3">
+            <div className="mt-auto p-3" style={{ position: "sticky", bottom: 0 }}>
                 <hr></hr>
                 <Link className="w-100 text-danger logoutMenu text-decoration-none" to="/logout">
                     <div className='w-100 p-2 d-flex align-items-center'>
