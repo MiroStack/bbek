@@ -2,10 +2,10 @@ import './index.css';
 import Index from './admin/index.tsx'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { LandPage } from './landpage/landpage.tsx';
-import {HomePage} from './landpage/view/Home.tsx'
-import {AboutPage} from './landpage/view/About.tsx';
-import { BeOneOfUsPage } from './landpage/view/BeOneOfUs.tsx';
-import { EventPage } from './landpage/view/Event.tsx';
+import { HomePage } from './landpage/view/Home.tsx'
+import { AboutPage } from './landpage/view/about/About.tsx';
+import { BeOneOfUsPage } from './landpage/view/beoneofus/BeOneOfUs.tsx';
+import { EventPage } from './landpage/view/events/Event.tsx';
 import { GivePage } from './landpage/view/Give.tsx';
 import { MinistriesPage } from './landpage/view/Ministries.tsx';
 import { LivePage } from './landpage/view/Live.tsx';
@@ -22,21 +22,47 @@ import Baptism_Record from './admin/pages/baptism_record.tsx';
 import Child_Dedication from './admin/pages/child_dedication.tsx';
 import Marriage from './admin/pages/marriage.tsx';
 import Marriage_Record from './admin/pages/marriage_record.tsx';
+import ScrollToTop from "./landpage/components/ScrollToTop.tsx";
+import { MissionPage } from './landpage/view/about/Mission.tsx';
+import { VisionPage } from './landpage/view/about/Vision.tsx';
+import { LeadershipPage } from './landpage/view/about/Leadership.tsx';
+import { OfficersPage } from './landpage/view/about/Officers.tsx';
+import { AboutUsPage } from './landpage/view/about/AboutUs.tsx';
+import { AllEventsPage } from './landpage/view/events/AllEvents.tsx';
+import { UpcomingEventsPage } from './landpage/view/events/UpcomingEvents.tsx';
+import { YearlyEventsPage } from './landpage/view/events/YearlyEvents.tsx';
+import { WaterBaptismPage } from './landpage/view/beoneofus/WaterBaptism.tsx';
+import { SendPrayerPage } from './landpage/view/beoneofus/SendPrayer.tsx';
 function App() {
 
   return (
     <>
+
       <Router>
+        <ScrollToTop />
         <Routes>
           <Route path='/' element={<Navigate to="/landpage" />} />
           <Route path='/landpage' element={<LandPage />}>
-             <Route index  element={<HomePage/>} />
-             <Route index path="about" element={<AboutPage/>} />
-             <Route index path="beoneofus" element={<BeOneOfUsPage/>} />
-             <Route index path="event" element={<EventPage/>} />
-             <Route index path="live" element={<LivePage/>} />
-             <Route index path="give" element={<GivePage/>} />
-             <Route index path="ministries" element={<MinistriesPage/>} />
+            <Route index element={<HomePage />} />
+            <Route path='about' element={<AboutPage />}>
+              <Route index path="aboutus" element={<AboutUsPage />}></Route>
+              <Route index path="mission" element={<MissionPage />}></Route>
+              <Route index path="vision" element={<VisionPage />}></Route>
+              <Route index path="leadership" element={<LeadershipPage />}></Route>
+              <Route index path="officers" element={<OfficersPage />}></Route>
+            </Route>
+            <Route path='beoneofus' element={<BeOneOfUsPage />}>
+              <Route index path="waterbaptism" element={<WaterBaptismPage />}></Route>
+              <Route index path="sendprayer" element={<SendPrayerPage />}></Route>
+            </Route>
+            <Route path='events' element={<EventPage />}>
+              <Route index path="allevents" element={<AllEventsPage />}></Route>
+              <Route index path="upcomingevents" element={<UpcomingEventsPage />}></Route>
+              <Route index path="yearlyevents" element={<YearlyEventsPage />}></Route>
+            </Route>
+            <Route index path="live" element={<LivePage />} />
+            <Route index path="give" element={<GivePage />} />
+            <Route index path="ministries" element={<MinistriesPage />} />
           </Route>
 
           {/* Admin layout with nested routes */}
