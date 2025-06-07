@@ -33,7 +33,7 @@ export const SideNav:React.FC<SideNavProps> = ({side, setShowSide, setShowLogin}
     }
     return (
         <>
-            <div className={`overflow-x-auto bg-white lg:w-[20rem] h-[100vh] p-3 rounded-tl-lg rounded-bl-lg shadow-lg items-center justify-center flex-col z-50  top-1/2 -translate-y-1/2 fixed ${showSide?"right-0" : "right-[-300px]"} transition-all duration-300 ease-in-out delay-700`}>
+            <div className={`overflow-x-auto bg-white lg:w-[20rem] h-[100vh] p-3 rounded-tl-lg rounded-bl-lg shadow-lg items-center justify-center flex-col z-50  top-1/2 -translate-y-1/2 fixed ${showSide?"right-0" : "right-[-350px]"} transition-all duration-300 ease-in-out delay-700`}>
                 <IoMdClose className="ml-auto hover:text-red-600 hover:text-lg ease-in-out all delay-200 cursor-pointer" onClick={closeSide}/>
                 <div className="flex items-center gap-2">
                     <img src={Logo} alt="logo" className="h-12" />
