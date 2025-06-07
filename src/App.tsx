@@ -15,6 +15,11 @@ import Baptism_Record from './admin/pages/baptism_record.tsx';
 import Child_Dedication from './admin/pages/child_dedication.tsx';
 import Marriage from './admin/pages/marriage.tsx';
 import Marriage_Record from './admin/pages/marriage_record.tsx';
+import Message from './admin/pages/message.tsx';
+import Audit_Trail from './admin/pages/audit_trail.tsx';
+import Archives from './admin/pages/archives.tsx';
+import User_Account from './admin/pages/user_account.tsx';
+import Settings from './admin/pages/settings.tsx';
 function App() {
 
   return (
@@ -39,6 +44,11 @@ function App() {
             <Route index path="child-dedication" element={<Child_Dedication />} />
             <Route index path="marriage" element={<Marriage />} />
             <Route index path="marriage-record" element={<Marriage_Record />} />
+            <Route index path="message" element={<Message />} />
+            <Route index path="audit-trail" element={<Audit_Trail />} />
+            <Route index path="archives" element={<Archives />} />
+            <Route index path="user-account" element={<User_Account />} />
+            <Route index path="settings" element={<Settings />} />
           </Route>
 
 
