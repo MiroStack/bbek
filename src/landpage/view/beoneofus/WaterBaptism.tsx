@@ -316,15 +316,12 @@ export const WaterBaptismPage = () => {
                                                 >
                                                     Preferred Baptism Date
                                                 </label>
-                                                <select
+                                                <input
+                                                    type="date"
                                                     id="date"
-                                                    className="w-full p-2 border rounded-md transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                                                >
-                                                    <option value="">Select a date</option>
-                                                    <option value="june-16">Sunday, June 16, 2024</option>
-                                                    <option value="august-18">Sunday, August 18, 2024</option>
-                                                    <option value="october-20">Sunday, October 20, 2024</option>
-                                                </select>
+                                                    className="hover:cursor-pointer w-full p-2 border rounded-md transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                                />
+                                                  
                                             </div>
                                             <div className="space-y-2">
                                                 <label

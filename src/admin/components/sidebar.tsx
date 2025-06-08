@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import bbekLogo from '../img/logobbek.jpg';
 import '../css/style.css';
 import { Link } from 'react-router-dom';
+import { Cookies } from '../../util/Cookies';
 
 export default function Sidebar() {
     const [showChurchSubmenu, setShowChurchSubmenu] = useState(false);
@@ -193,7 +194,11 @@ export default function Sidebar() {
 
             <div className="mt-auto p-3" style={{ position: "sticky", bottom: 0 }}>
                 <hr></hr>
-                <Link className="w-100 text-danger logoutMenu text-decoration-none" to="/logout">
+                <Link className="w-100 text-danger logoutMenu text-decoration-none" to="/landpage"
+                    onClick={() => { 
+                        Cookies.deleteCookie("auth_token"); 
+                        sessionStorage.removeItem('name');
+                        }}>
                     <div className='w-100 p-2 d-flex align-items-center'>
                         <i className="col-3 text-center fa-solid fa-right-from-bracket"></i>
                         <span className='col-6 text-start'>LOGOUT</span>

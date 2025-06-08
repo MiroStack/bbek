@@ -110,7 +110,7 @@ function Dashboard() {
         <>
             <div className="d-flex p-3 w-full align-items-center justify-content-between">
                 <div>
-                    <h5 className="text-3xl font-bold">Admin Dashboard</h5>
+                    <h5 className="text-3xl font-bold">{sessionStorage.getItem("name")}</h5>
                     <h3 className="text-2xl text-muted">Welcome back, Administrator</h3>
                 </div>
                 <div className="d-flex gap-2">

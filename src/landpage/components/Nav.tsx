@@ -9,7 +9,7 @@ type NavProps = {
   setShowLogin: React.Dispatch<React.SetStateAction<boolean>>;
   setShowSide:React.Dispatch<React.SetStateAction<boolean>>;
 };
-export const Nav: React.FC<NavProps> = ({setShowLogin, setShowSide}) => {
+export const Nav: React.FC<NavProps> = ({ setShowLogin, setShowSide}) => {
   const setSide = setShowSide;
   const setShow =setShowLogin;
   const [scrolled, setScrolled] = useState(false);
@@ -28,6 +28,7 @@ export const Nav: React.FC<NavProps> = ({setShowLogin, setShowSide}) => {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
 
   const displayLogin = ()=>{
     setShow(true);

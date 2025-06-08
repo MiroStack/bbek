@@ -30,7 +30,7 @@ export const HomePage = (prop: any) => {
               </ul>
 
 
-              <Link to="/landpage/about" className="flex items-center justify-center my-6 hover: bg-transparent">
+              <Link to="/landpage/about/aboutus" className="flex items-center justify-center my-6 hover: bg-transparent">
                 <div className="info-ctn mx-4 bg-white text-black rounded-3xl h-12 w-[200px] flex items-center justify-center hover:!bg-blue-950 hover:!text-white">
                   <span>PLAN YOUR VISIT </span>
                   <i className="fa-solid fa-arrow-right"></i>

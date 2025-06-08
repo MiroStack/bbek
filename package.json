@@ -17,6 +17,7 @@
     "@popperjs/core": "^2.11.8",
     "@tailwindcss/vite": "^4.1.7",
     "amqplib": "^0.10.8",
+    "axios": "^1.9.0",
     "bootstrap": "^5.3.6",
     "datatables.net": "^2.3.1",
     "datatables.net-dt": "^2.3.1",
