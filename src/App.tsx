@@ -38,6 +38,9 @@ import Audit_Trail from './admin/pages/audit_trail.tsx';
 import Archives from './admin/pages/archives.tsx';
 import User_Account from './admin/pages/user_account.tsx';
 import Settings from './admin/pages/settings.tsx';
+import { StaffPage } from './staff/staff.tsx';
+import { DashboardPage } from './staff/views/Dashboard.tsx';
+
 function App() {
 
   return (
@@ -92,6 +95,10 @@ function App() {
             <Route index path="settings" element={<Settings />} />
           </Route>
 
+          <Route path='/staff' element={<StaffPage />}>
+              <Route index element={<DashboardPage />} />
+          </Route>
+                     
 
         </Routes>
       </Router>

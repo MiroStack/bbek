@@ -9,6 +9,7 @@ import AuthRepo from "../repositories/AuthRepo";
 import { useNavigate } from "react-router-dom";
 import { ErrorDialog } from "./components/ErrorDialog";
 import { Cookies } from "../util/Cookies";
+import { SocialMediaGroups } from "./components/SocialMediaGroud";
 
 export const LandPage = () => {
     const [showLogin, setShowLogin] = useState(false);
@@ -63,6 +64,7 @@ export const LandPage = () => {
             <SideNav side={showSide} setShowSide={setShowSide} setShowLogin={setShowLogin} />
             <Loader loader={showLoader} />
             <ErrorDialog error={showError} message={"Invalid username or password!"} setShowError={setShowError}/>
+            <SocialMediaGroups/>
         </div>
     );
 }

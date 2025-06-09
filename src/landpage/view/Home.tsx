@@ -39,8 +39,8 @@ export const HomePage = (prop: any) => {
 
             </div>
           </div>
-          <div className="wave-container flex items-end h-[30%] w-[100%] z-10 absolute bottom-0 border-b-2">
-            <svg viewBox="0 0 1440 250" xmlns="http://www.w3.org/2000/svg">
+          <div className="wave-container flex items-end h-[20%] w-[100%] z-10 absolute bottom-0 border-b-2">
+            <svg viewBox="0 0 1440 220" xmlns="http://www.w3.org/2000/svg">
               <path fill="#ffffff" fillOpacity="1" d="M0,160
                           C 360,80 1080,240 1440,160
                           L1440,320

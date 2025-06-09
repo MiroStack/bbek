@@ -2,7 +2,6 @@
     position: relative;
     height: 100vh;
     background-image: url(../../assets/img/hero2.jpg);
-    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-clip: border-box;
@@ -10,6 +9,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    transition: all ease-in-out 500ms;
 }
 
 
@@ -18,7 +18,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background-color: rgba(0, 0, 1, 0.2);
+    background-color: rgba(0, 0, 1, 0.3);
     z-index: 1;
 }
 
@@ -35,13 +35,13 @@
 }
 
 .mynav {
-    background: rgba(255, 255, 255, 0.1)  !important;
+    background: rgba(255, 255, 255, 0.1) !important;
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
 }
 
-.menu-options{
+.menu-options {
     position: fixed;
     height: auto;
     width: 12em;
@@ -49,7 +49,8 @@
     border-radius: 8px;
     transition: all ease-in-out 800ms;
 }
-.menu-options > ul{
+
+.menu-options>ul {
     display: flex;
     flex-direction: column;
     gap: 1em;
@@ -60,15 +61,37 @@
     padding: 1em 0;
 }
 
-.menu-options > ul > li{
-    padding:4px 12px;
+.menu-options>ul>li {
+    padding: 4px 12px;
 }
 
-.no-scroll{
+.no-scroll {
     overflow-x: hidden;
     overflow-y: hidden;
 }
-.scroll{
-     overflow-x: auto;
+
+.scroll {
+    overflow-x: auto;
     overflow-y: auto;
+}
+
+@keyframes backgroundAnimation {
+    0% {
+        background-size: 105%;
+    }
+
+    50% {
+        background-size: 100%;
+    }
+
+    100% {
+        background-size: 105%;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    .hero-wrapper {
+        animation-name: backgroundAnimation;
+        animation: backgroundAnimation 8s ease-in-out infinite;
+    }
 }
