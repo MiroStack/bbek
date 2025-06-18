@@ -110,8 +110,8 @@ function Dashboard() {
         <>
             <div className="d-flex p-3 w-full align-items-center justify-content-between">
                 <div>
-                    <h5 className="text-3xl font-bold">{sessionStorage.getItem("name")}</h5>
-                    <h3 className="text-2xl text-muted">Welcome back, Administrator</h3>
+                    <h5 className="text-3xl font-bold">Adminstrator Dashboard</h5>
+                    <h3 className="text-2xl text-muted">Welcome back, {sessionStorage.getItem("name")}</h3>
                 </div>
                 <div className="d-flex gap-2">
                     <button className="btn btn-success"><i className="fa-solid fa-video pe-2"></i>Manage Live Stream</button>

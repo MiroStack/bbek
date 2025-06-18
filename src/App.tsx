@@ -7,7 +7,6 @@ import { AboutPage } from './landpage/view/about/About.tsx';
 import { BeOneOfUsPage } from './landpage/view/beoneofus/BeOneOfUs.tsx';
 import { EventPage } from './landpage/view/events/Event.tsx';
 import { GivePage } from './landpage/view/Give.tsx';
-import { MinistriesPage } from './landpage/view/Ministries.tsx';
 import { LivePage } from './landpage/view/Live.tsx';
 import Dashboard from './admin/pages/dashboard.tsx';
 import MemberRecord from './admin/pages/member_record.tsx';
@@ -40,6 +39,30 @@ import User_Account from './admin/pages/user_account.tsx';
 import Settings from './admin/pages/settings.tsx';
 import { StaffPage } from './staff/staff.tsx';
 import { DashboardPage } from './staff/views/Dashboard.tsx';
+import { MemberRecordPage } from './staff/views/church_records/MemberRecord.tsx';
+import { EventRecordPage } from './staff/views/church_records/EventRecord.tsx';
+import { TithesOfferingPage } from './staff/views/church_records/TitheOffer.tsx';
+import { MarriageRecordPage } from './staff/views/church_records/MarriageRecord.tsx';
+import { MinistriesStaffPage } from './staff/views/services/Ministries.tsx';
+import { ChildDedicationPage } from './staff/views/services/ChildDedication.tsx';
+import { MessagePage } from './staff/views/maintenance/message.tsx';
+import { AuditTrialPage } from './staff/views/maintenance/audit.tsx';
+import { WaterBaptism_Page } from './staff/views/services/WaterBaptism.tsx';
+import { MemberPage } from './member/member.tsx';
+import {DashboardMemberPage} from'./member/views/dashboard.tsx';
+import { MinistryStaffPage } from './staff/views/church_records/MinistryStaff.tsx';
+import { MinistriesPage } from './landpage/view/Ministries.tsx';
+import { MarriageServicePage } from './staff/views/services/MarriageService.tsx';
+import { MyProfile } from './member/views/myprofile/MyProfile.tsx';
+import { MyCertificate } from './member/views/myprofile/MyCertificate.tsx';
+import { MyDonations } from './member/views/services/MyDonations.tsx';
+import { MinistriesMember } from './member/views/services/Ministries.tsx';
+import { WaterBaptismMember } from './member/views/services/WaterBaptism.tsx';
+import { MarriageMember } from './member/views/services/Marriage.tsx';
+import { ChildDedicationMember } from './member/views/services/ChildDedication.tsx';
+import { ChurchEventsMember } from './member/views/services/ChurchEvents.tsx';
+import { MessageMember } from './member/views/communication/Message.tsx';
+import { PrayerRequestMember } from './member/views/communication/PrayerRequest.tsx';
 
 function App() {
 
@@ -96,9 +119,39 @@ function App() {
           </Route>
 
           <Route path='/staff' element={<StaffPage />}>
-              <Route index element={<DashboardPage />} />
+            <Route index element={<DashboardPage />} />
+            <Route index path="church-record/member-record" element={<MemberRecordPage />} />
+            <Route index path="church-record/event-record" element={<EventRecordPage />} />
+            <Route index path="church-record/tithe-offering" element={<TithesOfferingPage />} />
+            <Route index path="church-record/ministries-record" element={<MinistriesStaffPage />} />
+            <Route index path="church-record/marriage-record" element={<MarriageRecordPage />} />
+
+            <Route index path="service/ministry-record" element={<MinistryStaffPage />} />
+            <Route index path="service/waterbaptism" element={<WaterBaptism_Page />} />
+            <Route index path="service/child-dedication" element={<ChildDedicationPage />} />
+            <Route index path="service/marriage-record" element={<MarriageServicePage />} />
+
+            <Route index path="maintenance/message" element={<MessagePage />} />
+            <Route index path="maintenance/audit-trial" element={<AuditTrialPage />} />
+
+
           </Route>
-                     
+
+
+          <Route path='/member' element={<MemberPage />}>
+            <Route index element={<DashboardMemberPage />} />
+            <Route path='my-profile' element={<MyProfile/>}/>
+            <Route path='my-certificate' element={<MyCertificate/>}/>
+            <Route path='my-donation' element={<MyDonations/>}/>
+            <Route path='my-ministries' element={<MinistriesMember/>}/>
+            <Route path='my-waterbaptism' element={<WaterBaptismMember/>}/>
+            <Route path='my-marriage' element={<MarriageMember/>}/>
+            <Route path='my-childdedication' element={<ChildDedicationMember/>}/>
+            <Route path='my-events' element={<ChurchEventsMember/>}/>
+            <Route path='my-message' element={<MessageMember/>}/>
+            <Route path='my-prayerrequest' element={<PrayerRequestMember/>}/>
+          </Route>
+
 
         </Routes>
       </Router>

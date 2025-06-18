@@ -9,7 +9,7 @@ export const Nav=()=>{
                          <div className="flex items-center p-2">
                             <div className="mx-2">
                                 <h4 className="text-[.7rem] font-semibold">{sessionStorage.getItem("name")}</h4>
-                            <p className="text-[.6rem] font-semibold text-gray-500">Staff</p>
+                            <p className="text-[.6rem] font-semibold text-gray-500">Member</p>
                             </div>
                             <FaAngleDown className="font-normal text-gray-600 text-[.7rem]"/>
                          </div>

@@ -33,11 +33,10 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin, setShowLoa
                     navigate("/admin");
                     break;
                 case "MEMBER":
-                    // navigate("/admin");
-                    window.location.href = "https://v0-recreate-website-layout-gamma.vercel.app/member";
+                    navigate("/member");
                     break;
                 case "STAFF":
-                    window.location.href = "https://v0-recreate-website-layout-gamma.vercel.app/staff";
+                    navigate("/staff");
                     break;
             }
             console.log('Login succeeded:', loginResponse);
