@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
-import Sidebar from './components/sidebar.tsx'
+import Sidebar from './components/sidebar.tsx';
 
 export const Index = () => {
     return (
