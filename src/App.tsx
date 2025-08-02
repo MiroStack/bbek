@@ -43,14 +43,14 @@ import { MemberRecordPage } from './staff/views/church_records/MemberRecord.tsx'
 import { EventRecordPage } from './staff/views/church_records/EventRecord.tsx';
 import { TithesOfferingPage } from './staff/views/church_records/TitheOffer.tsx';
 import { MarriageRecordPage } from './staff/views/church_records/MarriageRecord.tsx';
-import { MinistriesStaffPage } from './staff/views/services/Ministries.tsx';
+import { MinistriesStaffPage } from './staff/views/church_records/Ministries.tsx';
 import { ChildDedicationPage } from './staff/views/services/ChildDedication.tsx';
 import { MessagePage } from './staff/views/maintenance/message.tsx';
 import { AuditTrialPage } from './staff/views/maintenance/audit.tsx';
 import { WaterBaptism_Page } from './staff/views/services/WaterBaptism.tsx';
 import { MemberPage } from './member/member.tsx';
 import {DashboardMemberPage} from'./member/views/dashboard.tsx';
-import { MinistryStaffPage } from './staff/views/church_records/MinistryStaff.tsx';
+import { MinistryStaffPage } from './staff/views/services/MinistryStaff.tsx';
 import { MinistriesPage } from './landpage/view/Ministries.tsx';
 import { MarriageServicePage } from './staff/views/services/MarriageService.tsx';
 import { MyProfile } from './member/views/myprofile/MyProfile.tsx';

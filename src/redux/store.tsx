@@ -1,12 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
 import ministryReducer from './staff/church_record/MinistrySlice';
-import loaderReducer from './dialog/LoaderSlice';
-import SuccessReducer from './dialog/SuccessSlice'
+import dialogReducer from './dialog/DialogSlice';
 export const store = configureStore({
   reducer: {
     ministryForm: ministryReducer,
-    loader:loaderReducer,
-    success_dialog:SuccessReducer
+    dialog:dialogReducer,
     // ... other reducers
   },
 });

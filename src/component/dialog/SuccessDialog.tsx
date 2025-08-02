@@ -1,10 +1,11 @@
 
 import { IoIosCheckmarkCircle } from "react-icons/io";
-import { showSuccessDialog, hideSuccessDialog, } from '../../redux/dialog/SuccessSlice.ts';
+
 import { useAppSelector } from "../../redux/staff/hooks/hooks.tsx";
 import { useDispatch } from "react-redux";
+import { hideSuccessDialog } from "../../redux/dialog/DialogSlice.ts";
 export const SuccessDialog = () => {
-    const success_dialog = useAppSelector((state) => state.success_dialog.value);
+    const success_dialog = useAppSelector((state) => state.dialog.success);
     const dispatch = useDispatch();
     return (
         <>
@@ -13,8 +14,13 @@ export const SuccessDialog = () => {
                 <div className="h-100 flex flex-col items-center justify-center space-y-1.5 text-center sm:text-left">
                     <div className="text-5xl text-green-600"><IoIosCheckmarkCircle /></div>
                     <h3 className="font-medium text-xl tracking-wider mb-2">Success</h3>
-                    <p>Saved Successfully!</p>
-                    <button className="bg-green-700 w-40 h-8 rounded-md text-white my-3" onClick={() => {dispatch(hideSuccessDialog()) }}>Close</button>
+                    <p>{sessionStorage.getItem("message")}</p>
+                    <button className="bg-green-700 w-40 h-8 rounded-md text-white my-3" onClick={
+                        () => {
+                            dispatch(hideSuccessDialog());
+                            sessionStorage.removeItem("message");
+                        }
+                    }>Close</button>
                 </div>
             </div>
         </>

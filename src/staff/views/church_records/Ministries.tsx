@@ -1,16 +1,35 @@
-import { showMinistry, hideMinistry } from '../../../redux/staff/church_record/MinistrySlice';
+import { showMinistry, hideMinistry, showUpdateMinistry } from '../../../redux/staff/church_record/MinistrySlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux/staff/hooks/hooks';
 import { useEffect, useState } from 'react';
 import MinistryRepo from '../../../repositories/MinistryRepo';
 import type { MinistryModel } from '../../../models/MinistryModel';
+import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
+import { CreateMinistryForm } from '../../components/ministry/CreateMinistryForm';
+import { Loader } from '../../../landpage/components/Loader';
+import { SuccessDialog } from '../../../component/dialog/SuccessDialog';
+import { WarningDialog } from '../../../component/dialog/WarningDialog';
+import { ErrorDialog2 } from '../../../component/dialog/ErrorDialog2';
+import { hideLoader, showErrorDialog, showLoader, showSuccessDialog, showWarningDialog } from '../../../redux/dialog/DialogSlice';
+import { UpdateMinistryForm } from '../../components/ministry/UpdateMinistryForm';
+
 export const MinistriesStaffPage = () => {
+
     const ministryForm = useAppSelector((state) => state.ministryForm.value);
+    const ministryEditForm = useAppSelector((state) => state.ministryForm.edit);
+    const loaderDialog = useAppSelector((state) => state.dialog.loader);
+    const successDialog = useAppSelector((state) => state.dialog.success);
+    const warningDialog = useAppSelector((state) => state.dialog.warning);
+    const errorDialog = useAppSelector((state) => state.dialog.error);
     const [ministryData, setMinistryData] = useState<MinistryModel[]>([])
+    const [isRefreshing, setIsRefreshing] = useState(true);
     useEffect(() => {
-        fetchMinistryData();
-        console.log(ministryData);
-    }, [ministryForm])
+        if (isRefreshing) {
+            fetchMinistryData();
+            console.log(ministryData);
+            setIsRefreshing(false);
+        }
+    }, [isRefreshing])
     const fetchMinistryData = async () => {
         try {
             const res = await MinistryRepo.getAllMinistry();
@@ -21,10 +40,54 @@ export const MinistriesStaffPage = () => {
     }
     const dispatch = useDispatch();
 
+    const handleDeleteMinsitry = async () =>{
+        dispatch(showLoader());
+        try{
+             const response = await MinistryRepo.deleteMinistry(Number(sessionStorage.getItem("id")));
+             if(response.statusCode == 200){
+                setTimeout(() => {
+                    sessionStorage.setItem("message", response.message);
+                    dispatch(showSuccessDialog());
+                    dispatch(hideLoader());
+                },1500);
+             }
+        }catch(e){
+            console.error("Error deleting ministry:", e);
+            sessionStorage.setItem("message", "Failed to delete ministry. Please try again.");
+            dispatch(hideLoader());
+            dispatch(showErrorDialog());
+        }finally{
+            setIsRefreshing(true);
+            sessionStorage.removeItem("id");
+        }
+    }
+
+
     return (
         <>
-            <div className={` w-100  h-auto flex flex-col items-center justify-center`}>
-                <div className="p-6 staff-ministries-page">
+            <div className={`${ministryForm ? "" : "hidden"}`}>
+                <CreateMinistryForm />
+            </div>
+            <div className={`${ministryEditForm ? "" : "hidden"}`}>
+                <UpdateMinistryForm setIsRefresh={setIsRefreshing}/>
+            </div>
+            <div className=''>
+                <Loader loader={loaderDialog} />
+            </div>
+
+            <div className={`${successDialog ? "" : "hidden"}`}>
+                <SuccessDialog />
+            </div>
+            <div className={`${warningDialog ? "" : "hidden"}`}>
+                <WarningDialog onConfirm={handleDeleteMinsitry} />
+            </div>
+            <div className={`${errorDialog ? "" : "hidden"}`}>
+                <ErrorDialog2 />
+            </div>
+            
+
+            <div className={`w-100  h-auto flex flex-col items-center justify-center`}>
+                <div className="w-[80%] p-6 staff-ministries-page">
                     <div className="flex justify-between items-center mb-6">
                         <h1 className="text-2xl font-bold">Ministries</h1>
                         <button
@@ -199,7 +262,7 @@ export const MinistriesStaffPage = () => {
                                             <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                                                 Members
                                             </th>
-                                            <th className="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 text-right"></th>
+                                            <th className="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 text-right">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody className="[&amp;_tr:last-child]:border-0">
@@ -210,36 +273,23 @@ export const MinistriesStaffPage = () => {
                                                     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{item.schedule}</td>
                                                     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{item.leader}</td>
                                                     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                                                        <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">Active</span>
+                                                        <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">{item.statusName}</span>
                                                     </td>
                                                     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{item.member}</td>
                                                     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
-                                                        <button
-                                                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
-                                                            type="button"
-                                                            id="radix-«ras»"
-                                                            aria-haspopup="menu"
-                                                            aria-expanded="false"
-                                                            data-state="closed"
-                                                        >
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                width="24"
-                                                                height="24"
-                                                                viewBox="0 0 24 24"
-                                                                fill="none"
-                                                                stroke="currentColor"
-                                                                strokeWidth="2"
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                className="lucide lucide-ellipsis h-4 w-4"
-                                                            >
-                                                                <circle cx="12" cy="12" r="1"></circle>
-                                                                <circle cx="19" cy="12" r="1"></circle>
-                                                                <circle cx="5" cy="12" r="1"></circle>
-                                                            </svg>
-                                                            <span className="sr-only">Actions</span>
-                                                        </button>
+                                                        <div className='flex items-center justify-end gap-2'>
+                                                            <FaEdit className='text-green-700 hover:cursor-pointer text-lg' onClick={
+                                                                ()=>{
+                                                                    sessionStorage.setItem("id", item.id.toString());
+                                                                    dispatch(showUpdateMinistry());
+                                                                    
+                                                                    }}/>
+                                                            <FaRegTrashAlt className='text-red-700 hover:cursor-pointer text-lg' onClick={() => {
+                                                                sessionStorage.setItem("id", item.id.toString());
+                                                                dispatch(showWarningDialog());
+
+                                                            }} />
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             ))

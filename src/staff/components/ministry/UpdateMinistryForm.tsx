@@ -1,12 +1,15 @@
-import { use, useState } from "react";
-import { showMinistry, hideMinistry } from '../../../redux/staff/church_record/MinistrySlice';
+import React, { use, useEffect, useState } from "react";
+import { showMinistry, hideMinistry, hideUpdateMinistry } from '../../../redux/staff/church_record/MinistrySlice';
 import { useSelector, useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux/staff/hooks/hooks';
 import MinistryRepo from "../../../repositories/MinistryRepo";
 import { hideLoader, showLoader, showSuccessDialog } from "../../../redux/dialog/DialogSlice";
 
-export const CreateMinistryForm = () => {
-    const ministryForm = useAppSelector((state) => state.ministryForm.value);
+type UpdateMinistryFormProps = {
+    setIsRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export const UpdateMinistryForm = ({setIsRefresh}:UpdateMinistryFormProps) => {
+    const ministryUpdate = useAppSelector((state) => state.ministryForm.edit);
     const dispatch = useDispatch();
     const [showStatus, setShowStatus] = useState(false);
     const[ministryName, setMinistryName] = useState("");
@@ -16,6 +19,9 @@ export const CreateMinistryForm = () => {
     const[status, setStatus] = useState("Pending");
     const[member, setMember] = useState(0);
     const [file, setFile] = useState<File | null>(null);
+    useEffect(()=>{
+        getData();
+    },[ministryUpdate]);
 
     const handleSetMinistryName = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMinistryName(e.target.value);
@@ -47,16 +53,36 @@ export const CreateMinistryForm = () => {
 
 
     const handleShowStatus = () => setShowStatus(showStatus ? false : true);
+    const getData= async()=> {
+        try{
+           const response =await MinistryRepo.getMinistryById(parseInt(sessionStorage.getItem("id") || "0"));
+           if(response.statusCode == 200){
+                const data = response.data;
+                setMinistryName(data.ministryName);
+                setSchedule(data.schedule);
+                setLeader(data.leader);
+                setDescription(data.description);
+                setStatus(data.statusName);
+                setMember(parseInt(data.member.toString()));
+                
+           }
+        }catch(e){
+            console.error("Error fetching ministry data:", e);
+        }
+    };
+    
     async function handleSaveMinistry() {
         dispatch(showLoader());
         if (!file) {
             console.error("No file selected");
+            alert("Please select a file to upload.");
+            dispatch(hideLoader());
             return;
         }
 
         try {
             const response = await MinistryRepo.saveMinistry(
-                0,
+                parseInt(sessionStorage.getItem("id") || "0"),
                 member,
                 description,
                 ministryName,
@@ -64,11 +90,11 @@ export const CreateMinistryForm = () => {
                 leader,
                 schedule,
                 file,
-                false
+                true
             );
             
-            if (response.statusCode === 201) {
-                dispatch(hideMinistry());
+            if (response.statusCode === 200) {
+                dispatch(hideUpdateMinistry());
                 sessionStorage.setItem("message", response.message);
                 console.log("Response:", response.message);
                 setMinistryName("");
@@ -81,6 +107,7 @@ export const CreateMinistryForm = () => {
                 // Show success dialog after a short delay 
                 setTimeout(()=>{
                     dispatch(showSuccessDialog())
+                    setIsRefresh && setIsRefresh(true);
                     dispatch(hideLoader())
                 }, 1500);
             }else{
@@ -105,10 +132,10 @@ export const CreateMinistryForm = () => {
             >
                 <div className="flex flex-col  text-center sm:text-left">
                     <h2 id="radix-«r4o»" className="text-lg font-semibold leading-none tracking-tight">
-                        Create New Ministry
+                        Update Ministry
                     </h2>
                     <p id="radix-«r4p»" className="text-sm text-muted-foreground">
-                        Add a new ministry to the church.
+                        Update the details of the ministry.
                     </p>
                 </div>
                 <div className="grid gap-4 py-2">
@@ -251,6 +278,8 @@ export const CreateMinistryForm = () => {
                             className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             id="new-description"
                             name="ministry-description-input"
+                            onChange={()=>handleSetDescription}
+                            value={description}
                         ></textarea>
                     </div>
                 </div>
@@ -261,12 +290,12 @@ export const CreateMinistryForm = () => {
                         name="create-ministry-confirm-btn"
                         onClick={handleSaveMinistry}
                     >
-                        Create Ministry
+                        Update Ministry
                     </button>
                 </div>
                 <button
                     type="button"
-                    onClick={() => dispatch(hideMinistry())}
+                    onClick={() => dispatch(hideUpdateMinistry())}
                     className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
                 >
                     <svg

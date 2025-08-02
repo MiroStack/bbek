@@ -1,7 +1,8 @@
 export interface MinistryModel{
+    id:number;
     schedule:string;
     leader:string;
-    statusId:number;
+    statusName:string;
     ministryName:string;
     description:string;
     member:string;

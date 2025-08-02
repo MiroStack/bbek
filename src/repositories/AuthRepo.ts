@@ -12,8 +12,8 @@ const AuthRepo = {
     return response.data;
   },
 
- async validate(token:string): Promise<TokenResponseModel>{
-  const response = await axios.get<TokenResponseModel>(`validate?token=${token}`);
+ async validate(token:string): Promise<ApiResponseModel<TokenResponseModel>> {
+  const response = await axios.get<ApiResponseModel<TokenResponseModel>>(`validate?token=${token}`);
   return response.data;
  } 
 };

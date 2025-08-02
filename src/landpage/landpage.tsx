@@ -28,25 +28,30 @@ export const LandPage = () => {
             setShowLoader(true);
             if (token) {
                 const loginResponse = await AuthRepo.validate(token);
-                sessionStorage.setItem("name", loginResponse.fullname);
-                switch (loginResponse.role) {
-                    case "ADMIN":
-                        navigate("/admin");
-                        break;
-                    case "MEMBER":
-                        // navigate("/admin");
-                        window.location.href = "https://v0-recreate-website-layout-gamma.vercel.app/member";
-                        break;
-                    case "STAFF":
-                        window.location.href = "https://v0-recreate-website-layout-gamma.vercel.app/staff";
-                        break;
-                    default:
-                        break;    
+                    if(loginResponse.statusCode == 200){
+                        sessionStorage.setItem("name", loginResponse.data.fullname);
+                    switch (loginResponse.data.role) {
+                        case "ADMIN":
+                            navigate("/admin");
+                            break;
+                        case "MEMBER":
+                            // navigate("/admin");
+                            navigate("/member");
+                            break;
+                        case "STAFF":
+                            navigate("/staff");
+                            break;
+                        default:
+                            navigate("/");
+                            console.error("Unknown role:", loginResponse.data.role);
+                            break;    
+                    }
                 }
             } else {
                  navigate("/");
                 console.error("Token not found in session storage.");
             }
+            
 
         } catch (e) {
            Cookies.deleteCookie("auth_token");
