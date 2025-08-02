@@ -1,7 +1,22 @@
+import { useEffect, useState } from "react"
 import { JoinUsSection } from "../components/JoinUsSection"
 import { MinistriesCard } from "../components/MinistriesCard"
+import type { MinistryModel } from "../../models/MinistryModel"
+import MinistryRepo from "../../repositories/MinistryRepo"
 
 export const MinistriesPage = () => {
+  const [ministryData, setMinistryData] = useState<MinistryModel[]>([]);
+  useEffect(() => {
+    try {
+      getAllMinistryList();
+    } catch (e) {
+      console.log(e);
+    }
+  }, [])
+  const getAllMinistryList = async () => {
+    const data = await MinistryRepo.getAllMinistry();
+    setMinistryData(data);
+  }
   return (
     <>
       <div className="w-screen h-auto items-center flex flex-col justify-center">
@@ -38,16 +53,18 @@ export const MinistriesPage = () => {
         {/* ministries card */}
         <div className="h-auto mx-5 py-5 flex flex-col items-center justify-center gap-2">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <MinistriesCard/>
-            <MinistriesCard/>
-            <MinistriesCard/>
-            <MinistriesCard/>
-            <MinistriesCard/>
+            {
+              ministryData.map((items, index) => (
+                <MinistriesCard key={index} ministryModel={items} />
+              ))
+            }
+
+
           </div>
 
           {/* end */}
         </div>
-        <JoinUsSection/>
+        <JoinUsSection />
       </div>
     </>
   )

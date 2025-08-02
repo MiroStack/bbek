@@ -1,4 +1,20 @@
+import { useEffect, useState } from "react"
+import type { EventModel } from "../../../models/EventModel";
+import EventRepo from "../../../repositories/EventRepo";
+
 export const EventRecordPage = () => {
+    const[eventData, setEventDate] = useState<EventModel[]>([])
+    useEffect(()=>{
+         fetchEventData();
+    },[]);
+    const fetchEventData= async ()=>{
+        try{
+           const res = await EventRepo.getAllEvent();
+           setEventDate(res);
+        }catch(e){
+
+        }
+    }
     return (
         <>
             <div className="w-100 h-auto flex flex-col items-center justify-center">
@@ -118,25 +134,27 @@ export const EventRecordPage = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="[&amp;_tr:last-child]:border-0">
-                                    <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                   {
+                                    eventData.map((item, index)=>(
+                                        <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                                         <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
-                                            Sunday Worship Service
+                                            {item.eventName}
                                         </td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">6/11/2023</td>
+                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{item.eventDate}</td>
                                         <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                                            9:00 AM - 11:00 AM
+                                            {item.eventTime}
                                         </td>
                                         <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                                            Main Sanctuary
+                                            {item.eventLocation}
                                         </td>
                                         <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden lg:table-cell">
-                                            Worship
+                                            {item.eventType}
                                         </td>
                                         <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                                             <div
                                                 className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-blue-100 text-blue-800"
                                             >
-                                                Upcoming
+                                                {item.statusName}
                                             </div>
                                         </td>
                                         <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
@@ -168,55 +186,8 @@ export const EventRecordPage = () => {
                                             </button>
                                         </td>
                                     </tr>
-                                    
-                                    <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
-                                            Children's Sunday School
-                                        </td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">6/4/2023</td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                                            9:00 AM - 10:30 AM
-                                        </td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                                            Children's Wing
-                                        </td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden lg:table-cell">Education</td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                                            <div
-                                                className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-green-100 text-green-800"
-                                            >
-                                                Completed
-                                            </div>
-                                        </td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
-                                            <button
-                                                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
-                                                type="button"
-                                                id="radix-«r95»"
-                                                aria-haspopup="menu"
-                                                aria-expanded="false"
-                                                data-state="closed"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="24"
-                                                    height="24"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="lucide lucide-ellipsis h-4 w-4"
-                                                >
-                                                    <circle cx="12" cy="12" r="1"></circle>
-                                                    <circle cx="19" cy="12" r="1"></circle>
-                                                    <circle cx="5" cy="12" r="1"></circle>
-                                                </svg>
-                                                <span className="sr-only">Actions</span>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                    ))
+                                   }
                                 </tbody>
                             </table>
                         </div>

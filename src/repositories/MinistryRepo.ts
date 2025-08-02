@@ -1,5 +1,6 @@
 import axios from "../api/axios"
 import type { ApiResponseModel } from '../models/ApiResponseModel';
+import type { MinistryModel } from "../models/MinistryModel";
 import { Cookies } from '../util/Cookies';
 
 const MinistryRepo = {
@@ -29,15 +30,14 @@ const MinistryRepo = {
     // console.log(token);
     return response.data;
   },
-   async getAllMinistry(): Promise<ApiResponseModel<any>> {
+   async getAllMinistry(): Promise<MinistryModel[]> {
     const token = Cookies.getCookie("auth_token");
 
-    const response = await axios.post<ApiResponseModel<any>>(
+    const response = await axios.get<MinistryModel[]>(
       "getAllMinistry",
       {
         headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data" 
         },
       }
     );
