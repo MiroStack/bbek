@@ -29,7 +29,7 @@ export const EventsCard: React.FC<EventCardProps> = ({ eventModel }) => {
         </div>
         <div className="p-6 flex-grow flex flex-col">
           <h3 className="text-xl font-semibold mb-3 text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
-            Couples Banquet
+           {eventModel.eventName}
           </h3>
           <div className="flex items-center text-gray-500 mb-2">
             <svg
@@ -49,11 +49,10 @@ export const EventsCard: React.FC<EventCardProps> = ({ eventModel }) => {
               <rect width="18" height="18" x="3" y="4" rx="2"></rect>
               <path d="M3 10h18"></path>
             </svg>
-            <span className="text-sm">Every Second week of February</span>
+            <span className="text-sm">{`${eventModel.eventDate} ${eventModel.eventTime}`}</span>
           </div>
           <p className="text-gray-600 leading-relaxed mb-4">
-            A special evening for couples to celebrate love and strengthen
-            marriages through fellowship and Biblical teaching.
+            {eventModel.description}
           </p>
           <div className="mt-auto">
             <a

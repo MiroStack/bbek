@@ -1,4 +1,5 @@
 export interface EventModel{
+  id:number;
   eventName: string;
   eventType: string;
   eventDate: string;
@@ -7,4 +8,5 @@ export interface EventModel{
   attendance: number;
   offering: number;
   statusName: string;
+  description: string;
 }

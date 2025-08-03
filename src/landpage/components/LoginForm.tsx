@@ -51,6 +51,7 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin, setShowLoa
             username.value = '';
             password.value = '';
             setTimeout(() => setLoader(false), 1000);
+            
         }
     }
 

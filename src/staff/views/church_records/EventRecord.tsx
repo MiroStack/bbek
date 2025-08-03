@@ -1,29 +1,92 @@
 import { useEffect, useState } from "react"
 import type { EventModel } from "../../../models/EventModel";
 import EventRepo from "../../../repositories/EventRepo";
-
+import { useDispatch } from "react-redux";
+import { showCreateEvent, showUpdateEvent } from "../../../redux/staff/church_record/EventSlice";
+import { useAppDispatch, useAppSelector } from "../../../redux/staff/hooks/hooks";
+import { CreateEventForm } from "../../components/events/CreateEventForm";
+import { Loader } from "../../../landpage/components/Loader";
+import { SuccessDialog } from "../../../component/dialog/SuccessDialog";
+import { WarningDialog } from "../../../component/dialog/WarningDialog";
+import { ErrorDialog2 } from "../../../component/dialog/ErrorDialog2";
+import { hideLoader, showErrorDialog, showLoader, showSuccessDialog, showWarningDialog } from "../../../redux/dialog/DialogSlice";
+import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
+import { UpdateEventForm } from "../../components/events/UpdateEventForm";
 export const EventRecordPage = () => {
-    const[eventData, setEventDate] = useState<EventModel[]>([])
-    useEffect(()=>{
-         fetchEventData();
-    },[]);
-    const fetchEventData= async ()=>{
-        try{
-           const res = await EventRepo.getAllEvent();
-           setEventDate(res);
-        }catch(e){
+    const eventCreateForm = useAppSelector((state) => state.eventForm.value);
+    const eventEditForm = useAppSelector((state) => state.eventForm.edit);
+    const loaderDialog = useAppSelector((state) => state.dialog.loader);
+    const successDialog = useAppSelector((state) => state.dialog.success);
+    const warningDialog = useAppSelector((state) => state.dialog.warning);
+    const errorDialog = useAppSelector((state) => state.dialog.error);
+    const dispatch = useDispatch();
+    const [eventData, setEventDate] = useState<EventModel[]>([])
+    const [isRefreshing, setIsRefreshing] = useState(true);
+
+    useEffect(() => {
+        if (isRefreshing) {
+            fetchEventData();
+            setIsRefreshing(false);
+        }
+    }, [isRefreshing]);
+    const fetchEventData = async () => {
+        try {
+            const res = await EventRepo.getAllEvent();
+            setEventDate(res);
+        } catch (e) {
 
         }
     }
+    const handleDeleteEvent = async () => {
+        dispatch(showLoader());
+        try {
+            const response = await EventRepo.deleteEvent(Number(sessionStorage.getItem("id")));
+            if (response.statusCode == 200) {
+                setTimeout(() => {
+                    sessionStorage.setItem("message", response.message);
+                    dispatch(showSuccessDialog());
+                    dispatch(hideLoader());
+                }, 1500);
+            }
+        } catch (e) {
+            console.error("Error deleting event:", e);
+            sessionStorage.setItem("message", "Failed to delete event. Please try again.");
+            dispatch(hideLoader());
+            dispatch(showErrorDialog());
+        } finally {
+            setIsRefreshing(true);
+            sessionStorage.removeItem("id");
+        }
+    };
     return (
         <>
+            <div className={`${eventCreateForm ? "" : "hidden"}`}>
+                <CreateEventForm setIsRefreshing={setIsRefreshing} />
+            </div>
+             <div className={`${eventEditForm ? "" : "hidden"}`}>
+                <UpdateEventForm setIsRefreshing={setIsRefreshing} />
+            </div>
+            <div className=''>
+                <Loader loader={loaderDialog} />
+            </div>
+
+            <div className={`${successDialog ? "" : "hidden"}`}>
+                <SuccessDialog />
+            </div>
+            <div className={`${warningDialog ? "" : "hidden"}`}>
+                <WarningDialog onConfirm={handleDeleteEvent} />
+            </div>
+            <div className={`${errorDialog ? "" : "hidden"}`}>
+                <ErrorDialog2 />
+            </div>
+
             <div className="w-100 h-auto flex flex-col items-center justify-center">
                 <div className="p-6">
                     <div className="flex justify-between items-center mb-6">
                         <h1 className="text-2xl font-bold">Church Events</h1>
                         <a
                             className="!bg-green-600 text-white hover:!bg-green-500  inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-                            href="/staff/events/new"
+                            onClick={() => { dispatch(showCreateEvent()) }}
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -67,7 +130,8 @@ export const EventRecordPage = () => {
                                     <input
                                         className="flex h-10 w-full rounded-md border border-input bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10"
                                         placeholder="Search events..."
-                                        value=""
+                                        type="text"
+                                        id="search-events"
                                     />
                                 </div>
                                 <div className="flex gap-2">
@@ -134,60 +198,47 @@ export const EventRecordPage = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="[&amp;_tr:last-child]:border-0">
-                                   {
-                                    eventData.map((item, index)=>(
-                                        <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
-                                            {item.eventName}
-                                        </td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{item.eventDate}</td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                                            {item.eventTime}
-                                        </td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                                            {item.eventLocation}
-                                        </td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden lg:table-cell">
-                                            {item.eventType}
-                                        </td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                                            <div
-                                                className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-blue-100 text-blue-800"
-                                            >
-                                                {item.statusName}
-                                            </div>
-                                        </td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
-                                            <button
-                                                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
-                                                type="button"
-                                                id="radix-«r8n»"
-                                                aria-haspopup="menu"
-                                                aria-expanded="false"
-                                                data-state="closed"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="24"
-                                                    height="24"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="lucide lucide-ellipsis h-4 w-4"
-                                                >
-                                                    <circle cx="12" cy="12" r="1"></circle>
-                                                    <circle cx="19" cy="12" r="1"></circle>
-                                                    <circle cx="5" cy="12" r="1"></circle>
-                                                </svg>
-                                                <span className="sr-only">Actions</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    ))
-                                   }
+                                    {
+                                        eventData.map((item, index) => (
+                                            <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                                <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
+                                                    {item.eventName}
+                                                </td>
+                                                <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{item.eventDate}</td>
+                                                <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                                                    {item.eventTime}
+                                                </td>
+                                                <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                                                    {item.eventLocation}
+                                                </td>
+                                                <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden lg:table-cell">
+                                                    {item.eventType}
+                                                </td>
+                                                <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                                    <div
+                                                        className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-blue-100 text-blue-800"
+                                                    >
+                                                        {item.statusName}
+                                                    </div>
+                                                </td>
+                                                <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
+                                                    <div className='flex items-center justify-end gap-2'>
+                                                        <FaEdit className='text-green-700 hover:cursor-pointer text-lg' onClick={
+                                                            () => {
+                                                                sessionStorage.setItem("id", item.id.toString());
+                                                                dispatch(showUpdateEvent());
+
+                                                            }} />
+                                                        <FaRegTrashAlt className='text-red-700 hover:cursor-pointer text-lg' onClick={() => {
+                                                            sessionStorage.setItem("id", item.id.toString());
+                                                            dispatch(showWarningDialog());
+
+                                                        }} />
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    }
                                 </tbody>
                             </table>
                         </div>

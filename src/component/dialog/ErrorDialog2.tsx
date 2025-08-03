@@ -15,7 +15,7 @@ export const ErrorDialog2 = () => {
                     <div className="text-5xl text-red-600"><IoIosCloseCircle /></div>
                     <h3 className="font-medium text-xl tracking-wider mb-2">Error</h3>
                     <p>{sessionStorage.getItem("message")}</p>
-                    <button className="bg-grey-700 w-40 h-8 rounded-md text-white my-3" onClick={
+                    <button className="bg-blue-700 w-40 h-8 rounded-md text-white my-3" onClick={
                         () => {
                             dispatch(hideErrorDialog());
                             sessionStorage.removeItem("message");

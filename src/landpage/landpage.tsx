@@ -56,7 +56,7 @@ export const LandPage = () => {
         } catch (e) {
            Cookies.deleteCookie("auth_token");
         } finally {
-            () => setShowLoader(false);
+            setShowLoader(false);
         }
     }
 

@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import ministryReducer from './staff/church_record/MinistrySlice';
 import dialogReducer from './dialog/DialogSlice';
+import eventReducer from './staff/church_record/EventSlice';
 export const store = configureStore({
   reducer: {
     ministryForm: ministryReducer,
     dialog:dialogReducer,
+    eventForm: eventReducer,
     // ... other reducers
   },
 });
