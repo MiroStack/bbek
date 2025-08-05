@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { ErrorDialog } from "./components/ErrorDialog";
 import { Cookies } from "../util/Cookies";
 import { SocialMediaGroups } from "./components/SocialMediaGroud";
+import { Navigation } from "./components/Navigation";
 
 export const LandPage = () => {
     const [showLogin, setShowLogin] = useState(false);
@@ -62,7 +63,8 @@ export const LandPage = () => {
 
     return (
         <div className={`relative`}>
-            <Nav setShowLogin={setShowLogin} setShowSide={setShowSide} />
+            {/* <Nav setShowLogin={setShowLogin} setShowSide={setShowSide} /> */}
+            <Navigation/>
             <Outlet />
             <Footer />
             <LoginForm show={showLogin} setShowLogin={setShowLogin} setShowLoader={setShowLoader} setShowError={setShowError} />

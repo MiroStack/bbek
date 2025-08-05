@@ -1,15 +1,15 @@
-import { use, useEffect, useState } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useState } from "react";
+import { useDispatch } from 'react-redux';
 import { hideLoader, showErrorDialog, showLoader, showSuccessDialog } from "../../../redux/dialog/DialogSlice";
-import { hideCreateEvent, hideUpdateEvent } from "../../../redux/staff/church_record/EventSlice";
+import { hideUpdateEvent } from "../../../redux/staff/church_record/EventSlice";
 import EventRepo from "../../../repositories/EventRepo";
 import { useAppSelector } from "../../../redux/staff/hooks/hooks";
 type UpdateEventFormProps = {
 
     setIsRefreshing: React.Dispatch<React.SetStateAction<boolean>>;
 };
-export const UpdateEventForm = ({setIsRefreshing}:UpdateEventFormProps) => {
-    const updateEventForm = useAppSelector((state)=> state.eventForm.edit);
+export const UpdateEventForm = ({ setIsRefreshing }: UpdateEventFormProps) => {
+    const updateEventForm = useAppSelector((state) => state.eventForm.edit);
     const dispatch = useDispatch();
     const [showStatus, setShowStatus] = useState(false);
     const [showEventStatus, setShowEventStatus] = useState(false);
@@ -24,14 +24,14 @@ export const UpdateEventForm = ({setIsRefreshing}:UpdateEventFormProps) => {
     const [eventName, setEventName] = useState("");
     const [file, setFile] = useState<File | null>(null);
 
-    useEffect(()=>{
-          getEventData();
-    },[updateEventForm]);
-    const getEventData = async ()=>{
+    useEffect(() => {
+        getEventData();
+    }, [updateEventForm]);
+    const getEventData = async () => {
         dispatch(showLoader());
-        try{
-           const response = await EventRepo.getEvent(parseInt(sessionStorage.getItem("id") || "0"));
-           if(response.statusCode === 200){
+        try {
+            const response = await EventRepo.getEvent(parseInt(sessionStorage.getItem("id") || "0"));
+            if (response.statusCode === 200) {
                 setEventName(response.data.eventName);
                 setEventType(response.data.eventType);
                 setEventDate(response.data.eventDate);
@@ -43,18 +43,18 @@ export const UpdateEventForm = ({setIsRefreshing}:UpdateEventFormProps) => {
                 setDescription(response.data.description);
                 setFile(null); // Reset file input
                 dispatch(hideLoader());
-           }else{
-                sessionStorage.setItem("message", response.message);     
+            } else {
+                sessionStorage.setItem("message", response.message);
                 dispatch(showErrorDialog());
                 dispatch(hideLoader());
-              }
-        }catch(e){
+            }
+        } catch (e) {
             console.error("Error fetching event data:", e);
             dispatch(hideLoader());
             sessionStorage.setItem("message", "Failed to fetch event data.");
             dispatch(showErrorDialog());
-        }finally{
-              
+        } finally {
+
         }
     }
 
@@ -110,7 +110,7 @@ export const UpdateEventForm = ({setIsRefreshing}:UpdateEventFormProps) => {
         }
         try {
             const response = await EventRepo.saveEvent(
-                sessionStorage.getItem("id") || "0", 
+                sessionStorage.getItem("id") || "0",
                 eventName,
                 eventType,
                 eventDate,
@@ -123,7 +123,7 @@ export const UpdateEventForm = ({setIsRefreshing}:UpdateEventFormProps) => {
                 description,
                 file
             );
-            
+
             if (response.statusCode === 200) {
                 dispatch(hideUpdateEvent());
                 sessionStorage.setItem("message", response.message);
@@ -139,20 +139,20 @@ export const UpdateEventForm = ({setIsRefreshing}:UpdateEventFormProps) => {
                 setDescription("");
                 setFile(null);
                 // Show success dialog after a short delay 
-                setTimeout(()=>{
+                setTimeout(() => {
                     dispatch(showSuccessDialog())
                     dispatch(hideLoader())
                 }, 1500);
-            }else{
+            } else {
                 dispatch(hideLoader())
             }
-            
+
         } catch (err) {
             console.error("Save failed:", err);
-        }finally{
+        } finally {
             setIsRefreshing(true); // Trigger a refresh of the event data
         }
-     
+
     }
     return (
         <>
