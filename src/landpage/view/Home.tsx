@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react"
 import "../styles/Home.css"
 import { Link } from "react-router-dom"
 import { scroll } from "motion";
-export const HomePage = (prop: any) => {
+export const Home = (prop: any) => {
   const [scrolled, setScrolled] = useState(false);
 
 

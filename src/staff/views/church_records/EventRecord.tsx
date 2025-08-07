@@ -3,7 +3,7 @@ import type { EventModel } from "../../../models/EventModel";
 import EventRepo from "../../../repositories/EventRepo";
 import { useDispatch } from "react-redux";
 import { showCreateEvent, showUpdateEvent } from "../../../redux/staff/church_record/EventSlice";
-import { useAppDispatch, useAppSelector } from "../../../redux/staff/hooks/hooks";
+import { useAppSelector } from "../../../redux/staff/hooks/hooks";
 import { CreateEventForm } from "../../components/events/CreateEventForm";
 import { Loader } from "../../../landpage/components/Loader";
 import { SuccessDialog } from "../../../component/dialog/SuccessDialog";

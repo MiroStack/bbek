@@ -1,7 +1,7 @@
 import Logo from "../../assets/img/logobbek.jpg";
 export const Navigation=()=>{
     return(
-        <div className="h-[5rem] w-full shadow-md  flex items-center justify-between bg-slate-50 px-4">
+        <div className="w-full shadow-md  flex items-center justify-between bg-slate-50 px-4 py-2">
             <div className="flex items-center gap-2">
                   <img src={Logo} className="h-10 w-10 object-cover rounded-full" />
                   <div>

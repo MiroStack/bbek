@@ -2,7 +2,7 @@ import './index.css';
 import Index from './admin/index.tsx'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { LandPage } from './landpage/landpage.tsx';
-import { HomePage } from './landpage/view/Home.tsx'
+import { Home} from './landpage/view/Home.tsx'
 import { AboutPage } from './landpage/view/about/About.tsx';
 import { BeOneOfUsPage } from './landpage/view/beoneofus/BeOneOfUs.tsx';
 import { EventPage } from './landpage/view/events/Event.tsx';
@@ -63,6 +63,7 @@ import { ChildDedicationMember } from './member/views/services/ChildDedication.t
 import { ChurchEventsMember } from './member/views/services/ChurchEvents.tsx';
 import { MessageMember } from './member/views/communication/Message.tsx';
 import { PrayerRequestMember } from './member/views/communication/PrayerRequest.tsx';
+import { Homepage } from './landpage/view/home/Homepage.tsx';
 
 function App() {
 
@@ -74,7 +75,7 @@ function App() {
         <Routes>
           <Route path='/' element={<Navigate to="/landpage" />} />
           <Route path='/landpage' element={<LandPage />}>
-            <Route index element={<HomePage />} />
+            <Route index element={<Homepage />} />
             <Route path='about' element={<AboutPage />}>
               <Route index path="aboutus" element={<AboutUsPage />}></Route>
               <Route index path="mission" element={<MissionPage />}></Route>

@@ -1,5 +1,5 @@
-import { showMinistry, hideMinistry, showUpdateMinistry } from '../../../redux/staff/church_record/MinistrySlice';
-import { useSelector, useDispatch } from 'react-redux';
+import { showMinistry,  showUpdateMinistry } from '../../../redux/staff/church_record/MinistrySlice';
+import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../../redux/staff/hooks/hooks';
 import { useEffect, useState } from 'react';
 import MinistryRepo from '../../../repositories/MinistryRepo';

@@ -3,7 +3,7 @@ import { SideNav } from "./components/SideNav.tsx";
 import { Nav } from "./components/Nav.tsx";
 import { Cookies } from "../util/Cookies.ts";
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import {  useDispatch } from 'react-redux';
 export const StaffPage = () => {
 
     const dispatch = useDispatch();

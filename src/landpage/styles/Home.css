@@ -1,97 +1,98 @@
 .hero-wrapper {
-    position: relative;
-    height: 100vh;
-    background-image: url(../../assets/img/hero2.jpg);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-clip: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    transition: all ease-in-out 500ms;
+  position: relative;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all ease-in-out 500ms;
 }
-
-
+#hero-page, .hero-wrapper {
+  background-image: url(../../assets/img/hero.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-clip: border-box;
+  background-size: cover;
+}
 
 .hero-wrapper::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-color: rgba(0, 0, 1, 0.3);
-    z-index: 1;
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(48, 48, 48, 0.3);
+  z-index: 1;
 }
 
-.hero-wrapper>* {
-    z-index: 2;
-    position: relative;
-    color: var(--white200);
-
+.hero-wrapper > * {
+  z-index: 2;
+  position: relative;
+  color: var(--white200);
 }
 
 .wave-container {
-    position: absolute;
-    bottom: 1;
+  position: absolute;
+  bottom: 1;
 }
 
 .mynav {
-    background: rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+  background: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .menu-options {
-    position: fixed;
-    height: auto;
-    width: 12em;
-    background-color: var(--white500);
-    border-radius: 8px;
-    transition: all ease-in-out 800ms;
+  position: fixed;
+  height: auto;
+  width: 12em;
+  background-color: var(--white500);
+  border-radius: 8px;
+  transition: all ease-in-out 800ms;
 }
 
-.menu-options>ul {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-    list-style: none;
+.menu-options > ul {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  list-style: none;
 
-    margin: 0;
-    font-size: var(--size-sm);
-    padding: 1em 0;
+  margin: 0;
+  font-size: var(--size-sm);
+  padding: 1em 0;
 }
 
-.menu-options>ul>li {
-    padding: 4px 12px;
+.menu-options > ul > li {
+  padding: 4px 12px;
 }
 
 .no-scroll {
-    overflow-x: hidden;
-    overflow-y: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .scroll {
-    overflow-x: auto;
-    overflow-y: auto;
+  overflow-x: auto;
+  overflow-y: auto;
 }
 
 @keyframes backgroundAnimation {
-    0% {
-        background-size: 105%;
-    }
+  0% {
+    background-size: 105%;
+  }
 
-    50% {
-        background-size: 100%;
-    }
+  50% {
+    background-size: 100%;
+  }
 
-    100% {
-        background-size: 105%;
-    }
+  100% {
+    background-size: 105%;
+  }
 }
 
 @media only screen and (min-width: 1200px) {
-    .hero-wrapper {
-        animation-name: backgroundAnimation;
-        animation: backgroundAnimation 8s ease-in-out infinite;
-    }
+  .hero-wrapper {
+    animation-name: backgroundAnimation;
+    animation: backgroundAnimation 8s ease-in-out infinite;
+  }
 }

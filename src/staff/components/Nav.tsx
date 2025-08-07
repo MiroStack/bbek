@@ -1,5 +1,4 @@
 import Logo from "../../assets/img/logobbek.jpg"
-import { FaAlignLeft } from "react-icons/fa";
 import { FaAngleDown } from "react-icons/fa";
 export const Nav=()=>{
     return(<div className="">
