@@ -69,13 +69,12 @@ function App() {
 
   return (
     <>
-
       <Router>
         <ScrollToTop />
         <Routes>
           <Route path='/' element={<Navigate to="/landpage" />} />
           <Route path='/landpage' element={<LandPage />}>
-            <Route index element={<Homepage />} />
+            <Route index element={<Home />} />
             <Route path='about' element={<AboutPage />}>
               <Route index path="aboutus" element={<AboutUsPage />}></Route>
               <Route index path="mission" element={<MissionPage />}></Route>
@@ -134,11 +133,7 @@ function App() {
 
             <Route index path="maintenance/message" element={<MessagePage />} />
             <Route index path="maintenance/audit-trial" element={<AuditTrialPage />} />
-
-
           </Route>
-
-
           <Route path='/member' element={<MemberPage />}>
             <Route index element={<DashboardMemberPage />} />
             <Route path='my-profile' element={<MyProfile/>}/>
@@ -152,8 +147,6 @@ function App() {
             <Route path='my-message' element={<MessageMember/>}/>
             <Route path='my-prayerrequest' element={<PrayerRequestMember/>}/>
           </Route>
-
-
         </Routes>
       </Router>
 

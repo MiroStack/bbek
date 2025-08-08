@@ -1,4 +1,4 @@
-.hero-wrapper {
+/* .hero-wrapper {
   position: relative;
   height: 100vh;
 
@@ -14,9 +14,9 @@
   background-repeat: no-repeat;
   background-clip: border-box;
   background-size: cover;
-}
+} */
 
-.hero-wrapper::before {
+/* .hero-wrapper::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -28,18 +28,26 @@
   z-index: 2;
   position: relative;
   color: var(--white200);
-}
+} */
 
-.wave-container {
+/* .wave-container {
   position: absolute;
   bottom: 1;
-}
+} */
 
 .mynav {
   background: rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
+}
+
+.myhero{
+  background-image: url(../../assets//img/hero.jpg);
+   background-position: center;
+  background-repeat: no-repeat;
+  background-clip: border-box;
+  background-size: cover;
 }
 
 .menu-options {

@@ -1,22 +1,18 @@
-import { useState, useEffect, useRef } from "react"
-import "../styles/Home.css"
-import { Link } from "react-router-dom"
+import { useState, useEffect, useRef } from "react";
+import "../styles/Home.css";
+import { Link } from "react-router-dom";
 import { scroll } from "motion";
 export const Home = (prop: any) => {
-  const [scrolled, setScrolled] = useState(false);
-
-
   return (
     <>
       <div className="w-screen min-h-screen overflow-x-hidden">
         <div className="w-full h-full relative">
           {/** hero*/}
-          <div className="hero-wrapper w-100">
-            <div className="hero-header z-10 text-white text-center">
+          <div className="hero-wrapper w-100 h-screen flex items-center justify-center">
+            {/* <div className="z-10 text-white text-center ">
               <h1 className="text-6xl font-bold">
                 BIBLE BAPTIST EKKLESIA
               </h1>
-
               <ul className="lg:flex items-center justify-center gap-5 list-disc">
                 <li className="text-xl underline">
                   nurturing faith
@@ -28,25 +24,22 @@ export const Home = (prop: any) => {
                   sharing God's love
                 </li>
               </ul>
-
-
               <Link to="/landpage/about/aboutus" className="flex items-center justify-center my-6 hover: bg-transparent">
                 <div className="info-ctn mx-4 bg-white text-black rounded-3xl h-12 w-[200px] flex items-center justify-center hover:!bg-blue-950 hover:!text-white">
                   <span>PLAN YOUR VISIT </span>
                   <i className="fa-solid fa-arrow-right"></i>
                 </div>
               </Link>
+            </div> */}
 
+            <div className="shadow-sm w-[80%] h-[26rem] rounded-md relative myhero">
+              <div className="absolute bottom-20 left-10 text-white">
+                <p className="">A Place to Grow in Faith, Hope, and Love</p>
+                <h3 className="text-xl ">BIBLE BAPTIST OF EKLESSIA KAWIT CAVITE</h3>
+                <button className="bg-blue-600 w-32 h-14 p-2">PLAN YOUR VISIT</button>
+                <button>GET DIRECTIONS</button>
+              </div>
             </div>
-          </div>
-          <div className="wave-container flex items-end h-[20%] w-[100%] z-10 absolute bottom-0 border-b-2">
-            <svg viewBox="0 0 1440 220" xmlns="http://www.w3.org/2000/svg">
-              <path fill="#ffffff" fillOpacity="1" d="M0,160
-                          C 360,80 1080,240 1440,160
-                          L1440,320
-                          L0,320
-                          Z"/>
-            </svg>
           </div>
         </div>
         {/**service & location */}
@@ -55,29 +48,45 @@ export const Home = (prop: any) => {
           <div className="container mx-auto px-4">
             <div className="flex flex-col md:flex-row animate-fade-in">
               <div className="w-full md:w-1/2 border-r border-gray-200 px-4 md:px-12 mb-8 md:mb-0 animate-slide-in-left">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">service time</h2>
-                <h3 className="text-xl font-medium text-gray-800">Sunday Mornings</h3>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                  service time
+                </h2>
+                <h3 className="text-xl font-medium text-gray-800">
+                  Sunday Mornings
+                </h3>
                 <p className="text-2xl font-bold text-gray-900 mb-2">
                   9:00 to 10:30 AM<sup>*</sup>
                 </p>
-                <p className="text-xs text-gray-500">*End time is approximate.</p>
+                <p className="text-xs text-gray-500">
+                  *End time is approximate.
+                </p>
               </div>
               <div className="w-full md:w-1/2 px-4 md:px-12 animate-slide-in-right">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">location</h2>
-                <h3 className="text-xl font-medium text-gray-800">Bible Baptist Ekklesia of Kawit</h3>
-                <p className="text-xl text-gray-900 mb-1">485 Acacia St. Villa Ramirez</p>
+                <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                  location
+                </h2>
+                <h3 className="text-xl font-medium text-gray-800">
+                  Bible Baptist Ekklesia of Kawit
+                </h3>
+                <p className="text-xl text-gray-900 mb-1">
+                  485 Acacia St. Villa Ramirez
+                </p>
                 <p className="text-xl text-gray-900">Tabon 1, Kawit, Cavite</p>
               </div>
             </div>
           </div>
         </section>
 
-
         {/** plan visit*/}
-        <div className={`w-100 h-auto text-center flex flex-col justify-center items-center lg:p-5`}>
+        <div
+          className={`w-100 h-auto text-center flex flex-col justify-center items-center lg:p-5`}
+        >
           <div>
             <h3 className="text-3xl font-bold">Plan Your Visit</h3>
-            <p className="text-lg max-w-2xl break-words my-3">We're excited to welcome you to Bible Baptist Ekklesia of Kawit. Here's everything you need to know for your first visit.</p>
+            <p className="text-lg max-w-2xl break-words my-3">
+              We're excited to welcome you to Bible Baptist Ekklesia of Kawit.
+              Here's everything you need to know for your first visit.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -102,7 +111,9 @@ export const Home = (prop: any) => {
                     </svg>
                   </div>
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-center">Service Times</h3>
+                <h3 className="text-xl font-bold mb-2 text-center">
+                  Service Times
+                </h3>
                 <div className="space-y-3">
                   <div className="text-center">
                     <p className="font-medium">Sunday Worship Service</p>
@@ -110,7 +121,9 @@ export const Home = (prop: any) => {
                   </div>
                   <div className="text-center">
                     <p className="font-medium">Bible Study</p>
-                    <p className="text-gray-600">Wednesday, 7:00 PM - 8:30 PM</p>
+                    <p className="text-gray-600">
+                      Wednesday, 7:00 PM - 8:30 PM
+                    </p>
                   </div>
                   <div className="text-center">
                     <p className="font-medium">Youth Fellowship</p>
@@ -144,8 +157,12 @@ export const Home = (prop: any) => {
                 <h3 className="text-xl font-bold mb-2 text-center">Location</h3>
                 <div className="space-y-3">
                   <div className="text-center">
-                    <p className="font-medium">Bible Baptist Ekklesia of Kawit</p>
-                    <p className="text-gray-600">485 Acacia St. Villa Ramirez</p>
+                    <p className="font-medium">
+                      Bible Baptist Ekklesia of Kawit
+                    </p>
+                    <p className="text-gray-600">
+                      485 Acacia St. Villa Ramirez
+                    </p>
                     <p className="text-gray-600">Tabon 1, Kawit, Cavite</p>
                   </div>
                   <div className="mt-4">
@@ -187,19 +204,27 @@ export const Home = (prop: any) => {
                     </svg>
                   </div>
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-center">What to Expect</h3>
+                <h3 className="text-xl font-bold mb-2 text-center">
+                  What to Expect
+                </h3>
                 <div className="space-y-3">
                   <div>
                     <p className="font-medium">Dress Code</p>
-                    <p className="text-gray-600">Come as you are! We have no formal dress code.</p>
+                    <p className="text-gray-600">
+                      Come as you are! We have no formal dress code.
+                    </p>
                   </div>
                   <div>
                     <p className="font-medium">Children</p>
-                    <p className="text-gray-600">Children's ministry available during Sunday service.</p>
+                    <p className="text-gray-600">
+                      Children's ministry available during Sunday service.
+                    </p>
                   </div>
                   <div>
                     <p className="font-medium">Worship Style</p>
-                    <p className="text-gray-600">Contemporary and traditional worship songs.</p>
+                    <p className="text-gray-600">
+                      Contemporary and traditional worship songs.
+                    </p>
                   </div>
                   <div>
                     <p className="font-medium">Service Length</p>
@@ -208,24 +233,29 @@ export const Home = (prop: any) => {
                 </div>
               </div>
             </div>
-
-
-
           </div>
         </div>
         {/**who we are */}
 
-        
-
         {/* welcome greeting */}
         <section className="py-20 bg-white">
           <div className="container mx-auto px-4 text-center animate-fade-in-up">
-            <h2 className="text-4xl font-bold mb-6">Welcome to Bible Baptist Ekklesia</h2>
+            <h2 className="text-4xl font-bold mb-6">
+              Welcome to Bible Baptist Ekklesia
+            </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              Bible Baptist Ekklesia of Kawit is an independent Baptist church founded on the principles of Biblical authority, salvation by grace through faith in Jesus Christ, the priesthood of all believers, the autonomy of the local church, and the Great Commission to make disciples of all nations.
+              Bible Baptist Ekklesia of Kawit is an independent Baptist church
+              founded on the principles of Biblical authority, salvation by
+              grace through faith in Jesus Christ, the priesthood of all
+              believers, the autonomy of the local church, and the Great
+              Commission to make disciples of all nations.
             </p>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              We are committed to proclaiming the Gospel of Jesus Christ, making disciples through Biblical teaching, and serving our community with the love of Christ. We welcome people from all walks of life to join us in worship and fellowship as we seek to grow in our relationship with God.
+              We are committed to proclaiming the Gospel of Jesus Christ, making
+              disciples through Biblical teaching, and serving our community
+              with the love of Christ. We welcome people from all walks of life
+              to join us in worship and fellowship as we seek to grow in our
+              relationship with God.
             </p>
             <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-11 bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 py-6 text-lg font-medium hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
               <span className="mr-2">LEARN MORE ABOUT US</span>
@@ -247,11 +277,7 @@ export const Home = (prop: any) => {
             </button>
           </div>
         </section>
-
-
       </div>
-
-
     </>
-  )
-}
+  );
+};
