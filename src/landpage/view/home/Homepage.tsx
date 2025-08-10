@@ -1,8 +1,8 @@
 export const Homepage = () => {
     return (
-        <div className="w-screen flex flex-col items-center p-4 overflow-x-hidden">
+        <div className="w-screen flex flex-col items-center overflow-x-hidden">
             {/*Hero section*/}
-            <div id="hero-page" className="w-[86%] h-[26rem] relative  bg-cover bg-center relative rounded-lg">
+            <div id="hero-page" className="w-[86%] h-[26rem] relative bg-cover bg-center relative rounded-lg">
                 <div className="absolute bottom-0 left-0">
                     <p>A Place to Grow in Faith, Hope, and Love</p>
                     <h3>BIBLE BAPTIST OF EKLESSIA

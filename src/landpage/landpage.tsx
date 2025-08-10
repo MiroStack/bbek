@@ -64,7 +64,7 @@ export const LandPage = () => {
     return (
         <div className={`relative`}>
             {/* <Nav setShowLogin={setShowLogin} setShowSide={setShowSide} /> */}
-            <Navigation/>
+            <Navigation setShowLogin={setShowLogin} setShowSide={setShowSide}/>
             <Outlet />
             <Footer />
             <LoginForm show={showLogin} setShowLogin={setShowLogin} setShowLoader={setShowLoader} setShowError={setShowError} />

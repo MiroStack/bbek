@@ -14,8 +14,8 @@ export const UpdateEventForm = ({ setIsRefreshing }: UpdateEventFormProps) => {
     const [showStatus, setShowStatus] = useState(false);
     const [showEventStatus, setShowEventStatus] = useState(false);
     const [eventType, setEventType] = useState("");
-    const [eventDate, setEventDate] = useState("");
-    const [eventTime, setEventTime] = useState("");
+    const [eventStartDate, setEventStartDate] = useState("");
+    const [eventEndDate, setEventEndDate] = useState("");
     const [eventLocation, setEventLocation] = useState("");
     const [attendance, setAttendance] = useState(0);
     const [offering, setOffering] = useState(0);
@@ -34,8 +34,8 @@ export const UpdateEventForm = ({ setIsRefreshing }: UpdateEventFormProps) => {
             if (response.statusCode === 200) {
                 setEventName(response.data.eventName);
                 setEventType(response.data.eventType);
-                setEventDate(response.data.eventDate);
-                setEventTime(response.data.eventTime);
+                setEventStartDate(response.data.eventStartDate);
+                setEventEndDate(response.data.eventStartDate);
                 setEventLocation(response.data.eventLocation);
                 setAttendance(response.data.attendance);
                 setOffering(response.data.offering);
@@ -65,11 +65,11 @@ export const UpdateEventForm = ({ setIsRefreshing }: UpdateEventFormProps) => {
     const handleEventLocation = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEventLocation(e.target.value);
     }
-    const handleEventDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEventDate(e.target.value);
+    const handleStartDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEventStartDate(`${e.target.value}:00`);
     }
-    const handleEventTime = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEventTime(e.target.value);
+    const handleEventEndDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEventEndDate(`${e.target.value}:00`);
     }
     const handleSetDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setDescription(e.target.value);
@@ -113,8 +113,8 @@ export const UpdateEventForm = ({ setIsRefreshing }: UpdateEventFormProps) => {
                 sessionStorage.getItem("id") || "0",
                 eventName,
                 eventType,
-                eventDate,
-                eventTime,
+                eventStartDate,
+                eventEndDate,
                 eventLocation,
                 attendance.toString(),
                 offering.toString(),
@@ -130,8 +130,8 @@ export const UpdateEventForm = ({ setIsRefreshing }: UpdateEventFormProps) => {
                 console.log("Response:", response.message);
                 setEventName("");
                 setEventType("");
-                setEventDate("");
-                setEventTime("");
+                setEventStartDate("");
+                setEventEndDate("");
                 setEventLocation("");
                 setAttendance(0);
                 setOffering(0);
@@ -245,8 +245,8 @@ export const UpdateEventForm = ({ setIsRefreshing }: UpdateEventFormProps) => {
                             className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             id="new-date"
                             type="date"
-                            value={eventDate}
-                            onChange={handleEventDate}
+                            value={eventStartDate}
+                            onChange={handleStartDate}
                             name="event-date-input"
                             required
                         />
@@ -262,8 +262,8 @@ export const UpdateEventForm = ({ setIsRefreshing }: UpdateEventFormProps) => {
                             className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             id="time"
                             type="time"
-                            value={eventTime}
-                            onChange={handleEventTime}
+                            value={eventEndDate}
+                            onChange={handleEventEndDate}
                             required
                             name="event-time-input"
                         />

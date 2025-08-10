@@ -1,8 +1,25 @@
 import { useState, useEffect, useRef } from "react";
 import "../styles/Home.css";
 import { Link } from "react-router-dom";
-import { scroll } from "motion";
+import { easeInOut, scroll } from "motion";
+import image1 from "../../assets/img/hero2.jpg";
+import image2 from "../../assets/img/hero.jpg";
+import image3 from "../../assets/img/hero4.jpg";
+import image4 from "../../assets/img/hero5.jpg";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FaCalendar } from "react-icons/fa6";
 export const Home = (prop: any) => {
+  const navigate = useNavigate();
+  const [currentImage, setCurrentImage] = useState(0);
+  const images = [image1, image2, image3, image4];
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % images.length);
+    }, 5000);
+
+    return () => clearInterval(interval); // cleanup on unmount
+  }, [images.length]);
   return (
     <>
       <div className="w-screen min-h-screen overflow-x-hidden">
@@ -32,251 +49,228 @@ export const Home = (prop: any) => {
               </Link>
             </div> */}
 
-            <div className="shadow-sm w-[80%] h-[26rem] rounded-md relative myhero">
-              <div className="absolute bottom-20 left-10 text-white">
-                <p className="">A Place to Grow in Faith, Hope, and Love</p>
-                <h3 className="text-xl ">BIBLE BAPTIST OF EKLESSIA KAWIT CAVITE</h3>
-                <button className="bg-blue-600 w-32 h-14 p-2">PLAN YOUR VISIT</button>
-                <button>GET DIRECTIONS</button>
+
+            <motion.div
+              className="shadow-sm w-[80%] h-[26rem] mt-2 relative">
+              <img src={images[currentImage]} alt="" className="absolute h-100 w-100 object-cover rounded-md transition-all ease-in-out " />
+              <div className="absolute bottom-10 left-10 text-gray-100">
+                <motion.p initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.2 }} className="">A Place to Grow in Faith, Hope, and Love</motion.p>
+                <motion.h3 initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.2 }} className="text-xl font-bold">BIBLE BAPTIST OF EKLESSIA KAWIT CAVITE</motion.h3>
+                <motion.button initial={{ scale: 0 }} animate={{ scale: 1 }} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.2 }} className="bg-blue-600 w-36 h-14  rounded-md text-sm mr-2 mt-2" onClick={() => { navigate("beoneofus/waterbaptism") }}>GET INVOLED</motion.button>
+                <motion.button initial={{ scale: 0 }} animate={{ scale: 1 }} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.2 }} className="bg-gray-400  w-36 h-14 rounded-md text-sm bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100" onClick={() => { navigate("plan-your-visit") }}>PLAN YOUR VISITS</motion.button>
               </div>
-            </div>
+
+              <div className="absolute right-10 bottom-12 text-gray-100 text-end">
+                <motion.p initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.2 }} className="text-lg">We invite you to attend our Sunday worship.</motion.p>
+                <motion.h3 initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.2 }} className="text-2xl font-bold">SUNDAYS | 9:30 AM - 10:30AM</motion.h3>
+                <motion.p initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.2 }} className="text-base">485 Acacia St. Villa Ramirez Tabon 1, Kawit Cavite</motion.p>
+              </div>
+              <div className="absolute w-full bottom-5 text-gray-100 flex items-center justify-center gap-2">
+                {
+                  images.map((_, index) => (
+                    <motion.div
+                      animate={{ scale: 1 }}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      key={index}
+                      className={`h-3 w-3 rounded-full hover:cursor-pointer ${currentImage === index ? 'bg-gray-400' : 'bg-slate-100'}`}
+                      onClick={() => setCurrentImage(index)}
+                    ></motion.div>
+                  ))
+                }
+              </div>
+            </motion.div>
           </div>
         </div>
-        {/**service & location */}
-
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row animate-fade-in">
-              <div className="w-full md:w-1/2 border-r border-gray-200 px-4 md:px-12 mb-8 md:mb-0 animate-slide-in-left">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                  service time
-                </h2>
-                <h3 className="text-xl font-medium text-gray-800">
-                  Sunday Mornings
-                </h3>
-                <p className="text-2xl font-bold text-gray-900 mb-2">
-                  9:00 to 10:30 AM<sup>*</sup>
-                </p>
-                <p className="text-xs text-gray-500">
-                  *End time is approximate.
-                </p>
-              </div>
-              <div className="w-full md:w-1/2 px-4 md:px-12 animate-slide-in-right">
-                <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                  location
-                </h2>
-                <h3 className="text-xl font-medium text-gray-800">
-                  Bible Baptist Ekklesia of Kawit
-                </h3>
-                <p className="text-xl text-gray-900 mb-1">
-                  485 Acacia St. Villa Ramirez
-                </p>
-                <p className="text-xl text-gray-900">Tabon 1, Kawit, Cavite</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/** plan visit*/}
-        <div
-          className={`w-100 h-auto text-center flex flex-col justify-center items-center lg:p-5`}
+        {/**about us */}
+        <motion.section
+          initial={{ backgroundColor: '#ffffff', opacity: 0 }}
+          whileInView={{
+            backgroundColor: '#f3f4f6', // Tailwind bg-gray-100
+            opacity: 1,
+            transition: { ease: 'easeInOut', delay: 0.2 }
+          }}
+          viewport={{ once: false, amount: 0.2 }} // Trigger every time, when 20% is visible
+          className="py-16 bg-gray-100"
         >
-          <div>
-            <h3 className="text-3xl font-bold">Plan Your Visit</h3>
-            <p className="text-lg max-w-2xl break-words my-3">
-              We're excited to welcome you to Bible Baptist Ekklesia of Kawit.
-              Here's everything you need to know for your first visit.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-            <div className="border text-card-foreground bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
-              <div className="p-6">
-                <div className="flex items-center justify-center mb-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-clock h-6 w-6 text-blue-600"
-                    >
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <polyline points="12 6 12 12 16 14"></polyline>
-                    </svg>
-                  </div>
-                </div>
-                <h3 className="text-xl font-bold mb-2 text-center">
-                  Service Times
-                </h3>
-                <div className="space-y-3">
-                  <div className="text-center">
-                    <p className="font-medium">Sunday Worship Service</p>
-                    <p className="text-gray-600">9:00 AM - 11:00 AM</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-medium">Bible Study</p>
-                    <p className="text-gray-600">
-                      Wednesday, 7:00 PM - 8:30 PM
-                    </p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-medium">Youth Fellowship</p>
-                    <p className="text-gray-600">Friday, 6:00 PM - 8:00 PM</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="border text-card-foreground bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
-              <div className="p-6">
-                <div className="flex items-center justify-center mb-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-map-pin h-6 w-6 text-blue-600"
-                    >
-                      <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path>
-                      <circle cx="12" cy="10" r="3"></circle>
-                    </svg>
-                  </div>
-                </div>
-                <h3 className="text-xl font-bold mb-2 text-center">Location</h3>
-                <div className="space-y-3">
-                  <div className="text-center">
-                    <p className="font-medium">
-                      Bible Baptist Ekklesia of Kawit
-                    </p>
-                    <p className="text-gray-600">
-                      485 Acacia St. Villa Ramirez
-                    </p>
-                    <p className="text-gray-600">Tabon 1, Kawit, Cavite</p>
-                  </div>
-                  <div className="mt-4">
-                    <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden">
-                      <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3863.5!2d120.9!3d14.4!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTTCsDI0JzAwLjAiTiAxMjDCsDU0JzAwLjAiRQ!5e0!3m2!1sen!2sph!4v1623456789012!5m2!1sen!2sph"
-                        width="100%"
-                        height="100%"
-                        loading="lazy"
-                        title="Church Location"
-                        style={{ border: "0px" }}
-                      ></iframe>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="border text-card-foreground bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300">
-              <div className="p-6">
-                <div className="flex items-center justify-center mb-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-users h-6 w-6 text-blue-600"
-                    >
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                      <circle cx="9" cy="7" r="4"></circle>
-                      <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                      <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                  </div>
-                </div>
-                <h3 className="text-xl font-bold mb-2 text-center">
-                  What to Expect
-                </h3>
-                <div className="space-y-3">
-                  <div>
-                    <p className="font-medium">Dress Code</p>
-                    <p className="text-gray-600">
-                      Come as you are! We have no formal dress code.
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-medium">Children</p>
-                    <p className="text-gray-600">
-                      Children's ministry available during Sunday service.
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-medium">Worship Style</p>
-                    <p className="text-gray-600">
-                      Contemporary and traditional worship songs.
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-medium">Service Length</p>
-                    <p className="text-gray-600">Approximately 1.5 hours.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/**who we are */}
-
-        {/* welcome greeting */}
-        <section className="py-20 bg-white">
-          <div className="container mx-auto px-4 text-center animate-fade-in-up">
-            <h2 className="text-4xl font-bold mb-6">
-              Welcome to Bible Baptist Ekklesia
+          <div className="container mx-auto px-4 flex flex-col items-center animate-fade-in-up">
+            <h2 className="text-4xl font-bold text-gray-900 mb-6 text-center">
+              About our Church
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              Bible Baptist Ekklesia of Kawit is an independent Baptist church
-              founded on the principles of Biblical authority, salvation by
-              grace through faith in Jesus Christ, the priesthood of all
-              believers, the autonomy of the local church, and the Great
-              Commission to make disciples of all nations.
+            <p className="text-lg text-gray-700 max-w-3xl mx-auto mb-8 text-center">
+              We are independent Bible Baptist Church fulfilling and carry-out Christ great commission to propagate the Gospel to all mankind and win souls to Christ as found in Matthew 28:19-20. Firmly preach the word of truth into the world.
+              Our church started its mission work in Kawit in 2006 and has been growing ever since, supporting both local and foreign missionaries
             </p>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              We are committed to proclaiming the Gospel of Jesus Christ, making
-              disciples through Biblical teaching, and serving our community
-              with the love of Christ. We welcome people from all walks of life
-              to join us in worship and fellowship as we seek to grow in our
-              relationship with God.
-            </p>
-            <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 h-11 bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 py-6 text-lg font-medium hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
-              <span className="mr-2">LEARN MORE ABOUT US</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-arrow-right h-5 w-5 transition-transform group-hover:translate-x-1"
-              >
-                <path d="M5 12h14"></path>
-                <path d="m12 5 7 7-7 7"></path>
-              </svg>
-            </button>
+            <motion.button
+              initial={{ scale: 0 }} animate={{ scale: 1 }} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.2 }}
+              onClick={() => navigate("/landpage/about/aboutus")}
+              className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors duration-300">
+              Learn More About Us
+            </motion.button>
+
           </div>
-        </section>
+        </motion.section>
+
+
+        {/** upcoming events*/}
+        <motion.div
+          initial={{ backgroundColor: '#ffffff', opacity: 0 }}
+          whileInView={{
+            opacity: 1,
+            transition: { ease: 'easeInOut', delay: 0.2 }
+          }}
+          viewport={{ once: false, amount: 0.2 }}
+          className={` container mx-auto flex flex-col lg:p-5`}>
+          <h2 className="text-2xl font-bold text-gray-900 my-2">
+            Events
+          </h2>
+          {/* Repeat for more events */}
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="w-full  bg-white shadow-md rounded-sm overflow-hidden">
+              <div className="h-auto bg-gray-200 relative">
+                <div className="inset-0 bg-black/20 ">
+                  <img src={image1} alt="upcoming-event" className="h-52 w-100 object-cover" />
+                </div>
+              </div>
+              <div className="flex flex-col md:flex-row items-center justify-between">
+                <div className="text-2xl text-center text-blue-600">Aug 08</div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold mb-2">World Mission Conference</h3>
+                  <p className="text-gray-600 mb-4">A whole day event that aims to give support for foreign and local missionaries all over the world.</p>
+                  <p className="text-sm text-gray-500">Friday, 8:00 AM - 5:00 PM</p>
+                </div>
+              </div>
+
+            </div>
+
+            <div className="w-full flex flex-col items-center gap-2  bg-white shadow-md rounded-sm overflow-hidden p-4">
+              <div className="h-22 w-100 shadow-sm bg-blue-500 flex items-center gap-2">
+                <div className="text-2xl text-center text-white p-2">
+                  <p>Aug</p>
+                  <p className="text-4xl font-bold">18</p>
+                </div>
+                <img src={image4} className="h-20 w-28 object-cover" />
+                <div className="text-white p-2">
+                  <h3 className="text-lg font-semibold">Water Baptism</h3>
+                  <p className="text-sm">Baptism service for new believers who have accepted Christ as their Savior.</p>
+                  <p className="text-sm">Sunday, 2:00 PM - 4:00 PM</p>
+                </div>
+              </div>
+
+              <div className="h-22 w-100 shadow-sm bg-blue-500 flex items-center gap-2">
+                <div className="text-2xl text-center text-white p-2">
+                  <p>Sep</p>
+                  <p className="text-4xl font-bold">20</p>
+                </div>
+                <img src={image2} className="h-20 w-28 object-cover" />
+                <div className="text-white p-2">
+                  <h3 className="text-lg font-semibold">Church Anniversary</h3>
+                  <p className="text-sm">Celebrating years of God's blessing in our church with special worship service.</p>
+                  <p className="text-sm">Sunday, 9:30 AM - 12:00 PM</p>
+                </div>
+              </div>
+
+              <div className="h-22 w-100 shadow-sm bg-blue-500 flex items-center gap-2">
+                <div className="text-2xl text-center text-white p-2">
+                  <p>Sep</p>
+                  <p className="text-4xl font-bold">21</p>
+                </div>
+                <img src={image4} className="h-20 w-28 object-cover" />
+                <div className="text-white p-2">
+                  <h3 className="text-lg font-semibold">Church Anniversary</h3>
+                  <p className="text-sm">Celebrating years of God's blessing in our church with special worship service.</p>
+                  <p className="text-sm">Sunday, 9:30 AM - 12:00 PM</p>
+                </div>
+              </div>
+
+              <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-300 mt-4" onClick={() => { navigate('events/allevents') }}>
+                See More
+              </button>
+            </div>
+          </div>
+        </motion.div>
+
+        {/**ministries */}
+        <motion.section
+          initial={{ backgroundColor: '#ffffff', opacity: 0 }}
+          whileInView={{
+            backgroundColor: '#f3f4f6', // Tailwind bg-gray-100
+            opacity: 1,
+            transition: { ease: 'easeInOut', delay: 0.2 }
+          }}
+          viewport={{ once: false, amount: 0.2 }}
+          className="lg:p-5 bg-gray-100">
+          <div className=" container mx-auto flex flex-col items-center">
+            <div className="w-100 "> <h2 className=" text-2xl font-bold text-start text-gray-800 py-2">Ministries</h2></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="w-100 bg-white shadow-md rounded-lg p-2 flex items-center gap-3">
+                <img src={image1} alt="Ministry Image" className="w-42 h-32 object-cover rounded-md" />
+                <div className="">
+                  <h3 className="text-lg font-semibold">Soulwinning/Evangelism</h3>
+                  <p className="text-gray-600">Reaching out to the community with the Gospel of Jesus Christ.</p>
+                  <div className="flex items-center gap-2"><FaCalendar /><span>Saturday</span></div>
+                </div>
+              </div>
+
+              <div className="w-100 bg-white shadow-md rounded-lg p-2 flex gap-3">
+                <img src={image2} alt="Ministry Image" className="w-42 h-32 object-cover rounded-md" />
+                <div className="">
+                  <h3 className="text-lg font-semibold">Soulwinning/Evangelism</h3>
+                  <p className="text-gray-600">Reaching out to the community with the Gospel of Jesus Christ.</p>
+                  <div className="flex items-center gap-2"><FaCalendar /><span>Saturday</span></div>
+                </div>
+              </div>
+
+              <div className="w-100 bg-white shadow-md rounded-lg p-2 flex items-center gap-3">
+                <img src={image3} alt="Ministry Image" className="w-42 h-32 object-cover rounded-md" />
+                <div className="">
+                  <h3 className="text-lg font-semibold">Soulwinning/Evangelism</h3>
+                  <p className="text-gray-600">Reaching out to the community with the Gospel of Jesus Christ.</p>
+                  <div className="flex items-center gap-2"><FaCalendar /><span>Saturday</span></div>
+                </div>
+              </div>
+
+              <div className="w-100 bg-white shadow-md rounded-lg p-2 flex items-center gap-3">
+                <img src={image3} alt="Ministry Image" className="w-42 h-32 object-cover rounded-md" />
+                <div className="">
+                  <h3 className="text-lg font-semibold">Soulwinning/Evangelism</h3>
+                  <p className="text-gray-600">Reaching out to the community with the Gospel of Jesus Christ.</p>
+                  <div className="flex items-center gap-2"><FaCalendar /><span>Saturday</span></div>
+                </div>
+              </div>
+            </div>
+
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-300 mt-4" onClick={()=>{navigate("/landpage/ministries")}}>
+              See More
+            </button>
+
+          </div>
+        </motion.section>
+
+        <motion.section initial={{ backgroundColor: '#ffffff', opacity: 0 }}
+          whileInView={{
+            opacity: 1,
+            transition: { ease: 'easeInOut', delay: 0.2 }
+          }}
+          viewport={{ once: false, amount: 0.2 }}
+          className="py-16 bg-white text-black">
+          <div className="container mx-auto px-4 text-center">
+            <h2 className="text-4xl font-bold mb-6">Join Our Community</h2>
+            <p className="text-xl mb-10 max-w-2xl mx-auto">
+              We invite you to be a part of our church family. Come worship with us and experience the love of Christ.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+
+              <button className="bg-blue-600 hover:bg-blue-400 text-white inline-flex items-center justify-center gap-2 whitespace-nowrap text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-11 rounded-full px-8"
+                onClick={() => { navigate('/landpage/beoneofus/waterbaptism') }}
+              >
+                Become a Member
+              </button>
+            </div>
+          </div>
+        </motion.section>
+
       </div>
     </>
   );

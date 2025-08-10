@@ -1,4 +1,5 @@
 import { use, useState } from "react";
+import dayjs from "dayjs";
 import { useSelector, useDispatch } from 'react-redux';
 import { hideLoader, showLoader, showSuccessDialog } from "../../../redux/dialog/DialogSlice";
 import { hideCreateEvent } from "../../../redux/staff/church_record/EventSlice";
@@ -12,8 +13,8 @@ export const CreateEventForm = ({setIsRefreshing}:CreateEventFormProps) => {
     const [showStatus, setShowStatus] = useState(false);
     const [showEventStatus, setShowEventStatus] = useState(false);
     const [eventType, setEventType] = useState("");
-    const [eventDate, setEventDate] = useState("");
-    const [eventTime, setEventTime] = useState("");
+    const [eventStartDate, setEventStartDate] = useState("");
+    const [eventEndDate, setEventEndDate] = useState("");
     const [eventLocation, setEventLocation] = useState("");
     const [attendance, setAttendance] = useState(0);
     const [offering, setOffering] = useState(0);
@@ -29,11 +30,11 @@ export const CreateEventForm = ({setIsRefreshing}:CreateEventFormProps) => {
     const handleEventLocation = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEventLocation(e.target.value);
     }
-    const handleEventDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEventDate(e.target.value);
+    const handleEventStartDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEventStartDate(`${e.target.value}:00`);
     }
-    const handleEventTime = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setEventTime(e.target.value);
+    const handleEventEndDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEventEndDate(`${e.target.value}:00`);
     }
     const handleSetDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setDescription(e.target.value);
@@ -76,8 +77,8 @@ export const CreateEventForm = ({setIsRefreshing}:CreateEventFormProps) => {
                 "0", 
                 eventName,
                 eventType,
-                eventDate,
-                eventTime,
+                eventStartDate,
+                eventEndDate,
                 eventLocation,
                 attendance.toString(),
                 offering.toString(),
@@ -93,8 +94,8 @@ export const CreateEventForm = ({setIsRefreshing}:CreateEventFormProps) => {
                 console.log("Response:", response.message);
                 setEventName("");
                 setEventType("");
-                setEventDate("");
-                setEventTime("");
+                setEventStartDate("");
+                setEventEndDate("");
                 setEventLocation("");
                 setAttendance(0);
                 setOffering(0);
@@ -107,11 +108,14 @@ export const CreateEventForm = ({setIsRefreshing}:CreateEventFormProps) => {
                     dispatch(hideLoader())
                 }, 1500);
             }else{
+            
                 dispatch(hideLoader())
             }
             
         } catch (err) {
             console.error("Save failed:", err);
+            alert("Failed to save event. Please try again.");
+            dispatch(hideLoader())
         }finally{
             setIsRefreshing(true); // Trigger a refresh of the event data
         }
@@ -203,14 +207,14 @@ export const CreateEventForm = ({setIsRefreshing}:CreateEventFormProps) => {
                             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             htmlFor="new-date"
                         >
-                            Event Date
+                            Event Start Date
                         </label>
                         <input
                             className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             id="new-date"
-                            type="date"
-                            value={eventDate}
-                            onChange={handleEventDate}
+                            type="dateTime-local"
+                            value={eventStartDate}
+                            onChange={handleEventStartDate}
                             name="event-date-input"
                             required
                         />
@@ -220,14 +224,14 @@ export const CreateEventForm = ({setIsRefreshing}:CreateEventFormProps) => {
                             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             htmlFor="new-time"
                         >
-                            Event Time
+                            Event End Date
                         </label>
                         <input
                             className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                            id="time"
-                            type="time"
-                            value={eventTime}
-                            onChange={handleEventTime}
+                            id="end-date"
+                            type="dateTime-local"
+                            value={eventEndDate}
+                            onChange={handleEventEndDate}
                             required
                             name="event-time-input"
                         />

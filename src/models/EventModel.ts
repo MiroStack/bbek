@@ -2,8 +2,8 @@ export interface EventModel{
   id:number;
   eventName: string;
   eventType: string;
-  eventDate: string;
-  eventTime: string;
+  eventStartDate: string;
+  eventEndDate: string;
   eventLocation: string;
   attendance: number;
   offering: number;

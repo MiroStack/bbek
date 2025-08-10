@@ -19,14 +19,14 @@ const EventRepo = {
     // console.log(token);
     return response.data;
   },
-  async saveEvent(id: string, eventName: string, eventType: string, eventDate: string, eventTime: string, eventLocation: string, attendance: string, offering: string, statusName: string, isUpdate: boolean, description: string, file: File): Promise<ApiResponseModel<EventModel>> {
+  async saveEvent(id: string, eventName: string, eventType: string, eventStartDate: string, eventEndDate: string, eventLocation: string, attendance: string, offering: string, statusName: string, isUpdate: boolean, description: string, file: File): Promise<ApiResponseModel<EventModel>> {
     const token = Cookies.getCookie("auth_token");
     const formData = new FormData();
     formData.append("id", id);
     formData.append("eventName", eventName);
     formData.append("eventType", eventType);
-    formData.append("eventDate", eventDate);
-    formData.append("eventTime", eventTime);
+    formData.append("eventStartDate", eventStartDate);
+    formData.append("eventEndDate", eventEndDate);
     formData.append("eventLocation", eventLocation);
     formData.append("attendance", attendance);
     formData.append("offering", offering);

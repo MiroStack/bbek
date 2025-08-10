@@ -64,6 +64,8 @@ import { ChurchEventsMember } from './member/views/services/ChurchEvents.tsx';
 import { MessageMember } from './member/views/communication/Message.tsx';
 import { PrayerRequestMember } from './member/views/communication/PrayerRequest.tsx';
 import { Homepage } from './landpage/view/home/Homepage.tsx';
+import { LeadersAndOfficers } from './landpage/view/about/LeadersAndOfficers.tsx';
+import { PlanYourVisit } from './landpage/view/PlanYourVisit.tsx';
 
 function App() {
 
@@ -77,6 +79,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path='about' element={<AboutPage />}>
               <Route index path="aboutus" element={<AboutUsPage />}></Route>
+              <Route index path ="leadersandofficers" element={<LeadersAndOfficers />}></Route>
               <Route index path="mission" element={<MissionPage />}></Route>
               <Route index path="vision" element={<VisionPage />}></Route>
               <Route index path="leadership" element={<LeadershipPage />}></Route>
@@ -94,6 +97,7 @@ function App() {
             <Route index path="live" element={<LivePage />} />
             <Route index path="give" element={<GivePage />} />
             <Route index path="ministries" element={<MinistriesPage />} />
+            <Route index path="plan-your-visit" element={<PlanYourVisit />} />
           </Route>
 
           {/* Admin layout with nested routes */}

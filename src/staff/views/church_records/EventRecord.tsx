@@ -12,6 +12,7 @@ import { ErrorDialog2 } from "../../../component/dialog/ErrorDialog2";
 import { hideLoader, showErrorDialog, showLoader, showSuccessDialog, showWarningDialog } from "../../../redux/dialog/DialogSlice";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 import { UpdateEventForm } from "../../components/events/UpdateEventForm";
+import dayjs from "dayjs";
 export const EventRecordPage = () => {
     const eventCreateForm = useAppSelector((state) => state.eventForm.value);
     const eventEditForm = useAppSelector((state) => state.eventForm.edit);
@@ -49,7 +50,8 @@ export const EventRecordPage = () => {
                 }, 1500);
             }
         } catch (e) {
-            console.error("Error deleting event:", e);
+ 
+            alert(e);
             sessionStorage.setItem("message", "Failed to delete event. Please try again.");
             dispatch(hideLoader());
             dispatch(showErrorDialog());
@@ -204,9 +206,9 @@ export const EventRecordPage = () => {
                                                 <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
                                                     {item.eventName}
                                                 </td>
-                                                <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{item.eventDate}</td>
+                                                <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{dayjs(item.eventStartDate).format("MMMM D, YYYY h:mm A")}</td>
                                                 <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                                                    {item.eventTime}
+                                                    {dayjs(item.eventEndDate).format("MMMM D, YYYY h:mm A")}
                                                 </td>
                                                 <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
                                                     {item.eventLocation}

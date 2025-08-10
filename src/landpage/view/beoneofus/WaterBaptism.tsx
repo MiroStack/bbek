@@ -1,9 +1,32 @@
+import { motion } from 'framer-motion'
+import { useNavigate } from 'react-router-dom';
 export const WaterBaptismPage = () => {
+    const navigate = useNavigate();
     return (
         <>
             <div className="w-screen h-auto items-center flex flex-col justify-center  bg-gray-100">
                 <main className="w-100 flex-1">
-                    <section className="relative py-20 md:py-28 bg-blue-600">
+                    <motion.section
+                        className="w-full mt-28 flex flex-col items-center justify-center bg-cover bg-center relative">
+                        <div className=" bg-gray-100 w-100 flex flex-col items-center justify-center p-8">
+                            <motion.h2
+                                initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.2 }}
+                                className="text-4xl font-bold text-blue-500">Water Baptism</motion.h2>
+                            <motion.p
+                                initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.5 }}
+                                className="text-lg text-gray-700 mt-4 max-w-2xl text-center">
+                                Take the next step in your faith journey through water baptism, a public
+                                declaration of your commitment to follow Jesus Christ.
+                            </motion.p>
+
+                            <div>
+                                <motion.button initial={{ scale: 0 }} animate={{ scale: 1 }} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.2 }} onClick={() => { window.location.href = "#learn-more" }} className="bg-blue-600 w-36 h-14 text-white  rounded-md text-sm mr-2 mt-2" >LEARN MORE</motion.button>
+                                <motion.button initial={{ scale: 0 }} animate={{ scale: 1 }} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.2 }} onClick={() => { window.location.href = "#register" }} className="bg-gray-400  w-36 h-14 rounded-md text-sm bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100">REQUEST TO JOIN</motion.button>
+                            </div>
+                        </div>
+                    </motion.section>
+
+                    {/* <section className="relative py-20 md:py-28 bg-gray-200">
                         <div className="container mx-auto px-4 text-center">
                             <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 animate-fade-in">
                                 Water Baptism
@@ -16,21 +39,16 @@ export const WaterBaptismPage = () => {
                                 declaration of your commitment to follow Jesus Christ.
                             </p>
                         </div>
-                        <div className="absolute bottom-0 left-0 right-0">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 1440 120"
-                                className="w-full"
-                            >
-                                <path
-                                    fill="#ffffff"
-                                    fillOpacity="1"
-                                    d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"
-                                ></path>
-                            </svg>
-                        </div>
-                    </section>
-                    <section className="py-16 bg-white">
+                       
+                    </section> */}
+                    <motion.section
+                        initial={{ backgroundColor: '#ffffff', opacity: 0 }}
+                        whileInView={{
+                            backgroundColor: '#f3f4f6', // Tailwind bg-gray-100
+                            opacity: 1,
+                            transition: { ease: 'easeInOut', delay: 0.2 }
+                        }}
+                        className="py-16 bg-white" id='learn-more'>
                         <div className="container mx-auto px-4">
                             <div className="max-w-4xl mx-auto">
                                 <h2
@@ -229,8 +247,14 @@ export const WaterBaptismPage = () => {
                                 </div>
                             </div>
                         </div>
-                    </section>
-                    <section className="py-16 bg-gray-50">
+                    </motion.section>
+                    <motion.section
+                        initial={{ opacity: 0 }}
+                        whileInView={{
+                            opacity: 1,
+                            transition: { ease: 'easeInOut', delay: 0.2 }
+                        }}
+                        className="py-16 bg-gray-50" id='register'>
                         <div className="container mx-auto px-4">
                             <div className="max-w-2xl mx-auto">
                                 <h2
@@ -321,7 +345,7 @@ export const WaterBaptismPage = () => {
                                                     id="date"
                                                     className="hover:cursor-pointer w-full p-2 border rounded-md transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                                                 />
-                                                  
+
                                             </div>
                                             <div className="space-y-2">
                                                 <label
@@ -346,7 +370,7 @@ export const WaterBaptismPage = () => {
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </motion.section>
                 </main>
             </div>
         </>

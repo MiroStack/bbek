@@ -2,47 +2,42 @@ import { useState } from "react";
 import BackgroundImage from "../../assets/img/placeholder.svg";
 import { GiveInPersonCard } from "../components/GiveInPersonCard";
 import { GiveOnlineForm } from "../components/GiveOnlineForm";
+import { motion } from "framer-motion";
 export const GivePage = () => {
   const [showForm, setShowForm] = useState(true);
-  const displayForm = ()=>{
+  const displayForm = () => {
     setShowForm(true);
   }
-  const hideForm =()=>{
+  const hideForm = () => {
     setShowForm(false);
   }
 
   return (
     <>
       <div className="w-screen h-auto items-center flex flex-col justify-center">
-        <section className="relative w-100 h-[60vh] min-h-[400px] flex items-center justify-center">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: `url("${BackgroundImage}")`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center center',
-              filter: 'brightness(0.5)',
-            }}
-          ></div>
-          <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight">
-              DONATION</h1>
-            <p className="text-xl md:text-2xl text-white font-light">Supporting the mission and ministry of our church</p>
+        <motion.section
+          className="w-full mt-28 flex flex-col items-center justify-center bg-cover bg-center relative">
+          <div className=" bg-gray-100 w-100 flex flex-col items-center justify-center p-8">
+            <motion.h2
+              initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.2 }}
+              className="text-4xl font-bold text-blue-500">Give to Help Those in Need</motion.h2>
+            <motion.p
+              initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.5 }}
+              className="text-lg text-gray-700 mt-4 max-w-2xl text-center">
+             Your gift changes lives. Every donation helps us share God’s Word, serve our community, and support those in need. Together, we can make a lasting impact.
+            </motion.p>
+
+            <div>
+              <motion.button initial={{ scale: 0 }} animate={{ scale: 1 }} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.2 }} onClick={() => { window.location.href = "#learn-more" }} className="bg-blue-600 w-36 h-14 text-white  rounded-md text-sm mr-2 mt-2" >LEARN MORE</motion.button>
+              <motion.button initial={{ scale: 0 }} animate={{ scale: 1 }} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} transition={{ duration: 0.2 }} onClick={() => { window.location.href = "#give-section" }} className="bg-gray-400  w-36 h-14 rounded-md text-sm bg-clip-padding backdrop-filter backdrop-blur-sm bg-opacity-10 border border-gray-100">Give</motion.button>
+            </div>
           </div>
-          <div className="absolute bottom-0 left-0 right-0">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" className="w-full">
-              <path
-                fill="#ffffff"
-                fillOpacity="1"
-                d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"
-              ></path>
-            </svg>
-          </div>
-        </section>
+        </motion.section>
+       
         {/* give content */}
         <div className="h-auto w-100 mx-5 py-5 flex flex-col items-center justify-center gap-2">
           <main className="flex-1 bg-white">
-            <section className="py-16 bg-white">
+            <section className="py-16 bg-white" id="give-section">
               <div className="container mx-auto px-4">
                 <div className="max-w-3xl mx-auto text-center mb-12">
                   <h2 className="text-3xl font-bold mb-4">Give Generously</h2>
@@ -70,7 +65,7 @@ export const GivePage = () => {
                         aria-controls="radix-«r8e»-content-online"
                         data-state="active"
                         id="radix-«r8e»-trigger-online"
-                        className={`${showForm?"bg-blue-600 text-white":"bg-white text-black"} inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm text-base py-3`}
+                        className={`${showForm ? "bg-blue-600 text-white" : "bg-white text-black"} inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm text-base py-3`}
                         tabIndex={-1}
                         onClick={displayForm}
                         data-orientation="horizontal"
@@ -85,7 +80,7 @@ export const GivePage = () => {
                         aria-controls="radix-«r8e»-content-other"
                         data-state="inactive"
                         id="radix-«r8e»-trigger-other"
-                        className={`${!showForm?"bg-blue-600 text-white":"bg-white text-black"} inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm text-base py-3`}
+                        className={`${!showForm ? "bg-blue-600 text-white" : "bg-white text-black"} inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm text-base py-3`}
                         tabIndex={-1}
                         onClick={hideForm}
                         data-orientation="horizontal"
@@ -106,10 +101,10 @@ export const GivePage = () => {
                     >
                       {/* {form} */}
                       {
-                        showForm?<GiveOnlineForm/>:<GiveInPersonCard/>
+                        showForm ? <GiveOnlineForm /> : <GiveInPersonCard />
                       }
                       {/* <GiveOnlineForm/> */}
-                      
+
 
                     </div>
                     <div
@@ -126,7 +121,7 @@ export const GivePage = () => {
                 </div>
               </div>
             </section>
-            <section className="py-16 bg-gray-50">
+            <section className="py-16 bg-gray-50" id="learn-more">
               <div className="container mx-auto px-4">
                 <div className="max-w-3xl mx-auto">
                   <h2 className="text-3xl font-bold mb-6 text-center">Why We Give</h2>
