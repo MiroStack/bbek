@@ -19,6 +19,15 @@ body {
   font-weight: normal;
   font-style: normal;
 }
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear{
+  display: none;
+}
+input[type="password"]::-webkit-contacts-auto-fill-button,
+input[type="password"]::-webkit-clear-button{
+  display: none;
+}
 /* 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

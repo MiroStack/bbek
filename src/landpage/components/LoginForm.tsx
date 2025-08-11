@@ -2,6 +2,8 @@ import { IoMdClose } from "react-icons/io";
 import AuthRepo from "../../repositories/AuthRepo";
 import Logo from "../../assets/img/logobbek.jpg"
 import { useNavigate } from "react-router-dom";
+import {FaEyeSlash, FaEye} from "react-icons/fa";
+import { useState } from "react";
 type LoginProps = {
     show: boolean;
     setShowLogin: React.Dispatch<React.SetStateAction<boolean>>;
@@ -11,6 +13,8 @@ type LoginProps = {
 export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin, setShowLoader, setShowError }) => {
     const setLoader = setShowLoader;
     const setError = setShowError;
+    const [showPassword, setShowPassword] = useState(false);
+    const handleShowPassword =()=> setShowPassword(!showPassword);
     const showErrorDialog = () => setError(true);
     const closeLogin = () => setShowLogin(false);
     const username = (document.getElementById('username') as HTMLInputElement);
@@ -87,14 +91,14 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin, setShowLoa
                     <div className="space-y-2">
                         <label
                             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            htmlFor="username"
+                            htmlFor="email"
                         >
-                            Username
+                            Email
                         </label>
                         <input
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
-                            id="username"
-                            placeholder="Enter your username"
+                            id="email"
+                            placeholder="Enter your email"
                             required
                             type="text"
                         // value=""
@@ -113,28 +117,15 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin, setShowLoa
                                 id="password"
                                 placeholder="Enter your password"
                                 required
-                                type="password"
+                                type={showPassword?'text':'password'}
                             // value=""
                             />
                             <button
                                 type="button"
                                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                                onClick={handleShowPassword}
                             >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="lucide lucide-eye h-4 w-4"
-                                >
-                                    <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
+                              {showPassword?<FaEyeSlash/>:<FaEye/>}
                             </button>
                         </div>
                     </div>
@@ -164,8 +155,8 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin, setShowLoa
                     </button>
                     <div className="text-sm text-center text-gray-600 pt-2">
                         Don't have an account?{" "}
-                        <a className="text-blue-600 hover:underline" href="/register">
-                            Register
+                        <a className="text-blue-600 hover:underline" href="/landpage/beoneofus/waterbaptism">
+                            Become a member
                         </a>
                     </div>
                 </form>

@@ -115,7 +115,7 @@ export const Home = (prop: any) => {
 
         {/** upcoming events*/}
         <motion.div
-          initial={{ backgroundColor: '#f2f2f2', opacity: 0 }}
+          initial={{ opacity: 0 }}
           whileInView={{
             opacity: 1,
             transition: { ease: 'easeInOut', delay: 0.2 }
@@ -128,7 +128,7 @@ export const Home = (prop: any) => {
           {/* Repeat for more events */}
           <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="w-full  bg-card  shadow-md rounded-sm overflow-hidden p-4">
-              <div className="h-auto bg-gray-200 relative">
+              <div className="h-auto bg-white relative">
                 <div className="inset-0 bg-black/20 ">
                   <img src={image1} alt="upcoming-event" className="h-52 w-100 object-cover" />
                 </div>
