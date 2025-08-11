@@ -115,7 +115,7 @@ export const Home = (prop: any) => {
 
         {/** upcoming events*/}
         <motion.div
-          initial={{ backgroundColor: '#ffffff', opacity: 0 }}
+          initial={{ backgroundColor: '#f2f2f2', opacity: 0 }}
           whileInView={{
             opacity: 1,
             transition: { ease: 'easeInOut', delay: 0.2 }
@@ -127,7 +127,7 @@ export const Home = (prop: any) => {
           </h2>
           {/* Repeat for more events */}
           <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="w-full  bg-white shadow-md rounded-sm overflow-hidden">
+            <div className="w-full  bg-card  shadow-md rounded-sm overflow-hidden p-4">
               <div className="h-auto bg-gray-200 relative">
                 <div className="inset-0 bg-black/20 ">
                   <img src={image1} alt="upcoming-event" className="h-52 w-100 object-cover" />
@@ -144,7 +144,7 @@ export const Home = (prop: any) => {
 
             </div>
 
-            <div className="w-full flex flex-col items-center gap-2  bg-white shadow-md rounded-sm overflow-hidden p-4">
+            <div className="w-full flex flex-col items-center gap-2  bg-card shadow-md rounded-sm overflow-hidden p-4">
               <div className="h-22 w-100 shadow-sm bg-blue-500 flex items-center gap-2">
                 <div className="text-2xl text-center text-white p-2">
                   <p>Aug</p>
