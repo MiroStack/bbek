@@ -11,6 +11,7 @@ import { ErrorDialog } from "./components/ErrorDialog";
 import { Cookies } from "../util/Cookies";
 import { SocialMediaGroups } from "./components/SocialMediaGroud";
 import { Navigation } from "./components/Navigation";
+import { WatchLive } from "./components/WacthLive";
 
 export const LandPage = () => {
     const [showLogin, setShowLogin] = useState(false);
@@ -72,6 +73,7 @@ export const LandPage = () => {
             <Loader loader={showLoader} />
             <ErrorDialog error={showError} message={"Invalid username or password!"} setShowError={setShowError}/>
             <SocialMediaGroups/>
+            <WatchLive/>
         </div>
     );
 }
