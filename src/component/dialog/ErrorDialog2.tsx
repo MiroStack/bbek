@@ -3,7 +3,7 @@ import { IoIosCheckmarkCircle, IoIosCloseCircle } from "react-icons/io";
 
 import { useAppSelector } from "../../redux/staff/hooks/hooks.tsx";
 import { useDispatch } from "react-redux";
-import { hideErrorDialog, hideSuccessDialog } from "../../redux/dialog/DialogSlice.ts";
+import { hideErrorDialog, hideLoader, hideSuccessDialog } from "../../redux/dialog/DialogSlice.ts";
 export const ErrorDialog2 = () => {
     const error_dialog = useAppSelector((state) => state.dialog.error);
     const dispatch = useDispatch();
@@ -19,6 +19,7 @@ export const ErrorDialog2 = () => {
                         () => {
                             dispatch(hideErrorDialog());
                             sessionStorage.removeItem("message");
+                           
                         }
                     }>Close</button>
                 </div>

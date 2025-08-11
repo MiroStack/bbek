@@ -9,7 +9,7 @@ import { Loader } from "../../../landpage/components/Loader";
 import { SuccessDialog } from "../../../component/dialog/SuccessDialog";
 import { WarningDialog } from "../../../component/dialog/WarningDialog";
 import { ErrorDialog2 } from "../../../component/dialog/ErrorDialog2";
-import { hideLoader, showErrorDialog, showLoader, showSuccessDialog, showWarningDialog } from "../../../redux/dialog/DialogSlice";
+import { hideErrorDialog, hideLoader, hideSuccessDialog, hideWarningDialog, showErrorDialog, showLoader, showSuccessDialog, showWarningDialog } from "../../../redux/dialog/DialogSlice";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 import { UpdateEventForm } from "../../components/events/UpdateEventForm";
 import dayjs from "dayjs";
@@ -35,7 +35,7 @@ export const EventRecordPage = () => {
             const res = await EventRepo.getAllEvent();
             setEventDate(res);
         } catch (e) {
-
+            console.error(e);
         }
     }
     const handleDeleteEvent = async () => {
@@ -50,7 +50,6 @@ export const EventRecordPage = () => {
                 }, 1500);
             }
         } catch (e) {
- 
             alert(e);
             sessionStorage.setItem("message", "Failed to delete event. Please try again.");
             dispatch(hideLoader());
@@ -65,13 +64,12 @@ export const EventRecordPage = () => {
             <div className={`${eventCreateForm ? "" : "hidden"}`}>
                 <CreateEventForm setIsRefreshing={setIsRefreshing} />
             </div>
-             <div className={`${eventEditForm ? "" : "hidden"}`}>
+            <div className={`${eventEditForm ? "" : "hidden"}`}>
                 <UpdateEventForm setIsRefreshing={setIsRefreshing} />
             </div>
             <div className=''>
                 <Loader loader={loaderDialog} />
             </div>
-
             <div className={`${successDialog ? "" : "hidden"}`}>
                 <SuccessDialog />
             </div>

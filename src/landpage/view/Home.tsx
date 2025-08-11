@@ -48,8 +48,6 @@ export const Home = (prop: any) => {
                 </div>
               </Link>
             </div> */}
-
-
             <motion.div
               className="shadow-sm w-[80%] h-[26rem] mt-2 relative">
               <img src={images[currentImage]} alt="" className="absolute h-100 w-100 object-cover rounded-md transition-all ease-in-out " />
@@ -145,39 +143,39 @@ export const Home = (prop: any) => {
             </div>
 
             <div className="w-full flex flex-col items-center gap-2  bg-card shadow-md rounded-sm overflow-hidden p-4">
-              <div className="h-22 w-100 shadow-sm bg-blue-500 flex items-center gap-2">
-                <div className="text-2xl text-center text-white p-2">
+              <div className="h-22 w-100 shadow-md  rounded-sm  flex items-center gap-2">
+                <div className="text-2xl text-center text-blue-600 p-4">
                   <p>Aug</p>
                   <p className="text-4xl font-bold">18</p>
                 </div>
                 <img src={image4} className="h-20 w-28 object-cover" />
-                <div className="text-white p-2">
+                <div className="p-2">
                   <h3 className="text-lg font-semibold">Water Baptism</h3>
                   <p className="text-sm">Baptism service for new believers who have accepted Christ as their Savior.</p>
                   <p className="text-sm">Sunday, 2:00 PM - 4:00 PM</p>
                 </div>
               </div>
 
-              <div className="h-22 w-100 shadow-sm bg-blue-500 flex items-center gap-2">
-                <div className="text-2xl text-center text-white p-2">
+              <div className="h-22 w-100 shadow-md  rounded-sm  flex items-center gap-2">
+                <div className="text-2xl text-center text-blue-600 p-4">
                   <p>Sep</p>
                   <p className="text-4xl font-bold">20</p>
                 </div>
                 <img src={image2} className="h-20 w-28 object-cover" />
-                <div className="text-white p-2">
+                <div className="p-2">
                   <h3 className="text-lg font-semibold">Church Anniversary</h3>
                   <p className="text-sm">Celebrating years of God's blessing in our church with special worship service.</p>
                   <p className="text-sm">Sunday, 9:30 AM - 12:00 PM</p>
                 </div>
               </div>
 
-              <div className="h-22 w-100 shadow-sm bg-blue-500 flex items-center gap-2">
-                <div className="text-2xl text-center text-white p-2">
+              <div className="h-22 w-100 shadow-md  rounded-sm  flex items-center gap-2">
+                <div className="text-2xl text-center text-blue-600 p-4">
                   <p>Sep</p>
                   <p className="text-4xl font-bold">21</p>
                 </div>
                 <img src={image4} className="h-20 w-28 object-cover" />
-                <div className="text-white p-2">
+                <div className="p-2">
                   <h3 className="text-lg font-semibold">Church Anniversary</h3>
                   <p className="text-sm">Celebrating years of God's blessing in our church with special worship service.</p>
                   <p className="text-sm">Sunday, 9:30 AM - 12:00 PM</p>

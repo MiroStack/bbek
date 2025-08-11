@@ -17,15 +17,14 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin, setShowLoa
     const handleShowPassword =()=> setShowPassword(!showPassword);
     const showErrorDialog = () => setError(true);
     const closeLogin = () => setShowLogin(false);
-    const username = (document.getElementById('username') as HTMLInputElement);
-    const password = (document.getElementById('password') as HTMLInputElement);
+    const [usernameVal, setUsernameVal] = useState("");
+    const [passwordVal, setPasswordVal] = useState("");
     const navigate = useNavigate();
     async function handleLogin() {
         try {
             closeLogin();
             setLoader(true);
-            const usernameVal = username.value.trim();
-            const passwordVal = password.value.trim();
+
             const loginResponse = await AuthRepo.login(usernameVal, passwordVal);
             if (loginResponse.statusCode == 200) {
                 // sessionStorage.setItem("token", loginResponse.data.token);
@@ -49,11 +48,10 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin, setShowLoa
         } catch (error) {
             showErrorDialog();
             console.error('Login failed', error);
+            setLoader(false);
 
         } finally {
-            //clear
-            username.value = '';
-            password.value = '';
+
             setTimeout(() => setLoader(false), 1000);
             
         }
@@ -99,6 +97,8 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin, setShowLoa
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                             id="email"
                             placeholder="Enter your email"
+                            onChange={(e) => setUsernameVal(e.target.value)}
+                            value={usernameVal}
                             required
                             type="text"
                         // value=""
@@ -115,6 +115,8 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin, setShowLoa
                             <input
                                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                                 id="password"
+                                onChange={(e) => setPasswordVal(e.target.value)}
+                                value={passwordVal}
                                 placeholder="Enter your password"
                                 required
                                 type={showPassword?'text':'password'}
