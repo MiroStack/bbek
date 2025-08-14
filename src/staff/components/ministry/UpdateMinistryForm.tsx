@@ -20,7 +20,9 @@ export const UpdateMinistryForm = ({setIsRefresh}:UpdateMinistryFormProps) => {
     const[member, setMember] = useState(0);
     const [file, setFile] = useState<File | null>(null);
     useEffect(()=>{
-        getData();
+        if(ministryUpdate){
+            getData();
+        }
     },[ministryUpdate]);
 
     const handleSetMinistryName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -278,7 +280,7 @@ export const UpdateMinistryForm = ({setIsRefresh}:UpdateMinistryFormProps) => {
                             className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             id="new-description"
                             name="ministry-description-input"
-                            onChange={()=>handleSetDescription}
+                            onChange={handleSetDescription}
                             value={description}
                         ></textarea>
                     </div>

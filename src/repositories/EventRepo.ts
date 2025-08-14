@@ -62,7 +62,7 @@ const EventRepo = {
     );
     return response.data;
   },
-   async getEvent(id: number): Promise<ApiResponseModel<EventModel>> {
+  async getEvent(id: number): Promise<ApiResponseModel<EventModel>> {
     const token = Cookies.getCookie("auth_token");
     const response = await axios.get<ApiResponseModel<EventModel>>(
       `getEvent?id=${id}`,
@@ -75,6 +75,32 @@ const EventRepo = {
     );
     return response.data;
   },
+
+  async getUpcomingEvents(): Promise<ApiResponseModel<EventModel[]>> {
+    const token = Cookies.getCookie("auth_token");
+    const response = await axios.get<ApiResponseModel<EventModel[]>>(
+      "upcomingEvents",
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  },
+
+  async getEventImage(eventName: string): Promise<string> {
+  const response = await axios.get(`event_image`, {
+    params: { eventName },
+    responseType: "arraybuffer", // get raw binary
+  });
+
+  // Convert binary to a blob URL
+  const blob = new Blob([response.data], {
+    type: response.headers["content-type"], 
+  });
+  return URL.createObjectURL(blob);
+}
 
 
 };

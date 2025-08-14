@@ -9,6 +9,7 @@ import image2 from "../../../assets/img/hero.jpg";
 import image3 from "../../../assets/img/hero4.jpg";
 import image4 from "../../../assets/img/hero5.jpg";
 import { FaCalendarDays, FaClock, FaLocationDot } from "react-icons/fa6";
+import dayjs from "dayjs";
 
 export const AllEventsPage = () => {
   const images = [image1, image2, image3, image4];
@@ -25,7 +26,7 @@ export const AllEventsPage = () => {
     try {
       const res = await EventRepo.getAllEvent();
       setEventDate(res);
-    } catch (e) {}
+    } catch (e) { }
   };
   return (
     <>
@@ -94,9 +95,8 @@ export const AllEventsPage = () => {
                     onClick={toggleSort}
                   />
                   <div
-                    className={`absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg z-10  ${
-                      showSort ? "block" : "hidden"
-                    }`}
+                    className={`absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg z-10  ${showSort ? "block" : "hidden"
+                      }`}
                   >
                     <ul className="py-1">
                       <li
@@ -126,240 +126,83 @@ export const AllEventsPage = () => {
                 style={{}}
               >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-3">
-                    <div className="w-full h-auto">
-                      <img
-                        src={images[0]}
-                        alt="event-image"
-                        className="h-40 w-full object-cover"
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-center">
-                      <div className="flex flex-col justify-center mt-2">
-                        <h3 className="text-xl font-bold mb-2">
-                          World Mission Conference
-                        </h3>
-                        <div className="w-full h-auto flex gap-2 bottom-1">
-                          <div className="w-auto flex items-center justify-center gap-2 text-xs bg-blue-500 text-white rounded-sm px-1">
-                            <FaCalendarDays />
-                            <span>May 20, 2024</span>
-                          </div>
-
-                          <div className="w-auto flex items-center justify-center gap-2 text-xs bg-blue-500 text-white rounded-sm  px-1">
-                            <FaClock />
-                            <span>10:00 am -12:pm</span>
-                          </div>
-
-                          <div className="w-auto flex items-center justify-center gap-2 text-xs bg-blue-500 text-white rounded-sm">
-                            <FaLocationDot  />
-                            <span>Bible Baptist of Eklessia</span>
-                          </div>
-
+                  {
+                    eventData.map((event, index) => (
+                      <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-3 flex flex-col">
+                        <div className="w-full h-auto">
+                          
+                          <img
+                            src={`http://localhost:8081/bbek/event_image?eventName=${encodeURIComponent(event.eventName)}`} alt={event.eventName}
+                            className="h-40 w-full object-cover"
+                          />
                         </div>
-                        <p className="text-gray-600 mb-2">
-                          A whole day event that aims to give support for
-                          foreign and local missionaries all over the world.
-                        </p>
-                        <div className="space-y-2 text-sm flex items-center gap-2">
-                          {/* <div className=" w-[40%] bg-blue-100 text-blue-700 font-bold text-center rounded-md">
+
+                        <div className="flex items-center justify-center flex-grow">
+                          <div className="flex flex-col justify-center mt-2">
+                            <h3 className="text-xl font-bold mb-2">
+                              {event.eventName}
+                            </h3>
+                            <div className="w-full h-auto flex gap-2 bottom-1">
+                              <div className="w-auto flex items-center justify-center gap-2 text-xs bg-blue-500 text-white rounded-sm px-1">
+                                <FaCalendarDays />
+                                <span>{dayjs(event.eventStartDate).format("MMMM D, YYYY")}</span>
+                              </div>
+
+                              <div className="w-auto flex items-center justify-center gap-2 text-xs bg-blue-500 text-white rounded-sm  px-1">
+                                <FaClock />
+                                <span>{dayjs(event.eventStartDate).format("hh:mm A")}-{dayjs(event.eventEndDate).format("hh:mm A")}</span>
+                              </div>
+
+                              <div className="w-auto flex items-center justify-center gap-2 text-xs bg-blue-500 text-white rounded-sm">
+                                <FaLocationDot />
+                                <span>{event.eventLocation}</span>
+                              </div>
+
+                            </div>
+                            <p className="text-gray-600 mb-2">
+                              {event.description}
+                            </p>
+                            <div className="space-y-2 text-sm flex items-center gap-2">
+                              {/* <div className=" w-[40%] bg-blue-100 text-blue-700 font-bold text-center rounded-md">
                             <div className="text-sm">MAY</div>
                             <div className="text-2xl">14</div>
                             <div className="text-sm">2025</div>
                           </div> */}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    <div className="w-full flex items-center justify-center gap-3 mt-2">
-                      <motion.button
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        transition={{ duration: 0.2 }}
-                        className="bg-blue-600 w-36 h-12  text-white  rounded-md text-sm "
-                        onClick={() => {
-                          navigate("beoneofus/waterbaptism");
-                        }}
-                      >
-                        LEARN MORE
-                      </motion.button>
-                      <motion.button
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        transition={{ duration: 0.2 }}
-                        className="bg-gray-400  w-36 h-12  text-white rounded-md text-sm  border border-gray-100"
-                        onClick={() => {
-                          navigate("plan-your-visit");
-                        }}
-                      >
-                        JOIN US
-                      </motion.button>
-                    </div>
-                  </div>
-
-                  <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-                    <div className="p-6">
-                      <div className="bg-blue-100 text-blue-700 font-bold text-center p-2 rounded-md mb-4">
-                        <div className="text-sm">MAY</div>
-                        <div className="text-2xl">16</div>
-                        <div className="text-sm">2025</div>
-                      </div>
-                      <h3 className="text-xl font-bold mb-2">
-                        10th Church Anniversary
-                      </h3>
-                      <p className="text-gray-600 mb-4">
-                        Celebrating 10 years of God's blessing in our church
-                        with special worship service.
-                      </p>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            className="lucide lucide-clock h-4 w-4 mr-2 text-blue-700"
+                        <div className="w-full flex items-center justify-center gap-3 mt-2">
+                          <motion.button
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{ duration: 0.2 }}
+                            className="bg-blue-600 w-36 h-12  text-white  rounded-md text-sm "
+                            onClick={() => {
+                              navigate("/landpage/beoneofus/waterbaptism");
+                            }}
                           >
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polyline points="12 6 12 12 16 14"></polyline>
-                          </svg>
-                          <span>Sunday, 9:30 AM - 12:00 PM</span>
-                        </div>
-                        <div className="flex items-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            className="lucide lucide-map-pin h-4 w-4 mr-2 text-blue-700"
+                            LEARN MORE
+                          </motion.button>
+                          <motion.button
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.95 }}
+                            transition={{ duration: 0.2 }}
+                            className="bg-gray-400  w-36 h-12  text-white rounded-md text-sm  border border-gray-100"
+                            onClick={() => {
+                              navigate("/landpage/beoneofus/waterbaptism");
+                            }}
                           >
-                            <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                          </svg>
-                          <span>Bible Baptist Ekklesia of Kawit</span>
+                            JOIN US
+                          </motion.button>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-                    <div className="p-6">
-                      <div className="bg-blue-100 text-blue-700 font-bold text-center p-2 rounded-md mb-4">
-                        <div className="text-sm">JUN</div>
-                        <div className="text-2xl">05</div>
-                        <div className="text-sm">2025</div>
-                      </div>
-                      <h3 className="text-xl font-bold mb-2">Water Baptism</h3>
-                      <p className="text-gray-600 mb-4">
-                        Baptism service for new believers who have accepted
-                        Christ as their Savior.
-                      </p>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            className="lucide lucide-clock h-4 w-4 mr-2 text-blue-700"
-                          >
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polyline points="12 6 12 12 16 14"></polyline>
-                          </svg>
-                          <span>Sunday, 2:00 PM - 4:00 PM</span>
-                        </div>
-                        <div className="flex items-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            className="lucide lucide-map-pin h-4 w-4 mr-2 text-blue-700"
-                          >
-                            <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                          </svg>
-                          <span>Local Beach Area</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
-                    <div className="p-6">
-                      <div className="bg-blue-100 text-blue-700 font-bold text-center p-2 rounded-md mb-4">
-                        <div className="text-sm">JUL</div>
-                        <div className="text-2xl">15</div>
-                        <div className="text-sm">2025</div>
-                      </div>
-                      <h3 className="text-xl font-bold mb-2">
-                        Daily Vacation Bible School
-                      </h3>
-                      <p className="text-gray-600 mb-4">
-                        Three days of fun Bible learning activities for children
-                        during summer vacation.
-                      </p>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            className="lucide lucide-clock h-4 w-4 mr-2 text-blue-700"
-                          >
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polyline points="12 6 12 12 16 14"></polyline>
-                          </svg>
-                          <span>Wednesday-Friday, 8:00 AM - 12:00 PM</span>
-                        </div>
-                        <div className="flex items-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            className="lucide lucide-map-pin h-4 w-4 mr-2 text-blue-700"
-                          >
-                            <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path>
-                            <circle cx="12" cy="10" r="3"></circle>
-                          </svg>
-                          <span>Bible Baptist Ekklesia of Kawit</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    ))
+                  }
+                  {/* {end} */}
                 </div>
               </div>
               <div

@@ -1,7 +1,67 @@
 import { motion } from 'framer-motion'
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import BaptismRepo from '../../../repositories/BaptismRepo';
+import { useDispatch } from 'react-redux';
+import { hideLoader, showLoader, showSuccessDialog } from '../../../redux/dialog/DialogSlice';
 export const WaterBaptismPage = () => {
     const navigate = useNavigate();
+    const [firstname, setFirstname] = useState("");
+    const [lastname, setLastname] = useState("");
+    const [email, setEmail] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [testimony, setTestimony] = useState("");
+    const [preferredDate, setPreferredDate] = useState("");
+    const dispatch = useDispatch();
+
+    const handleFirstname = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFirstname(e.target.value);
+    }
+    const handleLastname = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setLastname(e.target.value);
+    }
+    const handleEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEmail(e.target.value);
+    }
+    const handlePhoneNumber = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPhoneNumber(e.target.value);
+    }
+    const handleTestimony = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setTestimony(e.target.value);
+    }
+    const handlePreferredDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPreferredDate(e.target.value);
+    }
+    const handleSubmit = async () => {
+        try {
+            dispatch(showLoader());
+            const response = await BaptismRepo.submitBaptism(firstname, lastname, email, phoneNumber, testimony);
+            if (response.statusCode == 200) {
+                setTimeout(() => {
+                    sessionStorage.setItem("message", response.message);
+                    dispatch(hideLoader());
+                    dispatch(showSuccessDialog());
+                }, 1500);
+                setFirstname("");
+                setLastname("");
+                setEmail("");
+                setPhoneNumber("");
+                setTestimony("");
+                setPreferredDate("");
+            } else {
+                setTimeout(() => {
+                    dispatch(hideLoader());
+                    alert("Failed to submit baptism request. Please try again later.");
+                }, 1500);
+            }
+
+        } catch (e) {
+            hideLoader();
+        } finally {
+            hideLoader();
+        }
+    }
+
     return (
         <>
             <div className="w-screen h-auto items-center flex flex-col justify-center  bg-gray-100">
@@ -289,7 +349,10 @@ export const WaterBaptismPage = () => {
                                                     <input
                                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
                                                         id="first-name"
+                                                        value={firstname}
+                                                        onChange={handleFirstname}
                                                         placeholder="Enter your first name"
+                                                        required
                                                     />
                                                 </div>
                                                 <div className="space-y-2">
@@ -302,7 +365,10 @@ export const WaterBaptismPage = () => {
                                                     <input
                                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
                                                         id="last-name"
+                                                        value={lastname}
+                                                        onChange={handleLastname}
                                                         placeholder="Enter your last name"
+                                                        required
                                                     />
                                                 </div>
                                             </div>
@@ -316,8 +382,12 @@ export const WaterBaptismPage = () => {
                                                 <input
                                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
                                                     id="email"
+                                                    value={email}
+
+                                                    onChange={handleEmail}
                                                     placeholder="Enter your email"
                                                     type="email"
+                                                    required
                                                 />
                                             </div>
                                             <div className="space-y-2">
@@ -330,7 +400,10 @@ export const WaterBaptismPage = () => {
                                                 <input
                                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
                                                     id="phone"
+                                                    value={phoneNumber}
+                                                    onChange={handlePhoneNumber}
                                                     placeholder="Enter your phone number"
+                                                    required
                                                 />
                                             </div>
                                             <div className="space-y-2">
@@ -341,9 +414,12 @@ export const WaterBaptismPage = () => {
                                                     Preferred Baptism Date
                                                 </label>
                                                 <input
-                                                    type="date"
+                                                    type="datetime-local"
                                                     id="date"
+                                                    onChange={handlePreferredDate}
+                                                    value={preferredDate}
                                                     className="hover:cursor-pointer w-full p-2 border rounded-md transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                                                    required
                                                 />
 
                                             </div>
@@ -357,13 +433,17 @@ export const WaterBaptismPage = () => {
                                                 <textarea
                                                     className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 min-h-[100px] transition-all duration-300 focus:ring-2 focus:ring-blue-500"
                                                     id="testimony"
+                                                    value={testimony}
+                                                    onChange={handleTestimony}
                                                     placeholder="Share your journey to faith in Christ"
+                                                    required
                                                 ></textarea>
                                             </div>
                                         </form>
                                     </div>
                                     <div className="flex items-center p-6 pt-0">
-                                        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full transform transition-all duration-300 hover:scale-105">
+                                        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full transform transition-all duration-300 hover:scale-105"
+                                            onClick={handleSubmit}>
                                             Submit Registration
                                         </button>
                                     </div>

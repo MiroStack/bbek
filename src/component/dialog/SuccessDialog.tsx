@@ -10,7 +10,7 @@ export const SuccessDialog = () => {
     return (
         <>
             {/* {${Success?"fixed":"hidden"}} */}
-            <div className={`${success_dialog ? "fixed" : "hidden"} bg-white w-[24rem] md:w-[30rem]  lg:w-[24rem]  h-[18rem] p-3  rounded-lg shadow-lg items-center justify-center flex-col z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`}>
+            <div className={`${success_dialog ? "fixed" : "hidden"} bg-white w-[24rem] md:w-[30rem]  lg:w-[24rem]  h-[18rem] p-3  rounded-lg shadow-lg items-center justify-center flex-col z-[1500] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`}>
                 <div className="h-100 flex flex-col items-center justify-center space-y-1.5 text-center sm:text-left">
                     <div className="text-5xl text-green-600"><IoIosCheckmarkCircle /></div>
                     <h3 className="font-medium text-xl tracking-wider mb-2">Success</h3>

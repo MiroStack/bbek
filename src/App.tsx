@@ -5,7 +5,6 @@ import { LandPage } from './landpage/landpage.tsx';
 import { Home} from './landpage/view/Home.tsx'
 import { AboutPage } from './landpage/view/about/About.tsx';
 import { BeOneOfUsPage } from './landpage/view/beoneofus/BeOneOfUs.tsx';
-import { EventPage } from './landpage/view/events/Event.tsx';
 import { GivePage } from './landpage/view/Give.tsx';
 import { LivePage } from './landpage/view/Live.tsx';
 import Dashboard from './admin/pages/dashboard.tsx';
@@ -28,8 +27,6 @@ import { LeadershipPage } from './landpage/view/about/Leadership.tsx';
 import { OfficersPage } from './landpage/view/about/Officers.tsx';
 import { AboutUsPage } from './landpage/view/about/AboutUs.tsx';
 import { AllEventsPage } from './landpage/view/events/AllEvents.tsx';
-import { UpcomingEventsPage } from './landpage/view/events/UpcomingEvents.tsx';
-import { YearlyEventsPage } from './landpage/view/events/YearlyEvents.tsx';
 import { WaterBaptismPage } from './landpage/view/beoneofus/WaterBaptism.tsx';
 import { SendPrayerPage } from './landpage/view/beoneofus/SendPrayer.tsx';
 import Message from './admin/pages/message.tsx';
@@ -66,6 +63,7 @@ import { PrayerRequestMember } from './member/views/communication/PrayerRequest.
 import { Homepage } from './landpage/view/home/Homepage.tsx';
 import { LeadersAndOfficers } from './landpage/view/about/LeadersAndOfficers.tsx';
 import { PlanYourVisit } from './landpage/view/PlanYourVisit.tsx';
+import { EventPage } from './landpage/view/events/Event.tsx';
 
 function App() {
 
@@ -91,8 +89,6 @@ function App() {
             </Route>
             <Route path='events' element={<EventPage />}>
               <Route index path="allevents" element={<AllEventsPage />}></Route>
-              <Route index path="upcomingevents" element={<UpcomingEventsPage />}></Route>
-              <Route index path="yearlyevents" element={<YearlyEventsPage />}></Route>
             </Route>
             <Route index path="live" element={<LivePage />} />
             <Route index path="give" element={<GivePage />} />

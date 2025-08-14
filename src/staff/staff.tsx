@@ -5,8 +5,6 @@ import { Cookies } from "../util/Cookies.ts";
 import { useEffect, useState } from "react";
 import {  useDispatch } from 'react-redux';
 export const StaffPage = () => {
-
-    const dispatch = useDispatch();
     const token = Cookies.getCookie("auth_token");
     const navigate = useNavigate();
     useEffect(() => {

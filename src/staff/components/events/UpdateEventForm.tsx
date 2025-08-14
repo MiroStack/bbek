@@ -25,7 +25,9 @@ export const UpdateEventForm = ({ setIsRefreshing }: UpdateEventFormProps) => {
     const [file, setFile] = useState<File | null>(null);
 
     useEffect(() => {
-        getEventData();
+        if(updateEventForm) {
+            getEventData();
+        }
     }, [updateEventForm]);
     const getEventData = async () => {
         dispatch(showLoader());

@@ -68,6 +68,18 @@ const MinistryRepo = {
       },
     });
     return response.data;
+  },
+
+  async getUpcomingMinistries(): Promise<ApiResponseModel<MinistryModel[]>> {
+    const response = await axios.get<ApiResponseModel<MinistryModel[]>>(
+      "getUpcomingMinistry",
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
   }
 
 };

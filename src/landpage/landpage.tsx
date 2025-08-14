@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Nav } from "./components/Nav"
+
 import { Footer } from "./components/Footer";
 import { LoginForm } from "./components/LoginForm";
 import { useEffect, useState } from "react";
@@ -7,19 +7,26 @@ import { SideNav } from "./components/SideNav";
 import { Loader } from "./components/Loader";
 import AuthRepo from "../repositories/AuthRepo";
 import { useNavigate } from "react-router-dom";
-import { ErrorDialog } from "./components/ErrorDialog";
 import { Cookies } from "../util/Cookies";
 import { SocialMediaGroups } from "./components/SocialMediaGroud";
 import { Navigation } from "./components/Navigation";
 import { WatchLive } from "./components/WacthLive";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "../redux/staff/hooks/hooks";
+import { hideLoader, showErrorDialog, showLoader } from "../redux/dialog/DialogSlice";
+import { ErrorDialog2 } from "../component/dialog/ErrorDialog2";
+import { SuccessDialog } from "../component/dialog/SuccessDialog";
+
 
 export const LandPage = () => {
+    const loaderDialog = useAppSelector((state) => state.dialog.loader);
+    const errorDialog = useAppSelector((state) => state.dialog.error);
+    const successDialog = useAppSelector((state) => state.dialog.success);
     const [showLogin, setShowLogin] = useState(false);
     const [showSide, setShowSide] = useState(false);
-    const [showLoader, setShowLoader] = useState(false);
-    const [showError, setShowError] = useState(false);
     const token = Cookies.getCookie("auth_token");
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     useEffect(() => {
         if (token) {
             handleToken();
@@ -27,11 +34,11 @@ export const LandPage = () => {
     }, [])
     async function handleToken() {
         try {
-            setShowLoader(true);
+            dispatch(showLoader());
             if (token) {
                 const loginResponse = await AuthRepo.validate(token);
-                    if(loginResponse.statusCode == 200){
-                        sessionStorage.setItem("name", loginResponse.data.fullname);
+                if (loginResponse.statusCode == 200) {
+                    sessionStorage.setItem("name", loginResponse.data.fullname);
                     switch (loginResponse.data.role) {
                         case "ADMIN":
                             navigate("/admin");
@@ -46,34 +53,48 @@ export const LandPage = () => {
                         default:
                             navigate("/");
                             console.error("Unknown role:", loginResponse.data.role);
-                            break;    
+                            break;
                     }
+                    setTimeout(() => {
+                        dispatch(hideLoader())
+                    }, 1500)
                 }
             } else {
-                 navigate("/");
                 console.error("Token not found in session storage.");
+                setTimeout(() => {
+                    dispatch(hideLoader())
+                    dispatch(showErrorDialog())
+                    navigate("/");
+                }, 1500)
             }
-            
+
 
         } catch (e) {
-           Cookies.deleteCookie("auth_token");
+            Cookies.deleteCookie("auth_token");
         } finally {
-            setShowLoader(false);
+
         }
     }
 
     return (
         <div className={`relative`}>
             {/* <Nav setShowLogin={setShowLogin} setShowSide={setShowSide} /> */}
-            <Navigation setShowLogin={setShowLogin} setShowSide={setShowSide}/>
+            <Navigation setShowLogin={setShowLogin} setShowSide={setShowSide} />
             <Outlet />
             <Footer />
-            <LoginForm show={showLogin} setShowLogin={setShowLogin} setShowLoader={setShowLoader} setShowError={setShowError} />
+            <LoginForm show={showLogin} setShowLogin={setShowLogin} />
             <SideNav side={showSide} setShowSide={setShowSide} setShowLogin={setShowLogin} />
-            <Loader loader={showLoader} />
-            <ErrorDialog error={showError} message={"Invalid username or password!"} setShowError={setShowError}/>
-            <SocialMediaGroups/>
-            <WatchLive/>
+            <div className=''>
+                <Loader loader={loaderDialog} />
+            </div>
+            <div className={`${errorDialog ? "" : "hidden"}`}>
+                <ErrorDialog2 />
+            </div>
+             <div className={`${successDialog ? "" : "hidden"}`}>
+                <SuccessDialog />
+            </div>
+            <SocialMediaGroups />
+            <WatchLive />
         </div>
     );
 }

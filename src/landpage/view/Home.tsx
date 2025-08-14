@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, use } from "react";
 import "../styles/Home.css";
 import { Link } from "react-router-dom";
 import { easeInOut, scroll } from "motion";
@@ -9,17 +9,58 @@ import image4 from "../../assets/img/hero5.jpg";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaCalendar } from "react-icons/fa6";
+import EventRepo from "../../repositories/EventRepo";
+import type { EventModel } from "../../models/EventModel";
+import dayjs from "dayjs";
+import instance from "../../api/axios";
+import type { MinistryModel } from "../../models/MinistryModel";
+import MinistryRepo from "../../repositories/MinistryRepo";
 export const Home = (prop: any) => {
   const navigate = useNavigate();
   const [currentImage, setCurrentImage] = useState(0);
   const images = [image1, image2, image3, image4];
+  const [upcomingEvents, setUpcomingEvents] = useState<EventModel[]>([]);
+  const [upcomingMinistries, setUpcomingMinistries] = useState<MinistryModel[]>([]);
+  const firstEvent = upcomingEvents[0];
+
+  const handleEvent = async () => {
+    const response = await EventRepo.getUpcomingEvents();
+    if (response.statusCode == 200) {
+      console.log(response.data);
+      setUpcomingEvents(response.data);
+    }
+    else {
+      console.error("Failed to fetch events", response);
+      setUpcomingEvents([]); // ensure it's always an array
+    }
+  }
+
+  const handleMinistry = async () => {
+    const response = await MinistryRepo.getUpcomingMinistries();
+    if (response.statusCode == 200) {
+      console.log(response.data);
+      setUpcomingMinistries(response.data);
+    } else {
+      console.error("Failed to fetch ministries", response);
+      setUpcomingMinistries([]); // ensure it's always an array
+    }
+  }
+
+
   useEffect(() => {
+    if (upcomingEvents.length === 0) {
+      handleEvent();
+    }
+    if (upcomingMinistries.length === 0) {
+      handleMinistry();
+    }
+
     const interval = setInterval(() => {
       setCurrentImage((prev) => (prev + 1) % images.length);
     }, 5000);
-
     return () => clearInterval(interval); // cleanup on unmount
   }, [images.length]);
+
   return (
     <>
       <div className="w-screen min-h-screen overflow-x-hidden">
@@ -49,7 +90,7 @@ export const Home = (prop: any) => {
               </Link>
             </div> */}
             <motion.div
-              className="shadow-sm w-[80%] h-[26rem] mt-2 relative">
+              className="shadow-sm w-[80%] h-[80%] mt-5 relative">
               <img src={images[currentImage]} alt="" className="absolute h-100 w-100 object-cover rounded-md transition-all ease-in-out " />
               <div className="absolute bottom-10 left-10 text-gray-100">
                 <motion.p initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.2 }} className="">A Place to Grow in Faith, Hope, and Love</motion.p>
@@ -132,55 +173,40 @@ export const Home = (prop: any) => {
                 </div>
               </div>
               <div className="flex flex-col md:flex-row items-center justify-between">
-                <div className="text-2xl text-center text-blue-600">Aug 08</div>
+                <div className="text-2xl text-center text-blue-600">
+                  {/* {months} */}
+                  {firstEvent == null ? "" : dayjs(firstEvent.eventStartDate, "MMMM D, YYYY h:mm A").format("MMM\nD")}
+                </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-bold mb-2">World Mission Conference</h3>
-                  <p className="text-gray-600 mb-4">A whole day event that aims to give support for foreign and local missionaries all over the world.</p>
-                  <p className="text-sm text-gray-500">Friday, 8:00 AM - 5:00 PM</p>
+                  <h3 className="text-xl font-bold mb-2">{firstEvent == null ? "" : firstEvent.eventName}</h3>
+                  <p className="text-gray-600 mb-4">{firstEvent == null ? "" : firstEvent.description}</p>
+                  <p className="text-sm text-gray-500">{firstEvent == null ? "" : dayjs(firstEvent.eventStartDate).format("dddd, h:mm A")}</p>
                 </div>
               </div>
 
             </div>
 
             <div className="w-full flex flex-col items-center gap-2  bg-card shadow-md rounded-sm overflow-hidden p-4">
-              <div className="h-22 w-100 shadow-md  rounded-sm  flex items-center gap-2">
-                <div className="text-2xl text-center text-blue-600 p-4">
-                  <p>Aug</p>
-                  <p className="text-4xl font-bold">18</p>
-                </div>
-                <img src={image4} className="h-20 w-28 object-cover" />
-                <div className="p-2">
-                  <h3 className="text-lg font-semibold">Water Baptism</h3>
-                  <p className="text-sm">Baptism service for new believers who have accepted Christ as their Savior.</p>
-                  <p className="text-sm">Sunday, 2:00 PM - 4:00 PM</p>
-                </div>
-              </div>
+              {upcomingEvents.map((event, index) => {
+                if (index > 0) {
 
-              <div className="h-22 w-100 shadow-md  rounded-sm  flex items-center gap-2">
-                <div className="text-2xl text-center text-blue-600 p-4">
-                  <p>Sep</p>
-                  <p className="text-4xl font-bold">20</p>
-                </div>
-                <img src={image2} className="h-20 w-28 object-cover" />
-                <div className="p-2">
-                  <h3 className="text-lg font-semibold">Church Anniversary</h3>
-                  <p className="text-sm">Celebrating years of God's blessing in our church with special worship service.</p>
-                  <p className="text-sm">Sunday, 9:30 AM - 12:00 PM</p>
-                </div>
-              </div>
-
-              <div className="h-22 w-100 shadow-md  rounded-sm  flex items-center gap-2">
-                <div className="text-2xl text-center text-blue-600 p-4">
-                  <p>Sep</p>
-                  <p className="text-4xl font-bold">21</p>
-                </div>
-                <img src={image4} className="h-20 w-28 object-cover" />
-                <div className="p-2">
-                  <h3 className="text-lg font-semibold">Church Anniversary</h3>
-                  <p className="text-sm">Celebrating years of God's blessing in our church with special worship service.</p>
-                  <p className="text-sm">Sunday, 9:30 AM - 12:00 PM</p>
-                </div>
-              </div>
+                  return (
+                    (
+                      <div key={index} className="h-22 w-100 shadow-md  rounded-sm  flex items-center gap-2">
+                        <div className="text-2xl text-center text-blue-600 p-4">
+                          <p>{dayjs(event.eventStartDate, "MMMM D, YYYY h:mm A").format("MMM\nD")}</p>
+                        </div>
+                        <img src={`http://localhost:8081/bbek/event_image?eventName=${encodeURIComponent(event.eventName)}`} alt={event.eventName} className="h-20 w-28 object-cover" />
+                        <div className="p-2">
+                          <h3 className="text-lg font-semibold">{event.eventName}</h3>
+                          <p className="text-sm">{event.description}</p>
+                          <p className="text-sm">{dayjs(event.eventStartDate).format("dddd, h:mm A")}</p>
+                        </div>
+                      </div>
+                    )
+                  )
+                }
+              })}
 
               <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-300 mt-4" onClick={() => { navigate('events/allevents') }}>
                 See More
@@ -202,44 +228,22 @@ export const Home = (prop: any) => {
           <div className=" container mx-auto flex flex-col items-center">
             <div className="w-100 "> <h2 className=" text-2xl font-bold text-start text-gray-800 py-2">Ministries</h2></div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="w-100 bg-white shadow-md rounded-lg p-2 flex items-center gap-3">
-                <img src={image1} alt="Ministry Image" className="w-42 h-32 object-cover rounded-md" />
-                <div className="">
-                  <h3 className="text-lg font-semibold">Soulwinning/Evangelism</h3>
-                  <p className="text-gray-600">Reaching out to the community with the Gospel of Jesus Christ.</p>
-                  <div className="flex items-center gap-2"><FaCalendar /><span>Saturday</span></div>
-                </div>
-              </div>
+              {
+                upcomingMinistries.map((ministry, index) => (
+                  <div key={index} className="w-100 bg-white shadow-md rounded-lg p-2 flex items-center gap-3">
+                    <img src={`http://localhost:8081/bbek/ministry_image?ministryName=${encodeURIComponent(ministry.ministryName)}`} alt={ministry.ministryName} className="w-42 h-32 object-cover rounded-md" />
+                    <div className="h-full flex flex-col items-start">
+                      <h3 className="text-lg font-semibold">{ministry.ministryName}</h3>
+                      <p className="text-gray-600">{ministry.description}</p>
+                      <div className="flex items-center gap-2 font-extralight text-blue-500"><FaCalendar /><p>{ministry.schedule}</p></div>
+                    </div>
+                  </div>
+                ))
+              }
 
-              <div className="w-100 bg-white shadow-md rounded-lg p-2 flex gap-3">
-                <img src={image2} alt="Ministry Image" className="w-42 h-32 object-cover rounded-md" />
-                <div className="">
-                  <h3 className="text-lg font-semibold">Soulwinning/Evangelism</h3>
-                  <p className="text-gray-600">Reaching out to the community with the Gospel of Jesus Christ.</p>
-                  <div className="flex items-center gap-2"><FaCalendar /><span>Saturday</span></div>
-                </div>
-              </div>
-
-              <div className="w-100 bg-white shadow-md rounded-lg p-2 flex items-center gap-3">
-                <img src={image3} alt="Ministry Image" className="w-42 h-32 object-cover rounded-md" />
-                <div className="">
-                  <h3 className="text-lg font-semibold">Soulwinning/Evangelism</h3>
-                  <p className="text-gray-600">Reaching out to the community with the Gospel of Jesus Christ.</p>
-                  <div className="flex items-center gap-2"><FaCalendar /><span>Saturday</span></div>
-                </div>
-              </div>
-
-              <div className="w-100 bg-white shadow-md rounded-lg p-2 flex items-center gap-3">
-                <img src={image3} alt="Ministry Image" className="w-42 h-32 object-cover rounded-md" />
-                <div className="">
-                  <h3 className="text-lg font-semibold">Soulwinning/Evangelism</h3>
-                  <p className="text-gray-600">Reaching out to the community with the Gospel of Jesus Christ.</p>
-                  <div className="flex items-center gap-2"><FaCalendar /><span>Saturday</span></div>
-                </div>
-              </div>
             </div>
 
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-300 mt-4" onClick={()=>{navigate("/landpage/ministries")}}>
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-300 mt-4" onClick={() => { navigate("/landpage/ministries") }}>
               See More
             </button>
 

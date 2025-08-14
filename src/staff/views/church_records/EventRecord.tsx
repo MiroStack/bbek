@@ -9,7 +9,7 @@ import { Loader } from "../../../landpage/components/Loader";
 import { SuccessDialog } from "../../../component/dialog/SuccessDialog";
 import { WarningDialog } from "../../../component/dialog/WarningDialog";
 import { ErrorDialog2 } from "../../../component/dialog/ErrorDialog2";
-import { hideErrorDialog, hideLoader, hideSuccessDialog, hideWarningDialog, showErrorDialog, showLoader, showSuccessDialog, showWarningDialog } from "../../../redux/dialog/DialogSlice";
+import {  hideLoader, showErrorDialog, showLoader, showSuccessDialog, showWarningDialog } from "../../../redux/dialog/DialogSlice";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 import { UpdateEventForm } from "../../components/events/UpdateEventForm";
 import dayjs from "dayjs";
@@ -17,9 +17,10 @@ export const EventRecordPage = () => {
     const eventCreateForm = useAppSelector((state) => state.eventForm.value);
     const eventEditForm = useAppSelector((state) => state.eventForm.edit);
     const loaderDialog = useAppSelector((state) => state.dialog.loader);
+    const errorDialog = useAppSelector((state) => state.dialog.error);
     const successDialog = useAppSelector((state) => state.dialog.success);
     const warningDialog = useAppSelector((state) => state.dialog.warning);
-    const errorDialog = useAppSelector((state) => state.dialog.error);
+
     const dispatch = useDispatch();
     const [eventData, setEventDate] = useState<EventModel[]>([])
     const [isRefreshing, setIsRefreshing] = useState(true);
@@ -70,15 +71,16 @@ export const EventRecordPage = () => {
             <div className=''>
                 <Loader loader={loaderDialog} />
             </div>
+            <div className={`${errorDialog ? "" : "hidden"}`}>
+                <ErrorDialog2 />
+            </div>
             <div className={`${successDialog ? "" : "hidden"}`}>
                 <SuccessDialog />
             </div>
             <div className={`${warningDialog ? "" : "hidden"}`}>
                 <WarningDialog onConfirm={handleDeleteEvent} />
             </div>
-            <div className={`${errorDialog ? "" : "hidden"}`}>
-                <ErrorDialog2 />
-            </div>
+
 
             <div className="w-100 h-auto flex flex-col items-center justify-center">
                 <div className="p-6">

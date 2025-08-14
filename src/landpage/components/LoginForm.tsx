@@ -2,64 +2,70 @@ import { IoMdClose } from "react-icons/io";
 import AuthRepo from "../../repositories/AuthRepo";
 import Logo from "../../assets/img/logobbek.jpg"
 import { useNavigate } from "react-router-dom";
-import {FaEyeSlash, FaEye} from "react-icons/fa";
+import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { hideLoader, showErrorDialog, showLoader } from "../../redux/dialog/DialogSlice";
 type LoginProps = {
     show: boolean;
     setShowLogin: React.Dispatch<React.SetStateAction<boolean>>;
-    setShowLoader: React.Dispatch<React.SetStateAction<boolean>>;
-    setShowError: React.Dispatch<React.SetStateAction<boolean>>;
+
 };
-export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin, setShowLoader, setShowError }) => {
-    const setLoader = setShowLoader;
-    const setError = setShowError;
+export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin }) => {
     const [showPassword, setShowPassword] = useState(false);
-    const handleShowPassword =()=> setShowPassword(!showPassword);
-    const showErrorDialog = () => setError(true);
-    const closeLogin = () => setShowLogin(false);
+    const handleShowPassword = () => setShowPassword(!showPassword);
+    const dispatch = useDispatch();
     const [usernameVal, setUsernameVal] = useState("");
     const [passwordVal, setPasswordVal] = useState("");
     const navigate = useNavigate();
+    const closeLogin = () => {
+        setShowLogin(false);
+    }
     async function handleLogin() {
         try {
-            closeLogin();
-            setLoader(true);
-
+            dispatch(showLoader());
             const loginResponse = await AuthRepo.login(usernameVal, passwordVal);
             if (loginResponse.statusCode == 200) {
                 // sessionStorage.setItem("token", loginResponse.data.token);
                 document.cookie = `auth_token=${loginResponse.data.token}; path=/; max-age=604800; secure`;
                 sessionStorage.setItem('name', loginResponse.data.fullName);
+                setTimeout(() => {
+                    dispatch(hideLoader());
+                    switch (loginResponse.data.role) {
+                        case "ADMIN":
+                            navigate("/admin");
+                            break;
+                        case "MEMBER":
+                            navigate("/member");
+                            break;
+                        case "STAFF":
+                            navigate("/staff");
+                            break;
+                    }
+                    closeLogin();
+                }, 1500);
+
+            } else {
+                sessionStorage.setItem("message", "Login failed. Please check your credentials.");
+                setTimeout(() => {
+                    dispatch(showErrorDialog());
+                    dispatch(hideLoader());
+                }, 1500);
             }
-            switch (loginResponse.data.role) {
-                case "ADMIN":
-                    navigate("/admin");
-                    break;
-                case "MEMBER":
-                    navigate("/member");
-                    break;
-                case "STAFF":
-                    navigate("/staff");
-                    break;
-            }
-            console.log('Login succeeded:', loginResponse);
+
 
             // You can now access your LoginResponseModel data inside loginResponse.data or however ApiResponseModel is structured.
         } catch (error) {
-            showErrorDialog();
             console.error('Login failed', error);
-            setLoader(false);
 
         } finally {
-
-            setTimeout(() => setLoader(false), 1000);
-            
+            dispatch(hideLoader());
         }
     }
 
     return (
         <>
-            <div className={`${show ? "flex" : "hidden"} bg-white w-[24rem] md:w-[30rem]  h-auto lg:w-[24rem] lg:h-[26rem] p-3  rounded-lg shadow-lg fixed items-center justify-center flex-col z-[1000] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`}>
+            <div className={`${show ? "flex" : "hidden"} bg-white w-[24rem] md:w-[30rem]  h-auto lg:w-[24rem] lg:h-[26rem] p-3  rounded-lg shadow-lg fixed items-center justify-center flex-col z-20 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`}>
                 <div className="flex flex-col space-y-1.5 text-center sm:text-left">
                     <div className="flex items-center justify-center mb-4">
                         <img
@@ -119,7 +125,7 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin, setShowLoa
                                 value={passwordVal}
                                 placeholder="Enter your password"
                                 required
-                                type={showPassword?'text':'password'}
+                                type={showPassword ? 'text' : 'password'}
                             // value=""
                             />
                             <button
@@ -127,7 +133,7 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin, setShowLoa
                                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
                                 onClick={handleShowPassword}
                             >
-                              {showPassword?<FaEyeSlash/>:<FaEye/>}
+                                {showPassword ? <FaEyeSlash /> : <FaEye />}
                             </button>
                         </div>
                     </div>
