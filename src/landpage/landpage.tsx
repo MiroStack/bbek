@@ -71,8 +71,9 @@ export const LandPage = () => {
 
         } catch (e) {
             Cookies.deleteCookie("auth_token");
+            dispatch(hideLoader())
         } finally {
-
+            dispatch(hideLoader())
         }
     }
 
@@ -90,7 +91,7 @@ export const LandPage = () => {
             <div className={`${errorDialog ? "" : "hidden"}`}>
                 <ErrorDialog2 />
             </div>
-             <div className={`${successDialog ? "" : "hidden"}`}>
+            <div className={`${successDialog ? "" : "hidden"}`}>
                 <SuccessDialog />
             </div>
             <SocialMediaGroups />
