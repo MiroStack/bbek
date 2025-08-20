@@ -39,6 +39,7 @@ export const LandPage = () => {
                 const loginResponse = await AuthRepo.validate(token);
                 if (loginResponse.statusCode == 200) {
                     sessionStorage.setItem("name", loginResponse.data.fullname);
+                    sessionStorage.setItem("email", loginResponse.data.email);
                     switch (loginResponse.data.role) {
                         case "ADMIN":
                             navigate("/admin");

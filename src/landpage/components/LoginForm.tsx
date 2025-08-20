@@ -29,6 +29,7 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin }) => {
                 // sessionStorage.setItem("token", loginResponse.data.token);
                 document.cookie = `auth_token=${loginResponse.data.token}; path=/; max-age=604800; secure`;
                 sessionStorage.setItem('name', loginResponse.data.fullName);
+                sessionStorage.setItem('email', loginResponse.data.email);
                 setTimeout(() => {
                     dispatch(hideLoader());
                     switch (loginResponse.data.role) {

@@ -79,14 +79,7 @@ export const SideNav = () => {
               <Link to="maintenance/audit-trial" className="flex items-center gap-2 text-sm py-2"><IoNewspaper /><span>Audit Trial</span></Link>
             </ul>
           </div>
-          <div className="flex items-center gap-2 text-sm text-red-500 font-semibold border-t-2 p-2 mt-auto cursor-pointer" onClick={() => {
-            Cookies.deleteCookie("auth_token");
-            sessionStorage.removeItem('name');
-            navigate("/");
-          }}>
-            <IoLogOutOutline />
-            <span>Logout</span>
-          </div>
+         
         </ul>
       </div>
     </>
