@@ -169,7 +169,7 @@ export const Home = (prop: any) => {
             <div className="w-full  bg-card  shadow-md rounded-sm overflow-hidden p-4">
               <div className="h-auto bg-white relative">
                 <div className="inset-0 bg-black/20 ">
-                  <img src={image1} alt="upcoming-event" className="h-52 w-100 object-cover" />
+                  <img src={firstEvent.eventName} alt="upcoming-event" className="h-52 w-100 object-cover" />
                 </div>
               </div>
               <div className="flex flex-col md:flex-row items-center justify-between">
