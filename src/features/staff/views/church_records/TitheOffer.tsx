@@ -22,6 +22,7 @@ export const TithesOfferingPage = () => {
     useEffect(() => {
         if (isRefreshing) {
             handleGetAllOffering();
+            setIsRefreshing(false);
         }
     }, [isRefreshing]);
 
@@ -47,7 +48,7 @@ export const TithesOfferingPage = () => {
     return (
         <>
             <div className={`${offeringForm ? '' : 'hidden'}`}>
-                <CreateOffering />
+                <CreateOffering setIsRefreshing={setIsRefreshing} />
             </div>
             <div className={`${loaderDialog ? '' : 'hidden'}`}>
                 <Loader loader={loaderDialog} />

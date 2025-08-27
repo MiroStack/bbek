@@ -10,7 +10,11 @@ import type { OfferingPaymentModel } from "../../../../datasource/models/Offerin
 import type { OfferingTypeModel } from "../../../../datasource/models/Offering/OfferingTypeModel";
 import type { OfferingModel } from "../../../../datasource/models/Offering/OfferingModel";
 
-export const CreateOffering = () => {
+interface CreateOfferingProps{
+    setIsRefreshing:React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const CreateOffering = ({setIsRefreshing}:CreateOfferingProps) => {
     const offeringForm = useAppSelector((state) => state.offeringForm.value);
     const dispatch = useDispatch();
     const [showPayment, setShowPayment] = useState(false);
@@ -119,6 +123,7 @@ export const CreateOffering = () => {
                 setNotes("");
                 setOffering("");
                 setPayment("");
+                
             } else {
                 sessionStorage.setItem("message", response.message);
                 dispatch(showErrorDialog());
@@ -128,6 +133,7 @@ export const CreateOffering = () => {
             console.error("Save failed:", err);
         } finally {
             dispatch(hideLoader());
+            setIsRefreshing(true);
         }
     }
     return (
