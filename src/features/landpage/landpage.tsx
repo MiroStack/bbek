@@ -27,8 +27,11 @@ export const LandPage = () => {
     const token = Cookies.getCookie("auth_token");
     const navigate = useNavigate();
     const dispatch = useDispatch();
+     const isNavigateLandpage:boolean = sessionStorage.getItem("navigateLandpage")==="true";
+   
     useEffect(() => {
-        if (token) {
+        
+        if (token && !isNavigateLandpage) {
             handleToken();
         }
     }, [])

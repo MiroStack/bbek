@@ -89,7 +89,7 @@ export const MinistriesStaffPage = () => {
   return (
     <>
       <div className={`${ministryForm ? "" : "hidden"}`}>
-        <CreateMinistryForm />
+        <CreateMinistryForm setRefresh={setIsRefreshing}/>
       </div>
       <div className={`${ministryEditForm ? "" : "hidden"}`}>
         <UpdateMinistryForm setIsRefresh={setIsRefreshing} />

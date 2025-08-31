@@ -5,16 +5,22 @@ import { useAppSelector } from '../../../../datasource/redux/staff/hooks/hooks';
 import MinistryRepo from "../../../../datasource/repositories/MinistryRepo";
 import { hideLoader, showLoader, showSuccessDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 
-export const CreateMinistryForm = () => {
+interface MinistryProps{
+    setRefresh:React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const CreateMinistryForm = ({setRefresh}:MinistryProps) => {
     const ministryForm = useAppSelector((state) => state.ministryForm.value);
     const dispatch = useDispatch();
     const [showStatus, setShowStatus] = useState(false);
-    const[ministryName, setMinistryName] = useState("");
+    const [ministryName, setMinistryName] = useState("");
     const [schedule, setSchedule] = useState("");
+    const [startTime, setStartTime] = useState("");
+    const [endTime, setEndTime] = useState("");
     const [leader, setLeader] = useState("");
     const [description, setDescription] = useState("");
-    const[status, setStatus] = useState("Pending");
-    const[member, setMember] = useState(0);
+    const [status, setStatus] = useState("Pending");
+    const [member, setMember] = useState(0);
     const [file, setFile] = useState<File | null>(null);
 
     const handleSetMinistryName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,6 +28,12 @@ export const CreateMinistryForm = () => {
     }
     const handleSetSchedule = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSchedule(e.target.value);
+    }
+    const handleSetStartTime = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setStartTime(e.target.value);
+    }
+    const handleSetEndTime = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEndTime(e.target.value);
     }
     const handleSetLeader = (e: React.ChangeEvent<HTMLInputElement>) => {
         setLeader(e.target.value);
@@ -64,34 +76,38 @@ export const CreateMinistryForm = () => {
                 status,
                 leader,
                 schedule,
+                startTime,
+                endTime,
                 file,
                 false
             );
-            
+
             if (response.statusCode === 201) {
                 dispatch(hideMinistry());
                 sessionStorage.setItem("message", response.message);
                 console.log("Response:", response.message);
                 setMinistryName("");
                 setSchedule("");
+                setStartTime("");
+                setEndTime("");
                 setLeader("");
                 setDescription("");
                 setStatus("Pending");
                 setMember(0);
                 setFile(null);
                 // Show success dialog after a short delay 
-                setTimeout(()=>{
+                setTimeout(() => {
                     dispatch(showSuccessDialog())
                     dispatch(hideLoader())
                 }, 1500);
-            }else{
+            } else {
                 dispatch(hideLoader())
             }
-            
+
         } catch (err) {
             console.error("Save failed:", err);
-        }finally{
-            
+        } finally {
+          setRefresh(true);
         }
     }
     return (
@@ -148,6 +164,40 @@ export const CreateMinistryForm = () => {
                     <div className="grid gap-2">
                         <label
                             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            htmlFor="new-schedule"
+                        >
+                            Start Time
+                        </label>
+                        <input
+                            className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            id="new-schedule"
+                            type="time"
+                            value={startTime}
+                            onChange={handleSetStartTime}
+                            name="ministry-schedule-input"
+                            required
+                        />
+                    </div>
+                      <div className="grid gap-2">
+                        <label
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            htmlFor="new-schedule"
+                        >
+                            End Time
+                        </label>
+                        <input
+                            className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            id="new-schedule"
+                            value={endTime}
+                            type="time"
+                            onChange={handleSetEndTime}
+                            name="ministry-schedule-input"
+                            required
+                        />
+                    </div>
+                    <div className="grid gap-2">
+                        <label
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             htmlFor="new-leader"
                         >
                             Ministry Leader
@@ -161,7 +211,7 @@ export const CreateMinistryForm = () => {
                             required
                         />
                     </div>
-                      <div className="grid gap-2">
+                    <div className="grid gap-2">
                         <label
                             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             htmlFor="new-leader"
@@ -218,9 +268,9 @@ export const CreateMinistryForm = () => {
                             <span className="">{status}</span>
                             <div className={`${showStatus ? "" : "hidden"} absolute bg-white w-100 border  top-[150%] left-[50%] -translate-y-1/2 -translate-x-1/2`}>
                                 <ul className="flex flex-col items-start px-3 w-100">
-                                    <li className="hover:text-green-500" onClick={()=>handleSetStatus("Active")}>Active</li>
-                                    <li className="hover:text-green-500" onClick={()=>handleSetStatus("Pending")}>Pending</li>
-                                    <li className="hover:text-green-500" onClick={()=>handleSetStatus("Cancelled")}>Cancelled</li>
+                                    <li className="hover:text-green-500" onClick={() => handleSetStatus("Active")}>Active</li>
+                                    <li className="hover:text-green-500" onClick={() => handleSetStatus("Pending")}>Pending</li>
+                                    <li className="hover:text-green-500" onClick={() => handleSetStatus("Cancelled")}>Cancelled</li>
                                 </ul>
                             </div>
                             <svg

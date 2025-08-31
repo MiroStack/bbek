@@ -30,7 +30,10 @@ export const SideNav = () => {
   return (
     <>
       <div className="fixed overflow-y-auto overflow-x-hidden bg-white h-screen lg:w-[14rem] border border-solid border-blue-500 z-50">
-        <div className="flex items-center px-2 justify-start h-12 gap-1 relative border-b-2">
+        <div className="flex items-center px-2 justify-start h-12 gap-1 relative border-b-2 cursor-pointer"  onClick={()=>{
+                           sessionStorage.setItem("navigateLandpage", "true");
+                           navigate("/")
+                         }}>
           <img src={Logo} alt="logo" className="h-6" />
           <h2 className="font-semibold text-sm">BBEK Church</h2>
           <FaAlignLeft className="text-xl absolute right-[-24px] cursor-pointer" />

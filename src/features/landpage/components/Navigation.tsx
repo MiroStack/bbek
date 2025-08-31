@@ -10,8 +10,12 @@ export const Navigation = ({ setShowLogin, setShowSide }: NavProps) => {
   const setShow = setShowLogin;
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
+  const [isNavigateLandpage, setIsNavigateLandpage] = useState<boolean>(false);
   const textColor = scrolled ? "text-black" : "text-white";
+
   useEffect(() => {
+      const isNavigate:boolean = sessionStorage.getItem("navigateLandpage")==="true";
+      setIsNavigateLandpage(isNavigate);
     const onScroll = () => {
       const scrollY = window.scrollY;
       const totalHeight = document.body.scrollHeight - window.innerHeight;
@@ -31,6 +35,10 @@ export const Navigation = ({ setShowLogin, setShowSide }: NavProps) => {
   }
   const displaySide = () => {
     setSide(true);
+  }
+  const goToDashboard=()=>{
+    sessionStorage.removeItem("navigateLandpage")
+    navigate("/")
   }
 
   return (
@@ -59,11 +67,11 @@ export const Navigation = ({ setShowLogin, setShowSide }: NavProps) => {
           </div>
           <li className="font-semibold hover:text-blue-400 active:text-blue-600 cursor-pointer" onClick={() => navigate("/landpage/give")}>GIVE</li>
           <li className="font-semibold hover:text-blue-400 active:text-blue-600 cursor-pointer" onClick={() => navigate("/landpage/events/allevents")}>EVENT</li>
-          <li className="font-semibold hover:text-blue-400 active:text-blue-600 cursor-pointer" onClick={() => navigate("/landpage/ministries")}>MINISTRY</li>
+          <li className="font-semibold hover:text-blue-400 active:text-blue-600 cursor-pointer" onClick={() => navigate("/landpage/ministries/allministry")}>MINISTRY</li>
         </ul>
 
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors duration-300" onClick={displayLogin}>
-          Login
+        <button className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors duration-300" onClick={isNavigateLandpage?goToDashboard:displayLogin}>
+          {isNavigateLandpage?"Dashboard":"Login"}
         </button>
       </div>
     </div>

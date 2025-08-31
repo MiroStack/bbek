@@ -13,7 +13,7 @@ export const Nav=()=>{
     return(<div className="">
                 <div className="flex items-center justify-start h-12 gap-1 border-b-2 relative">
                        <div className="h-100  flex ml-auto items-center cursor-pointer p-2 hover:bg-gray-100 hover:rounded-md" onClick={handleToggleSidePanel}>
-                         <img src={Logo} alt="logo" className="h-6 rounded-md"/>
+                         <img src={Logo} alt="logo" className="h-6 rounded-md cursor-pointer"/>
                          <div className="flex items-center p-2">
                             <div className="mx-2">
                                 <h4 className="text-[.7rem] font-semibold">{sessionStorage.getItem("name")}</h4>

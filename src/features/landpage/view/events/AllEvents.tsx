@@ -3,19 +3,25 @@ import type { EventModel } from "../../../../datasource/models/EventModel";
 import EventRepo from "../../../../datasource/repositories/EventRepo";
 import { motion } from "framer-motion";
 import { IoMdFunnel } from "react-icons/io";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import image1 from "../../../../assets/img/hero2.jpg";
 import image2 from "../../../../assets/img/hero.jpg";
 import image3 from "../../../../assets/img/hero4.jpg";
 import image4 from "../../../../assets/img/hero5.jpg";
 import { FaCalendarDays, FaClock, FaLocationDot } from "react-icons/fa6";
 import dayjs from "dayjs";
+import { JoinCard } from "../../components/JoinCard";
 
 export const AllEventsPage = () => {
   const images = [image1, image2, image3, image4];
   const navigate = useNavigate();
   const [eventData, setEventDate] = useState<EventModel[]>([]);
   const [showSort, setShowSort] = useState(false);
+  const [showJoinEvent, setShowJoinEvent] = useState<boolean>(false);
+  const handleJoinEvent = () => {
+    setShowJoinEvent(!showJoinEvent);
+  }
+
   const toggleSort = () => {
     setShowSort(!showSort);
   };
@@ -29,7 +35,14 @@ export const AllEventsPage = () => {
     } catch (e) { }
   };
   return (
-    <>
+    <div className="relative">
+
+      {showJoinEvent &&
+        (
+          <JoinCard setJoinEvent={setShowJoinEvent} joinEvent={showJoinEvent} />
+        )
+      }
+
       <div className="w-screen h-auto items-center flex flex-col justify-center">
         <motion.section className="w-full mt-28 flex flex-col items-center justify-center bg-cover bg-center relative">
           <div className=" bg-gray-100 w-100 flex flex-col items-center justify-center p-8">
@@ -53,29 +66,6 @@ export const AllEventsPage = () => {
             </motion.p>
           </div>
         </motion.section>
-
-        {/* events card section */}
-        {/* <div className="h-auto mx-5 py-5 flex flex-col items-center justify-center gap-2 ">
-          <main className="flex-1 bg-white">
-            <section className="py-12 md:py-24 bg-gray-50">
-              <div className="container px-4 md:px-6">
-                <h2 className="text-3xl md:text-4xl font-light text-center mb-12 text-gray-900 animate-fade-in-up">
-                  Church Events
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          
-
-                  {
-                    eventData.map((item, index)=>(
-                        <EventsCard key={index} eventModel={item}/>
-                    ))
-                  }
-                 
-                </div>
-              </div>
-            </section>
-          </main>
-        </div> */}
         <section className="py-12">
           <div className="container mx-auto px-4">
             <div
@@ -130,7 +120,7 @@ export const AllEventsPage = () => {
                     eventData.map((event, index) => (
                       <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-3 flex flex-col">
                         <div className="w-full h-auto">
-                          
+
                           <img
                             src={`http://localhost:8081/bbek/event_image?eventName=${encodeURIComponent(event.eventName)}`} alt={event.eventName}
                             className="h-40 w-full object-cover"
@@ -160,7 +150,16 @@ export const AllEventsPage = () => {
 
                             </div>
                             <p className="text-gray-600 mb-2">
-                              {event.description}
+                              {event.description.length > 100 ? (
+                                <>
+                                  {event.description.substring(0, 100)}...
+                                  <br />
+                                  <Link
+                                    to="/landpage/events/learn-more-event"
+                                    state={{ eventModel: event }}
+                                    className="text-blue-500 cursor-pointer">See more</Link>
+                                </>
+                              ) : event.description}
                             </p>
                             <div className="space-y-2 text-sm flex items-center gap-2">
                               {/* <div className=" w-[40%] bg-blue-100 text-blue-700 font-bold text-center rounded-md">
@@ -172,6 +171,7 @@ export const AllEventsPage = () => {
                           </div>
                         </div>
                         <div className="w-full flex items-center justify-center gap-3 mt-2">
+
                           <motion.button
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
@@ -179,11 +179,15 @@ export const AllEventsPage = () => {
                             whileTap={{ scale: 0.95 }}
                             transition={{ duration: 0.2 }}
                             className="bg-blue-600 w-36 h-12  text-white  rounded-md text-sm "
-                            onClick={() => {
-                              navigate("/landpage/beoneofus/waterbaptism");
-                            }}
+
                           >
-                            LEARN MORE
+                            <Link
+                              className="hover:bg-transparent hover:text-white"
+                              to="/landpage/events/learn-more-event"
+                              state={{ eventModel: event }}
+                            >
+                              LEARN MORE
+                            </Link>
                           </motion.button>
                           <motion.button
                             initial={{ scale: 0 }}
@@ -192,9 +196,7 @@ export const AllEventsPage = () => {
                             whileTap={{ scale: 0.95 }}
                             transition={{ duration: 0.2 }}
                             className="bg-gray-400  w-36 h-12  text-white rounded-md text-sm  border border-gray-100"
-                            onClick={() => {
-                              navigate("/landpage/beoneofus/waterbaptism");
-                            }}
+                            onClick={handleJoinEvent}
                           >
                             JOIN US
                           </motion.button>
@@ -252,6 +254,6 @@ export const AllEventsPage = () => {
           </div>
         </motion.section>
       </div>
-    </>
+    </div>
   );
 };

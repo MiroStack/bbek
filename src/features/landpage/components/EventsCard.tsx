@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import type { EventModel } from "../../../datasource/models/EventModel";
 import PlaceHolder from "../../assets/img/image.png"
 type EventCardProps = {
@@ -29,7 +30,7 @@ export const EventsCard: React.FC<EventCardProps> = ({ eventModel }) => {
         </div>
         <div className="p-6 flex-grow flex flex-col">
           <h3 className="text-xl font-semibold mb-3 text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
-           {eventModel.eventName}
+            {eventModel.eventName}
           </h3>
           <div className="flex items-center text-gray-500 mb-2">
             <svg
@@ -49,15 +50,16 @@ export const EventsCard: React.FC<EventCardProps> = ({ eventModel }) => {
               <rect width="18" height="18" x="3" y="4" rx="2"></rect>
               <path d="M3 10h18"></path>
             </svg>
-            <span className="text-sm">{`${eventModel.eventDate} ${eventModel.eventTime}`}</span>
+            <span className="text-sm">{`${eventModel.eventStartDate} ${eventModel.eventEndDate}`}</span>
           </div>
           <p className="text-gray-600 leading-relaxed mb-4">
             {eventModel.description}
           </p>
           <div className="mt-auto">
-            <a
+            <Link
               className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 w-full group-hover:bg-blue-600 group-hover:text-white group-hover:border-blue-600 transition-all duration-300"
-              href="/events/couples-banquet"
+              to="/events/learn-more-event"
+              state={{ eventModel: eventModel }}
             >
               Learn More
               <svg
@@ -75,7 +77,7 @@ export const EventsCard: React.FC<EventCardProps> = ({ eventModel }) => {
                 <path d="M5 12h14"></path>
                 <path d="m12 5 7 7-7 7"></path>
               </svg>
-            </a>
+            </Link>
           </div>
         </div>
       </div>

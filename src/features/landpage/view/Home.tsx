@@ -160,7 +160,7 @@ export const Home = (prop: any) => {
             transition: { ease: 'easeInOut', delay: 0.2 }
           }}
           viewport={{ once: false, amount: 0.2 }}
-          className={` container mx-auto flex flex-col lg:p-5`}>
+          className={` w-full mx-auto flex flex-col p-5`}>
           <h2 className="text-2xl font-bold text-gray-900 my-2">
             Events
           </h2>
@@ -169,7 +169,7 @@ export const Home = (prop: any) => {
             <div className="w-full  bg-card  shadow-md rounded-sm overflow-hidden p-4">
               <div className="h-auto bg-white relative">
                 <div className="inset-0 bg-black/20 ">
-                  <img src={`http://localhost:8081/bbek/event_image?eventName=${encodeURIComponent( firstEvent == null ? "" :firstEvent.eventName)}`} alt={ firstEvent == null ? "" :firstEvent.eventName}className="h-52 w-100 object-cover" />
+                  <img src={`http://localhost:8081/bbek/event_image?eventName=${encodeURIComponent(firstEvent == null ? "" : firstEvent.eventName)}`} alt={firstEvent == null ? "" : firstEvent.eventName} className="h-52 w-100 object-cover" />
                 </div>
               </div>
               <div className="flex flex-col md:flex-row items-center justify-between">
@@ -179,7 +179,19 @@ export const Home = (prop: any) => {
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold mb-2">{firstEvent == null ? "" : firstEvent.eventName}</h3>
-                  <p className="text-gray-600 mb-4">{firstEvent == null ? "" : firstEvent.description}</p>
+                  <p className="text-gray-600 mb-2">
+                    {firstEvent == null ? "" : firstEvent.description.length > 200 ? (
+                      <>
+                        {firstEvent.description.substring(0, 200)}...
+                        <br />
+                        <Link
+                          to="/landpage/events/learn-more-event"
+                          state={{ eventModel: firstEvent }}
+                          className="text-blue-500 cursor-pointer">See more</Link>
+                      </>
+                    ) : firstEvent.description}
+
+                  </p>
                   <p className="text-sm text-gray-500">{firstEvent == null ? "" : dayjs(firstEvent.eventStartDate).format("dddd, h:mm A")}</p>
                 </div>
               </div>
@@ -199,7 +211,18 @@ export const Home = (prop: any) => {
                         <img src={`http://localhost:8081/bbek/event_image?eventName=${encodeURIComponent(event.eventName)}`} alt={event.eventName} className="h-20 w-28 object-cover" />
                         <div className="p-2">
                           <h3 className="text-lg font-semibold">{event.eventName}</h3>
-                          <p className="text-sm">{event.description}</p>
+                            <p className="text-gray-600 mb-2">
+                              {event.description.length > 80 ? (
+                                <>
+                                  {event.description.substring(0, 80)}...
+                                  <br />
+                                  <Link
+                                    to="/landpage/events/learn-more-event"
+                                    state={{ eventModel: event }}
+                                    className="text-blue-500 cursor-pointer">See more</Link>
+                                </>
+                              ) : event.description}
+                            </p>
                           <p className="text-sm">{dayjs(event.eventStartDate).format("dddd, h:mm A")}</p>
                         </div>
                       </div>
@@ -225,7 +248,7 @@ export const Home = (prop: any) => {
           }}
           viewport={{ once: false, amount: 0.2 }}
           className="lg:p-5 bg-gray-100">
-          <div className=" container mx-auto flex flex-col items-center">
+          <div className="  mx-auto flex flex-col items-center p-5">
             <div className="w-100 "> <h2 className=" text-2xl font-bold text-start text-gray-800 py-2">Ministries</h2></div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {
@@ -234,7 +257,18 @@ export const Home = (prop: any) => {
                     <img src={`http://localhost:8081/bbek/ministry_image?ministryName=${encodeURIComponent(ministry.ministryName)}`} alt={ministry.ministryName} className="w-42 h-32 object-cover rounded-md" />
                     <div className="h-full flex flex-col items-start">
                       <h3 className="text-lg font-semibold">{ministry.ministryName}</h3>
-                      <p className="text-gray-600">{ministry.description}</p>
+                       <p className="text-gray-600 mb-2">
+                              {ministry.description.length > 80 ? (
+                                <>
+                                  {ministry.description.substring(0, 80)}...
+                                  <br />
+                                  <Link
+                                    to="/landpage/ministries/learn-more-ministry"
+                                    state={{ ministryModel: ministry }}
+                                    className="text-blue-500 cursor-pointer">See more</Link>
+                                </>
+                              ) : ministry.description}
+                            </p>
                       <div className="flex items-center gap-2 font-extralight text-blue-500"><FaCalendar /><p>{ministry.schedule}</p></div>
                     </div>
                   </div>

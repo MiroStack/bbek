@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react"
-import { JoinUsSection } from "../components/JoinUsSection"
-import { MinistriesCard } from "../components/MinistriesCard"
-import type { MinistryModel } from "../../../datasource/models/MinistryModel"
-import MinistryRepo from "../../../datasource/repositories/MinistryRepo"
+import { JoinUsSection } from "../../components/JoinUsSection"
+import { MinistriesCard } from "../../components/MinistriesCard"
+import type { MinistryModel } from "../../../../datasource/models/MinistryModel"
+import MinistryRepo from "../../../../datasource/repositories/MinistryRepo"
 import { motion } from "framer-motion"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { IoMdFunnel } from "react-icons/io"
 import { FaCalendarDays, FaClock, FaLocationDot } from "react-icons/fa6"
-export const MinistriesPage = () => {
+import { JoinCard } from "../../components/JoinCard"
+export const AllMinistries = () => {
   const navigate = useNavigate();
   const [ministryData, setMinistryData] = useState<MinistryModel[]>([]);
+  const [showJoinEvent, setShowJoinEvent] = useState<boolean>(false);
   const [showSort, setShowSort] = useState(false);
+   const handleJoinEvent = () => {
+    setShowJoinEvent(!showJoinEvent);
+  }
   const toggleSort = () => {
     setShowSort(!showSort);
   };
@@ -27,6 +32,13 @@ export const MinistriesPage = () => {
   }
   return (
     <>
+
+      {showJoinEvent &&
+        (
+          <JoinCard setJoinEvent={setShowJoinEvent} joinEvent={showJoinEvent} />
+        )
+      }
+
       <div className="w-screen h-auto items-center flex flex-col justify-center">
         <motion.section
           className="w-full mt-28 flex flex-col items-center justify-center bg-cover bg-center relative">
@@ -79,7 +91,7 @@ export const MinistriesPage = () => {
 
                   {
                     ministryData.map((ministryData, index) => (
-                      <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-3 flex flex-col">
+                      <div key={index} className="rounded-lg border bg-card text-card-foreground shadow-sm p-3 flex flex-col">
                         <div className="w-full h-auto">
                           <img
                             src={`http://localhost:8081/bbek/ministry_image?ministryName=${encodeURIComponent(ministryData.ministryName)}`} alt={ministryData.ministryName}
@@ -98,13 +110,23 @@ export const MinistriesPage = () => {
                                 <span>{ministryData.schedule}</span>
                               </div>
                             </div>
-                            <p className="text-gray-600 mb-2">
-                              {ministryData.description}
+                             <p className="text-gray-600 mb-2">
+                              {ministryData.description.length > 80 ? (
+                                <>
+                                  {ministryData.description.substring(0, 80)}...
+                                  <br />
+                                  <Link
+                                    to="/landpage/ministries/learn-more-ministry"
+                                    state={{ ministryModel: ministryData }}
+                                    className="text-blue-500 cursor-pointer">See more</Link>
+                                </>
+                              ) : ministryData.description}
                             </p>
-                      
+
                           </div>
                         </div>
                         <div className="w-full flex items-center justify-center gap-3 mt-2">
+                         
                           <motion.button
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
@@ -112,11 +134,16 @@ export const MinistriesPage = () => {
                             whileTap={{ scale: 0.95 }}
                             transition={{ duration: 0.2 }}
                             className="bg-blue-600 w-36 h-12  text-white  rounded-md text-sm "
-                            onClick={() => {
-                              navigate("/landpage/beoneofus/waterbaptism");
-                            }}
+
                           >
-                            LEARN MORE
+                            <Link
+                              className="hover:bg-transparent hover:text-white"
+                              to="/landpage/ministries/learn-more-ministry"
+                              state={{ ministryModel: ministryData }}
+                            >
+                              LEARN MORE
+                            </Link>
+                            
                           </motion.button>
                           <motion.button
                             initial={{ scale: 0 }}
@@ -125,9 +152,7 @@ export const MinistriesPage = () => {
                             whileTap={{ scale: 0.95 }}
                             transition={{ duration: 0.2 }}
                             className="bg-gray-400  w-36 h-12  text-white rounded-md text-sm  border border-gray-100"
-                            onClick={() => {
-                              navigate("/landpage/beoneofus/waterbaptism");
-                            }}
+                            onClick={handleJoinEvent}
                           >
                             JOIN US
                           </motion.button>

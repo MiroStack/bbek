@@ -29,19 +29,12 @@ const OfferingRepo = {
     });
     return response.data;
   },
-  async submitOffering(offeringModel:OfferingModel, isUpdate:boolean):Promise<ApiResponseModel<any>>{
+  async submitOffering(offeringModel: OfferingModel, isUpdate: boolean): Promise<ApiResponseModel<any>> {
     const token = Cookies.getCookie("auth_token");
     const formData = new FormData();
-    formData.append("id", offeringModel.id);
-    formData.append("memberName", offeringModel.memberName)
-    formData.append("amount", offeringModel.amount.toString());
-    formData.append("offeringDate", offeringModel.offeringDate);
-    formData.append("offeringType", offeringModel.offeringType);
-    formData.append("paymentMethod", offeringModel.paymentMethod);
-    formData.append("notes", offeringModel.notes);
-    formData.append("isUpdate", isUpdate.toString());
+    const response = await axios.post<ApiResponseModel<any>>(`submitOffering?isUpdate=${isUpdate}`, 
+      offeringModel,{
 
-    const response = await axios.post<ApiResponseModel<any>>('submitOffering',formData,{
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`
@@ -49,12 +42,22 @@ const OfferingRepo = {
     });
     return response.data;
   },
-  async getAllOffering():Promise<ApiResponseModel<OfferingModel[]>>{
+  async getAllOffering(): Promise<ApiResponseModel<OfferingModel[]>> {
     const token = Cookies.getCookie("auth_token");
-    const response = await axios.get('getAllOffering',{
-      headers:{
-        "Content-Type":"application/json",
-        Authorization:`Bearer ${token}`
+    const response = await axios.get('getAllOffering', {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response.data;
+  },
+  async deleteOffering(id: number): Promise<ApiResponseModel<any>> {
+    const token = Cookies.getCookie("auth_token");
+    const response = await axios.delete(`deleteOffering?id=${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       }
     });
     return response.data;

@@ -8,4 +8,6 @@ export interface MinistryModel{
     member:string;
     createdDate:string;
     updatedDate:string;
+    startTime:string;
+    endTime:string;
 }

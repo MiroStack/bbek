@@ -1,24 +1,29 @@
 import { useEffect, useState } from "react";
 import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
 import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
-import { showCreateOffering } from "../../../../datasource/redux/staff/church_record/OfferingSlice";
+import { showCreateOffering, showUpdateOffering } from "../../../../datasource/redux/staff/church_record/OfferingSlice";
 import { useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks"
 import { Loader } from "../../../landpage/components/Loader";
 import { CreateOffering } from "../../components/offering/CreateOffering";
 import { useDispatch } from "react-redux";
 import OfferingRepo from "../../../../datasource/repositories/OfferingRepo";
-import { hideLoader, showErrorDialog, showLoader } from "../../../../datasource/redux/dialog/DialogSlice";
+import { hideLoader, showErrorDialog, showLoader, showWarningDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 import type { OfferingModel } from "../../../../datasource/models/Offering/OfferingModel";
 import dayjs from "dayjs";
+import { WarningDialog } from "../../../../component/dialog/WarningDialog";
+import { UpdateOffering } from "../../components/offering/UpdateOffering";
 
 export const TithesOfferingPage = () => {
     const offeringForm = useAppSelector((state => state.offeringForm.value));
     const loaderDialog = useAppSelector((state => state.dialog.loader));
     const errorDialog = useAppSelector((state => state.dialog.error));
     const successDialog = useAppSelector((state => state.dialog.success));
+    const warningDialog = useAppSelector((state => state.dialog.warning));
+    const updateOfferingForm = useAppSelector((state => state.offeringForm.edit));
     const [isRefreshing, setIsRefreshing] = useState<boolean>(true);
     const [allOffering, setAllOffering] = useState<OfferingModel[]>([]);
-
+    const [optionIndex, setOptionIndex] = useState<number>(-1);
+    const [selectedItem, setSelectedItem] = useState<OfferingModel | null>(null);
     useEffect(() => {
         if (isRefreshing) {
             handleGetAllOffering();
@@ -43,6 +48,27 @@ export const TithesOfferingPage = () => {
         }
     }
 
+    const handleDeleteOffering = async () => {
+        dispatch(showLoader());
+        try {
+            const id = parseInt(sessionStorage.getItem("id") ?? '0');
+            const response = await OfferingRepo.deleteOffering(id);
+            if (response.statusCode == 200) {
+                setIsRefreshing(true);
+            } else if (response.statusCode === 401) {
+                sessionStorage.setItem("message", "Session expired. Kindly relogin your account.");
+                dispatch(showErrorDialog());
+            } else {
+                sessionStorage.setItem("message", response.message);
+                dispatch(showErrorDialog());
+            }
+        } catch (e) {
+
+        } finally {
+            sessionStorage.removeItem("id");
+        }
+    }
+
 
     const dispatch = useDispatch();
     return (
@@ -50,11 +76,19 @@ export const TithesOfferingPage = () => {
             <div className={`${offeringForm ? '' : 'hidden'}`}>
                 <CreateOffering setIsRefreshing={setIsRefreshing} />
             </div>
+            {updateOfferingForm && (
+                <div>
+                    <UpdateOffering setIsRefreshing={setIsRefreshing} offeringModel={selectedItem!} />
+                </div>
+            )}
             <div className={`${loaderDialog ? '' : 'hidden'}`}>
                 <Loader loader={loaderDialog} />
             </div>
             <div className={`${successDialog ? '' : 'hidden'}`}>
                 <SuccessDialog />
+            </div>
+            <div className={`${warningDialog}? '':'hidden' `}>
+                <WarningDialog onConfirm={handleDeleteOffering} />
             </div>
             <div className={`${errorDialog ? '' : 'hidden'}`}>
                 <ErrorDialog2 />
@@ -206,102 +240,66 @@ export const TithesOfferingPage = () => {
                     </div>
                     <div className="rounded-lg border bg-card text-card-foreground shadow-sm mb-6">
                         <div className="p-6">
-                            <div className="relative w-full md:w-1/3">
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="lucide lucide-search absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
-                                >
-                                    <circle cx="11" cy="11" r="8"></circle>
-                                    <path d="m21 21-4.3-4.3"></path>
-                                </svg>
-                                <input
-                                    className="flex h-10 w-full rounded-md border border-input bg-background mb-2 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10"
-                                    placeholder="Search donations..."
-                                    value=""
-                                />
+                            <div className="flex flex-col md:flex-row gap-4 justify-between">
+                                <div className="relative w-full md:w-1/3">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        className="lucide lucide-search absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
+                                    >
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <path d="m21 21-4.3-4.3"></path>
+                                    </svg>
+                                    <input
+                                        className="flex h-10 w-full rounded-md border border-input bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10"
+                                        placeholder="Search events..."
+                                        type="text"
+                                        id="search-events"
+                                    />
+                                </div>
+                                <div className="flex gap-2">
+                                    <button
+                                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                                        type="button"
+                                        id="radix-«r8l»"
+                                        aria-haspopup="menu"
+                                        aria-expanded="false"
+                                        data-state="closed"
+                                    >
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            className="lucide lucide-filter h-4 w-4 mr-2"
+                                        >
+                                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                                        </svg>
+                                        Filter by Type
+                                    </button>
+                                    <button
+                                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                                        name="export-events-csv-btn"
+                                    >
+                                        Export CSV
+                                    </button>
+                                </div>
                             </div>
-                            <button
-                                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
-                                name="export-donations-csv-btn"
-                            >
-                                Export CSV
-                            </button>
                         </div>
                     </div>
                     <div dir="ltr" data-orientation="horizontal">
-                        <div
-                            role="tablist"
-                            aria-orientation="horizontal"
-                            className="inline-flex h-10 items-center justify-center rounded-md bg-muted p-1 text-muted-foreground mb-6"
-                            tabIndex={0}
-                            data-orientation="horizontal"
-                            style={{ outline: 'none' }}
-                        >
-                            <button
-                                type="button"
-                                role="tab"
-                                aria-selected="true"
-                                aria-controls="radix-«r9a»-content-all"
-                                data-state="active"
-                                id="radix-«r9a»-trigger-all"
-                                className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-                                tabIndex={-1}
-                                data-orientation="horizontal"
-                                data-radix-collection-item=""
-                            >
-                                All Donations
-                            </button>
-                            <button
-                                type="button"
-                                role="tab"
-                                aria-selected="false"
-                                aria-controls="radix-«r9a»-content-tithes"
-                                data-state="inactive"
-                                id="radix-«r9a»-trigger-tithes"
-                                className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-                                tabIndex={-1}
-                                data-orientation="horizontal"
-                                data-radix-collection-item=""
-                            >
-                                Tithes
-                            </button>
-                            <button
-                                type="button"
-                                role="tab"
-                                aria-selected="false"
-                                aria-controls="radix-«r9a»-content-offerings"
-                                data-state="inactive"
-                                id="radix-«r9a»-trigger-offerings"
-                                className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-                                tabIndex={-1}
-                                data-orientation="horizontal"
-                                data-radix-collection-item=""
-                            >
-                                Offerings
-                            </button>
-                            <button
-                                type="button"
-                                role="tab"
-                                aria-selected="false"
-                                aria-controls="radix-«r9a»-content-special"
-                                data-state="inactive"
-                                id="radix-«r9a»-trigger-special"
-                                className="inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
-                                tabIndex={-1}
-                                data-orientation="horizontal"
-                                data-radix-collection-item=""
-                            >
-                                Special Offerings
-                            </button>
-                        </div>
                         <div
                             data-state="active"
                             data-orientation="horizontal"
@@ -354,14 +352,25 @@ export const TithesOfferingPage = () => {
                                                         <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
                                                             {item.notes}
                                                         </td>
-                                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
+                                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right relative">
+                                                            <div className={`${optionIndex === index ? "" : "hidden"} absolute bg-white z-10 h-28 w-36 left-[-100%] bottom-[-80%] shadow-md rounded-md`} onClick={() => setOptionIndex(-1)}>
+                                                                <ul className="flex flex-col items-start w-full">
+                                                                    <li className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start">View Details</li>
+                                                                    <li className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start" onClick={() => {
+                                                                        setSelectedItem(item);
+                                                                        dispatch(showUpdateOffering())
+                                                                    }}>Edit Donation</li>
+                                                                    <li className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start">Print Receipt</li>
+                                                                    <li className="text-red-500 cursor-pointer hover:bg-gray-100 p-1 w-full text-start" onClick={() => {
+                                                                        sessionStorage.setItem("id", item.id);
+                                                                        dispatch(showWarningDialog());
+                                                                    }}>Delete</li>
+                                                                </ul>
+                                                            </div>
                                                             <button
                                                                 className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
                                                                 type="button"
-                                                                id="radix-«r9f»"
-                                                                aria-haspopup="menu"
-                                                                aria-expanded="false"
-                                                                data-state="closed"
+                                                                onClick={() => { setOptionIndex(index) }}
                                                             >
                                                                 <svg
                                                                     xmlns="http://www.w3.org/2000/svg"

@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import bbekLogo from '../img/logobbek.jpg';
 import '../css/style.css';
 import { Link } from 'react-router-dom';
 import { Cookies } from '../../util/Cookies';
 
 export default function Sidebar() {
+    const navigate = useNavigate();
     const [showChurchSubmenu, setShowChurchSubmenu] = useState(false);
     const [showServicesSubmenu, setShowServicesSubmenu] = useState(false);
     const [showMaintenanceSubmenu, setShowMaintenanceSubmenu] = useState(false);
@@ -14,7 +15,10 @@ export default function Sidebar() {
 
     return (
         <div style={{ width: 350 }} className="p-3 border d-flex flex-column gap-2 vh-100 ">
-            <Link to="/admin" className='navbar-brand text-center d-flex gap-2 align-items-center p-2'><img src={bbekLogo} style={{ width: 50 }} className="logo img-fluid" alt="Vite logo" /><span className='text-sm'>BBEK CHURCH</span></Link>
+            <div className='navbar-brand text-center d-flex gap-2 align-items-center p-2 cursor-pointer'  onClick={()=>{ 
+                           sessionStorage.setItem("navigateLandpage", "true");
+                           navigate("/")}}><img src={bbekLogo} style={{ width: 50 }} className="logo img-fluid" alt="Vite logo" />
+                           <span className='text-sm'>BBEK CHURCH</span></div>
             <span className='border-bottom'></span>
             <span className='text-muted text-sm fw-bold'>MAIN</span>
 

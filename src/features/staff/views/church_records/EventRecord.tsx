@@ -180,10 +180,10 @@ export const EventRecordPage = () => {
                                             Event Title
                                         </th>
                                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                                            Date
+                                            Start Date
                                         </th>
                                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                                            Time
+                                            End Date
                                         </th>
                                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
                                             Location

@@ -48,7 +48,7 @@ import { WaterBaptism_Page } from './features/staff/views/services/WaterBaptism.
 import { MemberPage } from './features/member/member.tsx';
 import {DashboardMemberPage} from'./features/member/views/dashboard.tsx';
 import { MinistryStaffPage } from './features/staff/views/services/MinistryStaff.tsx';
-import { MinistriesPage } from './features/landpage/view/Ministries.tsx';
+import { AllMinistries } from './features/landpage/view/ministries/AllMinistries.tsx';
 import { MarriageServicePage } from './features/staff/views/services/MarriageService.tsx';
 import { MyProfile } from './features/member/views/myprofile/MyProfile.tsx';
 import { MyCertificate } from './features/member/views/myprofile/MyCertificate.tsx';
@@ -64,6 +64,9 @@ import { Homepage } from './features/landpage/view/home/Homepage.tsx';
 import { LeadersAndOfficers } from './features/landpage/view/about/LeadersAndOfficers.tsx';
 import { PlanYourVisit } from './features/landpage/view/PlanYourVisit.tsx';
 import { EventPage } from './features/landpage/view/events/Event.tsx';
+import { LearnMoreEvent } from './features/landpage/view/events/LearnMoreEvent.tsx';
+import { LearnMoreMinistries } from './features/landpage/view/ministries/LearnMoreMinistries.tsx';
+import { MinistryPage } from './features/landpage/view/ministries/Ministry.tsx';
 
 function App() {
 
@@ -87,12 +90,20 @@ function App() {
               <Route index path="waterbaptism" element={<WaterBaptismPage />}></Route>
               <Route index path="sendprayer" element={<SendPrayerPage />}></Route>
             </Route>
+
             <Route path='events' element={<EventPage />}>
               <Route index path="allevents" element={<AllEventsPage />}></Route>
+              <Route index path="learn-more-event" element={<LearnMoreEvent/>}></Route>
             </Route>
+
             <Route index path="live" element={<LivePage />} />
             <Route index path="give" element={<GivePage />} />
-            <Route index path="ministries" element={<MinistriesPage />} />
+           
+            <Route  path="ministries" element={<MinistryPage />}>
+                 <Route index  path="allministry" element={<AllMinistries/>}></Route>
+                <Route  path="learn-more-ministry" element={<LearnMoreMinistries/>}></Route>
+            </Route>
+
             <Route index path="plan-your-visit" element={<PlanYourVisit />} />
           </Route>
 
