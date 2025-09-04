@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
 import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
 import { showCreateOffering, showUpdateOffering } from "../../../../datasource/redux/staff/church_record/OfferingSlice";
@@ -13,7 +13,45 @@ import dayjs from "dayjs";
 import { WarningDialog } from "../../../../component/dialog/WarningDialog";
 import { UpdateOffering } from "../../components/offering/UpdateOffering";
 
+export const OfferingTypes = {
+    all: "ALL",
+    offering: "OFFERING",
+    tithe: "TITHE",
+    special_offering: "SPECIAL OFFERING"
+}
+interface ActionModel {
+    type: string;
+    payload: OfferingModel[];
+}
+interface DonationModel {
+    all: number;
+    tithe: number;
+    offering: number;
+    special_offering: number;
+}
+
+const reducer = (state: OfferingModel[], action: ActionModel) => {
+    //    console.log("I am working "+action.payload);
+    switch (action.type) {
+        case OfferingTypes.all:
+            return action.payload;
+        case OfferingTypes.offering:
+            //    console.log("offering");
+            return action.payload.filter((item, index) => item.offeringType == OfferingTypes.offering);
+        case OfferingTypes.tithe:
+            //    console.log("tithe");
+            return action.payload.filter((item, index) => item.offeringType == OfferingTypes.tithe);
+        case OfferingTypes.special_offering:
+            return action.payload.filter((item, index) => item.offeringType == OfferingTypes.special_offering);
+        default:
+            //    console.log("all");
+            return state;
+    }
+}
+
+
 export const TithesOfferingPage = () => {
+
     const offeringForm = useAppSelector((state => state.offeringForm.value));
     const loaderDialog = useAppSelector((state => state.dialog.loader));
     const errorDialog = useAppSelector((state => state.dialog.error));
@@ -24,12 +62,51 @@ export const TithesOfferingPage = () => {
     const [allOffering, setAllOffering] = useState<OfferingModel[]>([]);
     const [optionIndex, setOptionIndex] = useState<number>(-1);
     const [selectedItem, setSelectedItem] = useState<OfferingModel | null>(null);
+    const [showSorting, setShowSorting] = useState<boolean>(false);
+    const [donation, setDonation] = useState<DonationModel>();
+    const [state, dispatch1] = useReducer(reducer, allOffering);
     useEffect(() => {
         if (isRefreshing) {
             handleGetAllOffering();
             setIsRefreshing(false);
         }
     }, [isRefreshing]);
+
+    useEffect(() => {
+        if (allOffering.length > 0) {
+            dispatch1({ type: OfferingTypes.all, payload: allOffering });
+            calculate();
+        }
+      
+    }, [allOffering]);
+
+   const calculate = useCallback(()=>{
+          let allDonation = 0;
+        let offeringDonation = 0;
+        let titheDonation = 0;
+        let specialDonation = 0;
+        allOffering.forEach((item) => {
+            allDonation += item.amount;
+            switch (item.offeringType) {
+                case OfferingTypes.offering:
+                    offeringDonation += item.amount;
+                    break;
+                case OfferingTypes.tithe:
+                    titheDonation += item.amount;
+                    break;
+                case OfferingTypes.special_offering:
+                    specialDonation += item.amount;
+                    break;
+            }
+        })
+
+        setDonation({
+            all: allDonation,
+            offering: offeringDonation,
+            tithe: titheDonation,
+            special_offering: specialDonation
+        })
+    },[allOffering])
 
     const handleGetAllOffering = async () => {
         dispatch(showLoader());
@@ -47,6 +124,7 @@ export const TithesOfferingPage = () => {
             dispatch(hideLoader());
         }
     }
+
 
     const handleDeleteOffering = async () => {
         dispatch(showLoader());
@@ -67,6 +145,10 @@ export const TithesOfferingPage = () => {
         } finally {
             sessionStorage.removeItem("id");
         }
+    }
+
+    const handleShowSorting = () => {
+        setShowSorting(!showSorting);
     }
 
 
@@ -126,7 +208,7 @@ export const TithesOfferingPage = () => {
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm font-medium text-gray-500">Total Donations</p>
-                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">₱10,300</h3>
+                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">₱{donation?.all}</h3>
                                     </div>
                                     <div className="p-3 bg-green-100 rounded-full">
                                         <svg
@@ -155,7 +237,7 @@ export const TithesOfferingPage = () => {
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm font-medium text-gray-500">Tithes</p>
-                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">₱4,500</h3>
+                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">₱{donation?.tithe}</h3>
                                     </div>
                                     <div className="p-3 bg-blue-100 rounded-full">
                                         <svg
@@ -184,7 +266,7 @@ export const TithesOfferingPage = () => {
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm font-medium text-gray-500">Offerings</p>
-                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">₱800</h3>
+                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">₱{donation?.offering}</h3>
                                     </div>
                                     <div className="p-3 bg-purple-100 rounded-full">
                                         <svg
@@ -213,7 +295,7 @@ export const TithesOfferingPage = () => {
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm font-medium text-gray-500">Special Offerings</p>
-                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">₱5,000</h3>
+                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">₱{donation?.special_offering}</h3>
                                     </div>
                                     <div className="p-3 bg-yellow-100 rounded-full">
                                         <svg
@@ -264,14 +346,19 @@ export const TithesOfferingPage = () => {
                                         id="search-events"
                                     />
                                 </div>
-                                <div className="flex gap-2">
+                                <div className="flex gap-2 relative">
+                                    <div className={`${showSorting ? "" : "hidden"} absolute bg-white z-10 h-28 w-48 rounded-md shadow-md bottom-[-250%] left-[-10%] flex flex-col items-center justify-center`}>
+                                        <ul className="h-full w-full flex flex-col items-center justify-center" onClick={() => setShowSorting(false)}>
+                                            <li className="hover:bg-green-100 cursor-pointer w-full px-3" onClick={() => dispatch1({ type: OfferingTypes.all, payload: allOffering })}>All</li>
+                                            <li className="hover:bg-green-100 cursor-pointer w-full px-3" onClick={() => dispatch1({ type: OfferingTypes.offering, payload: allOffering })}>Offering</li>
+                                            <li className="hover:bg-green-100 cursor-pointer w-full px-3" onClick={() => dispatch1({ type: OfferingTypes.tithe, payload: allOffering })}>Tithe</li>
+                                            <li className="hover:bg-green-100 cursor-pointer w-full px-3" onClick={() => dispatch1({ type: OfferingTypes.special_offering, payload: allOffering })}>Special Offering</li>
+                                        </ul>
+                                    </div>
                                     <button
                                         className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
                                         type="button"
-                                        id="radix-«r8l»"
-                                        aria-haspopup="menu"
-                                        aria-expanded="false"
-                                        data-state="closed"
+                                        onClick={handleShowSorting}
                                     >
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
@@ -340,7 +427,7 @@ export const TithesOfferingPage = () => {
                                         </thead>
                                         <tbody className="[&amp;_tr:last-child]:border-0">
                                             {
-                                                allOffering.map((item, index) => (
+                                                state.map((item, index) => (
                                                     <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                                                         <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">{item.memberName}</td>
                                                         <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">₱{item.amount}</td>
