@@ -1,16 +1,14 @@
-import { use, useState } from "react";
-import { showMinistry, hideMinistry } from '../../../../datasource/redux/staff/church_record/MinistrySlice';
-import { useSelector, useDispatch } from 'react-redux';
-import { useAppSelector } from '../../../../datasource/redux/staff/hooks/hooks';
+import { useState } from "react";
+import { hideMinistry } from '../../../../datasource/redux/staff/church_record/MinistrySlice';
+import { useDispatch } from 'react-redux';
 import MinistryRepo from "../../../../datasource/repositories/MinistryRepo";
-import { hideLoader, showLoader, showSuccessDialog } from "../../../../datasource/redux/dialog/DialogSlice";
+import { hideLoader, showErrorDialog, showLoader, showSuccessDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 
 interface MinistryProps{
-    setRefresh:React.Dispatch<React.SetStateAction<boolean>>;
+    setIsRefresh:React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const CreateMinistryForm = ({setRefresh}:MinistryProps) => {
-    const ministryForm = useAppSelector((state) => state.ministryForm.value);
+export const CreateMinistryForm = ({setIsRefresh}:MinistryProps) => {
     const dispatch = useDispatch();
     const [showStatus, setShowStatus] = useState(false);
     const [ministryName, setMinistryName] = useState("");
@@ -101,13 +99,15 @@ export const CreateMinistryForm = ({setRefresh}:MinistryProps) => {
                     dispatch(hideLoader())
                 }, 1500);
             } else {
+                sessionStorage.setItem("message", response.message);
+                dispatch(showErrorDialog())
                 dispatch(hideLoader())
             }
 
         } catch (err) {
             console.error("Save failed:", err);
         } finally {
-          setRefresh(true);
+          setIsRefresh(true);
         }
     }
     return (

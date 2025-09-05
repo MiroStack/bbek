@@ -32,7 +32,7 @@ export const MinistriesStaffPage = () => {
   const [ministryData, setMinistryData] = useState<MinistryModel[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(true);
   const [activeMinistry, setActiveMinistry] = useState<MinistryModel[]>([]);
-   const [totalMember, setTotalMember] = useState<number>(0);
+  const [totalMember, setTotalMember] = useState<number>(0);
   useEffect(() => {
     if (isRefreshing) {
       fetchMinistryData();
@@ -44,18 +44,21 @@ export const MinistriesStaffPage = () => {
     try {
       const res = await MinistryRepo.getAllMinistry();
       setMinistryData(res);
-       setActiveMinistry(
-        res.filter((item, index) => {
+      setActiveMinistry(
+        res.filter((item) => {
           console.log(item.statusName.toLowerCase() === "active");
           return item.statusName.toLowerCase() === "active";
         })
       );
       let total = 0;
-      res.forEach((item, index)=>{
-        total += parseInt(item.member??0);
+      res.forEach((item) => {
+        total += parseInt(item.member ?? 0);
       })
       setTotalMember(total);
-    } catch (e) {}
+    } catch (e) {
+
+      console.log(e);
+    }
   };
   const dispatch = useDispatch();
 
@@ -71,6 +74,9 @@ export const MinistriesStaffPage = () => {
           dispatch(showSuccessDialog());
           dispatch(hideLoader());
         }, 1500);
+      } else {
+        sessionStorage.setItem("message", response.message);
+        dispatch(showErrorDialog());
       }
     } catch (e) {
       console.error("Error deleting ministry:", e);
@@ -88,26 +94,13 @@ export const MinistriesStaffPage = () => {
 
   return (
     <>
-      <div className={`${ministryForm ? "" : "hidden"}`}>
-        <CreateMinistryForm setRefresh={setIsRefreshing}/>
-      </div>
-      <div className={`${ministryEditForm ? "" : "hidden"}`}>
-        <UpdateMinistryForm setIsRefresh={setIsRefreshing} />
-      </div>
-      <div className="">
-        <Loader loader={loaderDialog} />
-      </div>
-
-      <div className={`${successDialog ? "" : "hidden"}`}>
-        <SuccessDialog />
-      </div>
-      <div className={`${warningDialog ? "" : "hidden"}`}>
-        <WarningDialog onConfirm={handleDeleteMinsitry} />
-      </div>
-      <div className={`${errorDialog ? "" : "hidden"}`}>
-        <ErrorDialog2 />
-      </div>
-
+      {ministryForm && (<CreateMinistryForm setIsRefresh={setIsRefreshing} />)}
+      {ministryEditForm && (<UpdateMinistryForm setIsRefresh={setIsRefreshing} />)}
+      <Loader loader={loaderDialog} />
+    
+       {successDialog && ( <SuccessDialog />)}
+      {warningDialog && (<WarningDialog onConfirm={handleDeleteMinsitry} />)}
+      {errorDialog && (<ErrorDialog2 />)}
       <div
         className={`w-100  h-auto flex flex-col items-center justify-center`}
       >

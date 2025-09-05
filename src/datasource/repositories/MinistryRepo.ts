@@ -5,7 +5,7 @@ import { Cookies } from '../../util/Cookies';
 import { end } from "@popperjs/core";
 
 const MinistryRepo = {
-  async saveMinistry(id: number, member: number, description: string, ministryName: string, statusName: string, leader: string, schedule: string, startTime:string, endTime:string, file: File, isUpdate: boolean): Promise<ApiResponseModel<any>> {
+  async saveMinistry(id: number, member: number, description: string, ministryName: string, statusName: string, leader: string, schedule: string, startTime:string, endTime:string, file: File|null, isUpdate: boolean): Promise<ApiResponseModel<any>> {
     const formData = new FormData();
     const token = Cookies.getCookie("auth_token");
     // Append each field individually for @RequestParam
@@ -19,7 +19,9 @@ const MinistryRepo = {
     formData.append("startTime", startTime);
     formData.append("endTime", endTime);
     formData.append("isUpdate", isUpdate.toString());
-    formData.append("file", file);
+    if(file!){
+      formData.append("file", file);
+    }
 
     const response = await axios.post<ApiResponseModel<any>>(
       "saveMinistry",

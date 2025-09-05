@@ -102,12 +102,6 @@ export const UpdateEventForm = ({ setIsRefreshing }: UpdateEventFormProps) => {
     const handleShowStatus = () => setShowStatus(showStatus ? false : true);
     async function handleSaveEvent() {
         dispatch(showLoader());
-        if (!file) {
-            console.error("No file selected");
-            alert("Please select an image file to upload.");
-            dispatch(hideLoader());
-            return;
-        }
         try {
             const response = await EventRepo.saveEvent(
                 sessionStorage.getItem("id") || "0",

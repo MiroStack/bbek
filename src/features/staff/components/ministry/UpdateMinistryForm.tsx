@@ -6,7 +6,7 @@ import MinistryRepo from "../../../../datasource/repositories/MinistryRepo";
 import { hideLoader, showLoader, showSuccessDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 
 type UpdateMinistryFormProps = {
-    setIsRefresh?: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
 export const UpdateMinistryForm = ({ setIsRefresh }: UpdateMinistryFormProps) => {
     const ministryUpdate = useAppSelector((state) => state.ministryForm.edit);
@@ -85,13 +85,6 @@ export const UpdateMinistryForm = ({ setIsRefresh }: UpdateMinistryFormProps) =>
 
     async function handleSaveMinistry() {
         dispatch(showLoader());
-        if (!file) {
-            console.error("No file selected");
-            alert("Please select a file to upload.");
-            dispatch(hideLoader());
-            return;
-        }
-
         try {
             const response = await MinistryRepo.saveMinistry(
                 parseInt(sessionStorage.getItem("id") || "0"),
@@ -123,7 +116,7 @@ export const UpdateMinistryForm = ({ setIsRefresh }: UpdateMinistryFormProps) =>
                 // Show success dialog after a short delay 
                 setTimeout(() => {
                     dispatch(showSuccessDialog())
-                    setIsRefresh && setIsRefresh(true);
+                    setIsRefresh(true);
                     dispatch(hideLoader())
                 }, 1500);
             } else {

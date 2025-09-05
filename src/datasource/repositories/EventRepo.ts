@@ -19,8 +19,10 @@ const EventRepo = {
     // console.log(token);
     return response.data;
   },
-  async saveEvent(id: string, eventName: string, eventType: string, eventStartDate: string, eventEndDate: string, eventLocation: string, attendance: string, offering: string, statusName: string, isUpdate: boolean, description: string, file: File): Promise<ApiResponseModel<EventModel>> {
+  async saveEvent(id: string, eventName: string, eventType: string, eventStartDate: string, eventEndDate: string, eventLocation: string, attendance: string, offering: string, statusName: string, isUpdate: boolean, description: string, file: File | null): Promise<ApiResponseModel<EventModel>> {
     const token = Cookies.getCookie("auth_token");
+    // Only append file if it's not null
+
     const formData = new FormData();
     formData.append("id", id);
     formData.append("eventName", eventName);
@@ -33,7 +35,9 @@ const EventRepo = {
     formData.append("statusName", statusName);
     formData.append("description", description);
     formData.append("isUpdate", isUpdate.toString());
-    formData.append("file", file);
+    if(file!){
+      formData.append("file", file);
+    }
 
 
     const response = await axios.post<ApiResponseModel<EventModel>>(
@@ -90,17 +94,17 @@ const EventRepo = {
   },
 
   async getEventImage(eventName: string): Promise<string> {
-  const response = await axios.get(`event_image`, {
-    params: { eventName },
-    responseType: "arraybuffer", // get raw binary
-  });
+    const response = await axios.get(`event_image`, {
+      params: { eventName },
+      responseType: "arraybuffer", // get raw binary
+    });
 
-  // Convert binary to a blob URL
-  const blob = new Blob([response.data], {
-    type: response.headers["content-type"], 
-  });
-  return URL.createObjectURL(blob);
-}
+    // Convert binary to a blob URL
+    const blob = new Blob([response.data], {
+      type: response.headers["content-type"],
+    });
+    return URL.createObjectURL(blob);
+  }
 
 
 };
