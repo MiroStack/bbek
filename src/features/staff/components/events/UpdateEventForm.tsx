@@ -55,9 +55,7 @@ export const UpdateEventForm = ({ setIsRefreshing }: UpdateEventFormProps) => {
             dispatch(hideLoader());
             sessionStorage.setItem("message", "Failed to fetch event data.");
             dispatch(showErrorDialog());
-        } finally {
-
-        }
+        } 
     }
 
     const handleSetEventName = (e: React.ChangeEvent<HTMLInputElement>) => {
