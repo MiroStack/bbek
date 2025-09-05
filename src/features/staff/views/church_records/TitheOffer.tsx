@@ -486,36 +486,6 @@ export const TithesOfferingPage = () => {
                                 </div>
                             </div>
                         </div>
-                        <div
-                            data-state="inactive"
-                            data-orientation="horizontal"
-                            role="tabpanel"
-                            aria-labelledby="radix-«r9a»-trigger-tithes"
-                            hidden={false}
-                            id="radix-«r9a»-content-tithes"
-                            tabIndex={0}
-                            className="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 mt-0"
-                        ></div>
-                        <div
-                            data-state="inactive"
-                            data-orientation="horizontal"
-                            role="tabpanel"
-                            aria-labelledby="radix-«r9a»-trigger-offerings"
-                            hidden={false}
-                            id="radix-«r9a»-content-offerings"
-                            tabIndex={0}
-                            className="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 mt-0"
-                        ></div>
-                        <div
-                            data-state="inactive"
-                            data-orientation="horizontal"
-                            role="tabpanel"
-                            aria-labelledby="radix-«r9a»-trigger-special"
-                            hidden={false}
-                            id="radix-«r9a»-content-special"
-                            tabIndex={0}
-                            className="ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 mt-0"
-                        ></div>
                     </div>
                 </div>
             </div>
