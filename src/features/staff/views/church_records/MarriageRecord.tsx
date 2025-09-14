@@ -1,11 +1,103 @@
+import { useEffect, useState } from "react";
+import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
+import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
+import { WarningDialog } from "../../../../component/dialog/WarningDialog";
+import type { MarriageStatusesModel } from "../../../../datasource/models/Marriage/MarriageStatusesModel";
+import { useAppDispatch, useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks";
+import { MarriageRepo } from "../../../../datasource/repositories/MarriageRepo"
+import { Loader } from "../../../landpage/components/Loader";
+import type { MarriageLocationsModel } from "../../../../datasource/models/Marriage/MarriageLocationsModel";
+import type { MarriageModel } from "../../../../datasource/models/Marriage/MarriageModel";
+import { hideLoader, showErrorDialog, showLoader } from "../../../../datasource/redux/dialog/DialogSlice";
+import dayjs from "dayjs";
+import { CreateMarriageRecord } from "../../components/marriage/CreateMarriageRecord";
+import { showCreateMarriage } from "../../../../datasource/redux/staff/church_record/MarriageSlice";
 export const MarriageRecordPage = () => {
+    useEffect(() => {
+        fetchStatusesRef();
+        fetchLocationRef();
+        fetchMarriageRecords();
+    }, [])
+    const dispatch = useAppDispatch();
+    const showMarriageForm = useAppSelector((state) => state.marriageForm.value);
+    const successDialog = useAppSelector((state) => state.dialog.success);
+    const errorDialog = useAppSelector((state) => state.dialog.error);
+    const warningDialog = useAppSelector((state) => state.dialog.warning);
+    const loaderDialog = useAppSelector((state) => state.dialog.loader);
+    const [statusRef, setStatusRef] = useState<MarriageStatusesModel[]>([]);
+    const [locationRef, setLocationRef] = useState<MarriageLocationsModel[]>([]);
+    const [marriageRecords, setMarriageRecords] = useState<MarriageModel[]>([]);
+    const fetchStatusesRef = async () => {
+        const response = await MarriageRepo.getaAllMarriageStatus();
+        try {
+            dispatch(showLoader());
+            if (response.statusCode === 200) {
+                console.log(response.data);
+                setStatusRef(response.data);
+            } else {
+                sessionStorage.setItem("message", response.message);
+                dispatch(showErrorDialog());
+            }
+        } catch (e) {
+            console.log(e);
+        } finally {
+            dispatch(hideLoader());
+        }
+    }
+    const fetchLocationRef = async () => {
+
+        const response = await MarriageRepo.getaAllMarriageLocation();
+        try {
+            dispatch(showLoader());
+            if (response.statusCode === 200) {
+                console.log(response.data);
+                setLocationRef(response.data);
+            } else {
+                sessionStorage.setItem("message", response.message);
+                dispatch(showErrorDialog());
+            }
+        } catch (e) {
+            console.log(e);
+        } finally {
+            dispatch(hideLoader());
+        }
+    }
+    const fetchMarriageRecords = async () => {
+        const response = await MarriageRepo.getAllMarriage();
+        try {
+            dispatch(showLoader());
+            if (response.statusCode === 200) {
+                console.log(response.data);
+                setMarriageRecords(response.data);
+            } else {
+                sessionStorage.setItem("message", response.message);
+                dispatch(showErrorDialog());
+            }
+        } catch (e) {
+
+        }
+        finally {
+            dispatch(hideLoader());
+        }
+    }
+    const handleDeleteMarriage = () => {
+
+    }
     return (
+
         <>
+            {showMarriageForm && (<CreateMarriageRecord marriageStatuses={statusRef} marriageLocations={locationRef} />)}
+            {successDialog && (<SuccessDialog />)}
+            {errorDialog && (<ErrorDialog2 />)}
+            {warningDialog && (<WarningDialog onConfirm={handleDeleteMarriage} />)}
+            {loaderDialog && (<Loader loader={loaderDialog} />)}
             <div className="w-100 h-auto flex flex-col items-center justify-center">
                 <div className="p-6">
                     <div className="flex justify-between items-center mb-6">
                         <h1 className="text-2xl font-bold">Marriage Records</h1>
-                        <button className="!bg-green-600 text-white hover:!bg-green-500 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                        <button className="!bg-green-600 text-white hover:!bg-green-500 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                            onClick={()=>dispatch(showCreateMarriage())}
+                        >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="24"
@@ -46,7 +138,7 @@ export const MarriageRecordPage = () => {
                                     <input
                                         className="flex h-10 w-full rounded-md border border-input bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10"
                                         placeholder="Search records..."
-                                        value=""
+                        
                                     />
                                 </div>
                             </div>
@@ -160,14 +252,28 @@ export const MarriageRecordPage = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="[&amp;_tr:last-child]:border-0">
-                                        <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">John Smith</td>
-                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">Mary Johnson</td>
-                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">6/15/2023</td>
+                                       {
+                                         marriageRecords.map((record, index) => (
+                                            <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">{record.groomName}</td>
+                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{record.brideName}</td>
+                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{dayjs(record.weddingDate).format("MMMM D, YYYY h:mm A")}</td>
                                             <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                                                <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">Completed</span>
+                                                <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">{statusRef.map((item)=>{
+                                                    if(item.id === record.status){
+                                                        return item.statusName;
+                                                    }else{
+                                                        return null;
+                                                    }
+                                                })}</span>
                                             </td>
-                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">Main Church</td>
+                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{locationRef.map((item)=>{
+                                                    if(item.id === record.location){
+                                                        return item.locationName;
+                                                    }else{
+                                                        return null;
+                                                    }
+                                                })}</td>
                                             <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
                                                 <button
                                                     className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
@@ -197,44 +303,9 @@ export const MarriageRecordPage = () => {
                                                 </button>
                                             </td>
                                         </tr>
-                                        
-                                        <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">James Taylor</td>
-                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">Patricia Martinez</td>
-                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">10/28/2023</td>
-                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                                                <span className="px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800">Pending</span>
-                                            </td>
-                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">Garden Chapel</td>
-                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
-                                                <button
-                                                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
-                                                    type="button"
-                                                    id="radix-«ran»"
-                                                    aria-haspopup="menu"
-                                                    aria-expanded="false"
-                                                    data-state="closed"
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="24"
-                                                        height="24"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth="2"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        className="lucide lucide-ellipsis h-4 w-4"
-                                                    >
-                                                        <circle cx="12" cy="12" r="1"></circle>
-                                                        <circle cx="19" cy="12" r="1"></circle>
-                                                        <circle cx="5" cy="12" r="1"></circle>
-                                                    </svg>
-                                                    <span className="sr-only">Actions</span>
-                                                </button>
-                                            </td>
-                                        </tr>
+                                         ))
+                                       }
+                                       
                                     </tbody>
                                 </table>
                             </div>
