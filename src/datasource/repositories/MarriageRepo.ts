@@ -50,7 +50,7 @@ export const MarriageRepo = {
 
    async submitMarriage(marriageModel: any, isUpdate: boolean): Promise<ApiResponseModel<any>> {
         const token = Cookies.getCookie("auth_token");
-        const response = await axios.post<ApiResponseModel<any>>("getAllMarriageRecord",
+        const response = await axios.post<ApiResponseModel<any>>("submitMarriageRecord",
             {
                 entity: marriageModel,
                 update: isUpdate

@@ -2,17 +2,19 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import type { MarriageStatusesModel } from "../../../../datasource/models/Marriage/MarriageStatusesModel";
 import type { MarriageLocationsModel } from "../../../../datasource/models/Marriage/MarriageLocationsModel";
-import { hideCreateMarriage } from "../../../../datasource/redux/staff/church_record/MarriageSlice";
+import { hideCreateMarriage, hideUpdateMarriage } from "../../../../datasource/redux/staff/church_record/MarriageSlice";
 import Marriage from "../../../../admin/pages/marriage";
 import { MarriageRepo } from "../../../../datasource/repositories/MarriageRepo";
 import type { MarriageModel } from "../../../../datasource/models/Marriage/MarriageModel";
 import { hideLoader, showErrorDialog, showLoader, showSuccessDialog } from "../../../../datasource/redux/dialog/DialogSlice";
-interface CreateMarriageRecordProps {
+interface UpdateMarriageRecordProps {
     marriageStatuses: MarriageStatusesModel[];
     marriageLocations: MarriageLocationsModel[];
+    marriageRecord?: MarriageModel | null;
+    setSelectedItem: React.Dispatch<React.SetStateAction<MarriageModel | null>>;
     setRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export const CreateMarriageRecord = ({ marriageStatuses, marriageLocations, setRefresh }: CreateMarriageRecordProps) => {
+export const UpdateMarriageRecord = ({ marriageStatuses, marriageLocations, marriageRecord, setSelectedItem, setRefresh }: UpdateMarriageRecordProps) => {
     const dispatch = useDispatch();
     const [groomName, setGroomName] = useState("");
     const [brideName, setBrideName] = useState("");
@@ -44,22 +46,30 @@ export const CreateMarriageRecord = ({ marriageStatuses, marriageLocations, setR
     }
 
     useEffect(() => {
-        console.log(marriageLocations)
+        console.log(marriageLocations);
         setStatusList(marriageStatuses);
         setLocationList(marriageLocations);
-        setStatus(marriageStatuses[0]);
-        setLocation(marriageLocations[0]);
+        setStatus(marriageStatuses.find(status => status.id === marriageRecord?.status));
+        setLocation(marriageLocations.find(location => location.id === marriageRecord?.location));
+        setGroomName(marriageRecord?.groomName || "");
+        setBrideName(marriageRecord?.brideName || "");
+        setWeddingDate(marriageRecord?.weddingDate || "");
+        setEmail(marriageRecord?.email || "");
+        setStatus(marriageStatuses.find(status => status.id === marriageRecord?.status));
+        setLocation(marriageLocations.find(location => location.id === marriageRecord?.location));
+
+
     }, []);
 
     const handleSubmitMarriage = async () => {
-        if(groomName === "" || brideName === "" || weddingDate === "" || email === "" || !location || !status){
+        if (groomName === "" || brideName === "" || weddingDate === "" || email === "" || !location || !status) {
             alert("Please fill all the fields");
             return;
         }
         dispatch(showLoader());
         try {
             const marriageData: MarriageModel = {
-                id: 0,
+                id: marriageRecord?.id || 0,
                 groomName: groomName,
                 brideName: brideName,
                 weddingDate: weddingDate,
@@ -68,18 +78,19 @@ export const CreateMarriageRecord = ({ marriageStatuses, marriageLocations, setR
                 email: email,
                 createdDate: ""
             }
-            const response = await MarriageRepo.submitMarriage(marriageData, false);
-            if (response.statusCode === 201) {
+            const response = await MarriageRepo.submitMarriage(marriageData, true);
+            if (response.statusCode === 200) {
                 sessionStorage.setItem("message", response.message);
                 dispatch(showSuccessDialog())
-                dispatch(hideCreateMarriage());
+                dispatch(hideUpdateMarriage());
                 dispatch(hideLoader());
                 setRefresh(true);
             } else {
+                sessionStorage.setItem("message", response.message);
                 dispatch(showErrorDialog());
             }
         } catch (error) {
-             console.log(error);
+            console.log(error);
         } finally {
             dispatch(hideLoader());
         }
@@ -117,8 +128,8 @@ export const CreateMarriageRecord = ({ marriageStatuses, marriageLocations, setR
                             className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             id="new-name"
                             name="groom-name-input"
-                            onChange={handleGroomNameChange}
                             value={groomName}
+                            onChange={handleGroomNameChange}
                             required
                         />
                     </div>
@@ -133,8 +144,8 @@ export const CreateMarriageRecord = ({ marriageStatuses, marriageLocations, setR
                             className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                             id="bridename"
                             name="brid-name-input"
-                            value={brideName}
                             onChange={handleBrideNameChange}
+                            value={brideName}
                             required
                         />
                     </div>
@@ -276,14 +287,13 @@ export const CreateMarriageRecord = ({ marriageStatuses, marriageLocations, setR
                         type="button"
                         onClick={handleSubmitMarriage}
                         name="create-marriage-confirm-btn"
-
                     >
-                        Create Marriage
+                        Update Marriage
                     </button>
                 </div>
                 <button
                     type="button"
-                    onClick={() => dispatch(hideCreateMarriage())}
+                    onClick={() => dispatch(hideUpdateMarriage())}
                     className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
                 >
                     <svg

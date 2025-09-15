@@ -6,4 +6,5 @@ export interface MarriageModel{
     status: number;
     location: number;
     email: string;
+    createdDate: string;
 }

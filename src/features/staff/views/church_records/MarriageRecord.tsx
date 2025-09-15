@@ -8,29 +8,39 @@ import { MarriageRepo } from "../../../../datasource/repositories/MarriageRepo"
 import { Loader } from "../../../landpage/components/Loader";
 import type { MarriageLocationsModel } from "../../../../datasource/models/Marriage/MarriageLocationsModel";
 import type { MarriageModel } from "../../../../datasource/models/Marriage/MarriageModel";
-import { hideLoader, showErrorDialog, showLoader } from "../../../../datasource/redux/dialog/DialogSlice";
+import { hideLoader, showErrorDialog, showLoader, showSuccessDialog, showWarningDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 import dayjs from "dayjs";
 import { CreateMarriageRecord } from "../../components/marriage/CreateMarriageRecord";
-import { showCreateMarriage } from "../../../../datasource/redux/staff/church_record/MarriageSlice";
+import { showCreateMarriage, showUpdateMarriage } from "../../../../datasource/redux/staff/church_record/MarriageSlice";
+import { UpdateMarriageRecord } from "../../components/marriage/UpdateMarriageRecord";
 export const MarriageRecordPage = () => {
-    useEffect(() => {
-        fetchStatusesRef();
-        fetchLocationRef();
-        fetchMarriageRecords();
-    }, [])
+
     const dispatch = useAppDispatch();
+    const [refresh, setRefresh] = useState<boolean>(true);
     const showMarriageForm = useAppSelector((state) => state.marriageForm.value);
+    const displayUpdateMarriage = useAppSelector((state) => state.marriageForm.edit);
     const successDialog = useAppSelector((state) => state.dialog.success);
     const errorDialog = useAppSelector((state) => state.dialog.error);
     const warningDialog = useAppSelector((state) => state.dialog.warning);
     const loaderDialog = useAppSelector((state) => state.dialog.loader);
+    const [optionIndex, setOptionIndex] = useState<number>(-1);
     const [statusRef, setStatusRef] = useState<MarriageStatusesModel[]>([]);
     const [locationRef, setLocationRef] = useState<MarriageLocationsModel[]>([]);
     const [marriageRecords, setMarriageRecords] = useState<MarriageModel[]>([]);
+    const [selectedItem, setSelectedItem] = useState<MarriageModel | null>(null);
+    useEffect(() => {
+        if (refresh) {
+            fetchStatusesRef();
+            fetchLocationRef();
+            fetchMarriageRecords();
+            setRefresh(false);
+        }
+    }, [refresh])
     const fetchStatusesRef = async () => {
+        dispatch(showLoader());
         const response = await MarriageRepo.getaAllMarriageStatus();
         try {
-            dispatch(showLoader());
+
             if (response.statusCode === 200) {
                 console.log(response.data);
                 setStatusRef(response.data);
@@ -45,10 +55,9 @@ export const MarriageRecordPage = () => {
         }
     }
     const fetchLocationRef = async () => {
-
+        dispatch(showLoader());
         const response = await MarriageRepo.getaAllMarriageLocation();
         try {
-            dispatch(showLoader());
             if (response.statusCode === 200) {
                 console.log(response.data);
                 setLocationRef(response.data);
@@ -63,15 +72,18 @@ export const MarriageRecordPage = () => {
         }
     }
     const fetchMarriageRecords = async () => {
+        dispatch(showLoader());
         const response = await MarriageRepo.getAllMarriage();
         try {
-            dispatch(showLoader());
+
             if (response.statusCode === 200) {
                 console.log(response.data);
                 setMarriageRecords(response.data);
+                dispatch(hideLoader());
             } else {
                 sessionStorage.setItem("message", response.message);
                 dispatch(showErrorDialog());
+                dispatch(hideLoader());
             }
         } catch (e) {
 
@@ -80,13 +92,35 @@ export const MarriageRecordPage = () => {
             dispatch(hideLoader());
         }
     }
-    const handleDeleteMarriage = () => {
+    const handleDeleteMarriage = async () => {
+        dispatch(showLoader());
+        try{
+          const id = sessionStorage.getItem("id");
+            if(id){
+                const response = await MarriageRepo.deleteMarriage(Number(id));
+                if(response.statusCode === 200){
+                    sessionStorage.setItem("message", response.message);
+                    dispatch(showSuccessDialog());
+                    dispatch(hideLoader());
+                    setRefresh(true);
+                }else{
+                    sessionStorage.setItem("message", response.message);
+                    dispatch(showErrorDialog());
+                    dispatch(hideLoader());
+                }
+            }
+        }catch(e){
+
+        }finally{
+            dispatch(hideLoader());
+        }
 
     }
     return (
 
         <>
-            {showMarriageForm && (<CreateMarriageRecord marriageStatuses={statusRef} marriageLocations={locationRef} />)}
+            {showMarriageForm && (<CreateMarriageRecord marriageStatuses={statusRef} marriageLocations={locationRef} setRefresh={setRefresh}/>)}
+            {displayUpdateMarriage && (<UpdateMarriageRecord marriageStatuses={statusRef} marriageLocations={locationRef} marriageRecord={selectedItem} setSelectedItem={setSelectedItem} setRefresh={setRefresh}/>)}
             {successDialog && (<SuccessDialog />)}
             {errorDialog && (<ErrorDialog2 />)}
             {warningDialog && (<WarningDialog onConfirm={handleDeleteMarriage} />)}
@@ -96,7 +130,7 @@ export const MarriageRecordPage = () => {
                     <div className="flex justify-between items-center mb-6">
                         <h1 className="text-2xl font-bold">Marriage Records</h1>
                         <button className="!bg-green-600 text-white hover:!bg-green-500 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
-                            onClick={()=>dispatch(showCreateMarriage())}
+                            onClick={() => dispatch(showCreateMarriage())}
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -138,7 +172,7 @@ export const MarriageRecordPage = () => {
                                     <input
                                         className="flex h-10 w-full rounded-md border border-input bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10"
                                         placeholder="Search records..."
-                        
+
                                     />
                                 </div>
                             </div>
@@ -150,7 +184,7 @@ export const MarriageRecordPage = () => {
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm font-medium text-gray-500">Total Marriages</p>
-                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">5</h3>
+                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">{marriageRecords.length}</h3>
                                     </div>
                                     <div className="p-3 bg-red-100 rounded-full">
                                         <svg
@@ -176,7 +210,7 @@ export const MarriageRecordPage = () => {
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm font-medium text-gray-500">Completed</p>
-                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">1</h3>
+                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">{marriageRecords.filter((item)=>item.status == 3).length}</h3>
                                     </div>
                                     <div className="p-3 bg-green-100 rounded-full">
                                         <svg
@@ -202,7 +236,7 @@ export const MarriageRecordPage = () => {
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm font-medium text-gray-500">Pending Approvals</p>
-                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">2</h3>
+                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">{marriageRecords.filter((item)=>item.status === 1).length}</h3>
                                     </div>
                                     <div className="p-3 bg-yellow-100 rounded-full">
                                         <svg
@@ -252,60 +286,73 @@ export const MarriageRecordPage = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="[&amp;_tr:last-child]:border-0">
-                                       {
-                                         marriageRecords.map((record, index) => (
-                                            <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">{record.groomName}</td>
-                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{record.brideName}</td>
-                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{dayjs(record.weddingDate).format("MMMM D, YYYY h:mm A")}</td>
-                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                                                <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">{statusRef.map((item)=>{
-                                                    if(item.id === record.status){
-                                                        return item.statusName;
-                                                    }else{
-                                                        return null;
-                                                    }
-                                                })}</span>
-                                            </td>
-                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{locationRef.map((item)=>{
-                                                    if(item.id === record.location){
-                                                        return item.locationName;
-                                                    }else{
-                                                        return null;
-                                                    }
-                                                })}</td>
-                                            <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
-                                                <button
-                                                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
-                                                    type="button"
-                                                    id="radix-«raf»"
-                                                    aria-haspopup="menu"
-                                                    aria-expanded="false"
-                                                    data-state="closed"
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="24"
-                                                        height="24"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth="2"
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        className="lucide lucide-ellipsis h-4 w-4"
-                                                    >
-                                                        <circle cx="12" cy="12" r="1"></circle>
-                                                        <circle cx="19" cy="12" r="1"></circle>
-                                                        <circle cx="5" cy="12" r="1"></circle>
-                                                    </svg>
-                                                    <span className="sr-only">Actions</span>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                         ))
-                                       }
-                                       
+                                        {
+                                            marriageRecords.map((record, index) => (
+                                                <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">{record.groomName}</td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{record.brideName}</td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{dayjs(record.weddingDate).format("MMMM D, YYYY h:mm A")}</td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                                        <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">{statusRef.map((item) => {
+                                                            if (item.id === record.status) {
+                                                                return item.statusName;
+                                                            } else {
+                                                                return null;
+                                                            }
+                                                        })}</span>
+                                                    </td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{locationRef.map((item) => {
+                                                        if (item.id === record.location) {
+                                                            return item.locationName;
+                                                        } else {
+                                                            return null;
+                                                        }
+                                                    })}</td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right relative">
+                                                        <div className={`${optionIndex === index ? "" : "hidden"} absolute bg-white z-10 h-28 w-36 left-[-100%] bottom-[-80%] shadow-md rounded-md `} onClick={() => setOptionIndex(-1)}>
+                                                            <ul className="flex flex-col items-start w-full">
+                                                                <li className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start">View Details</li>
+                                                                <li className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start" onClick={() => {
+                                                                    // setSelectedItem(item);
+                                                                    // dispatch(showUpdateOffering())
+                                                                    setSelectedItem(record);
+                                                                    dispatch(showUpdateMarriage());
+                                                                }}>Edit Record</li>
+                                                                <li className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start">Send Message</li>
+                                                                <li className="text-red-500 cursor-pointer hover:bg-gray-100 p-1 w-full text-start" onClick={() => {
+                                                                    sessionStorage.setItem("id", record.id.toString());
+                                                                    dispatch(showWarningDialog());
+                                                                }}>Delete Record</li>
+                                                            </ul>
+                                                        </div>
+                                                        <button
+                                                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+                                                            type="button"
+                                                            onClick={() => { setOptionIndex(index) }}
+                                                        >
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                width="24"
+                                                                height="24"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                strokeWidth="2"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                className="lucide lucide-ellipsis h-4 w-4"
+                                                            >
+                                                                <circle cx="12" cy="12" r="1"></circle>
+                                                                <circle cx="19" cy="12" r="1"></circle>
+                                                                <circle cx="5" cy="12" r="1"></circle>
+                                                            </svg>
+                                                            <span className="sr-only">Actions</span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        }
+
                                     </tbody>
                                 </table>
                             </div>
