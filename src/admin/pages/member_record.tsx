@@ -208,7 +208,7 @@ function Member_Record() {
     });
 
     // Delete Member
-    const deleteMember = (id: number) => {  
+    const deleteMember = (id: number) => {
         swal("Do you want to delete this Member?", {
             icon: "warning",
             buttons: {
@@ -424,7 +424,7 @@ function Member_Record() {
                                             Current Image
                                         </label>
                                         <div className="col-sm-9">
-                                            <img src={`${row.image}`} style={{ width: 50 }} className="logo img-fluid" alt="" />
+                                            <img src={baseUrl + "member/getImage?filename=" + row?.image} style={{ width: 50 }} className="logo img-fluid" alt="" />
                                         </div>
                                         <input type="hidden" name="image" value={row.image} />
                                     </div>
@@ -564,7 +564,8 @@ function Member_Record() {
                             <span>Personal Information</span>
                             <div className='d-flex w-100 flex-column gap-2'>
                                 <div className='d-flex justify-content-center'>
-                                    <img src={selectedMember?.image || user_logo} style={{ width: 200, height: 200 }} className="logo img-fluid rounded-circle" />
+                                    <img src={baseUrl + "member/getImage?filename=" + selectedMember?.image}
+                                        style={{ width: 200, height: 200 }} className="logo img-fluid rounded-circle" />
                                 </div>
                                 <span className='text-muted text-sm'>Full Name</span>
                                 <span className=''> {selectedMember?.name || ''}</span>
