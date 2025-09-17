@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { EventModel } from "../../../../datasource/models/EventModel";
+import type { EventModel } from "../../../../datasource/models/Event/EventModel";
 import EventRepo from "../../../../datasource/repositories/EventRepo";
 import { motion } from "framer-motion";
 import { IoMdFunnel } from "react-icons/io";

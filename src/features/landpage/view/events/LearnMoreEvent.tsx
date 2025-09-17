@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
-import type { EventModel } from "../../../../datasource/models/EventModel";
+import type { EventModel } from "../../../../datasource/models/Event/EventModel";
 import dayjs from "dayjs";
 
 export const LearnMoreEvent = () => {

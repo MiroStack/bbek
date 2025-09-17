@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaCalendar } from "react-icons/fa6";
 import EventRepo from "../../../datasource/repositories/EventRepo";
-import type { EventModel } from "../../../datasource/models/EventModel";
+import type { EventModel } from "../../../datasource/models/Event/EventModel";
 import dayjs from "dayjs";
 import instance from "../../../api/axios";
 import type { MinistryModel } from "../../../datasource/models/MinistryModel";

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import type { EventModel } from "../../../../datasource/models/EventModel";
+import type { EventModel } from "../../../../datasource/models/Event/EventModel";
 import EventRepo from "../../../../datasource/repositories/EventRepo";
 import { useDispatch } from "react-redux";
 import { showCreateEvent, showUpdateEvent } from "../../../../datasource/redux/staff/church_record/EventSlice";
@@ -9,11 +9,19 @@ import { Loader } from "../../../landpage/components/Loader";
 import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
 import { WarningDialog } from "../../../../component/dialog/WarningDialog";
 import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
-import {  hideLoader, showErrorDialog, showLoader, showSuccessDialog, showWarningDialog } from "../../../../datasource/redux/dialog/DialogSlice";
+import { hideLoader, showErrorDialog, showLoader, showSuccessDialog, showWarningDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 import { UpdateEventForm } from "../../components/events/UpdateEventForm";
 import dayjs from "dayjs";
+import type { PaginatedEventsModel } from "../../../../datasource/models/Event/PaginatedEventModel";
+import type { EventStatusModel } from "../../../../datasource/models/Event/EventStatusModel";
+import { NoDataPage } from "../../../landpage/components/NoDataPage";
+import { useNavigate } from "react-router-dom";
+import { Cookies } from "../../../../util/Cookies";
+import { EventService } from "../../components/events/EventService";
+import { event } from "jquery";
 export const EventRecordPage = () => {
+    const navigate = useNavigate();
     const eventCreateForm = useAppSelector((state) => state.eventForm.value);
     const eventEditForm = useAppSelector((state) => state.eventForm.edit);
     const loaderDialog = useAppSelector((state) => state.dialog.loader);
@@ -22,44 +30,35 @@ export const EventRecordPage = () => {
     const warningDialog = useAppSelector((state) => state.dialog.warning);
 
     const dispatch = useDispatch();
-    const [eventData, setEventDate] = useState<EventModel[]>([])
+    const [eventData, setEventData] = useState<PaginatedEventsModel[]>([]);
+    const [eventStatus, setEventStatuses] = useState<EventStatusModel[]>([]);
     const [isRefreshing, setIsRefreshing] = useState(true);
+    const [pageIndex, setPageIndex] = useState(1);
+    const [pageNumber, setPageNumber] = useState(1);
+    const [pages, setPages] = useState([1, 2, 3, 4, 5, 6, 10]);
+    const [query, setQuery] = useState("");
+    const eventService = EventService({
+        query,
+        pageIndex,
+        setEventData,
+        setEventStatuses,
+        setIsRefreshing,
+        setQuery,
+    });
+
 
     useEffect(() => {
         if (isRefreshing) {
-            fetchEventData();
+            eventService.fetchEventData();
+            eventService.fetchEventStatuses();
+            // fetchEventStatuses();
+            // fetchEventData();
             setIsRefreshing(false);
         }
     }, [isRefreshing]);
-    const fetchEventData = async () => {
-        try {
-            const res = await EventRepo.getAllEvent();
-            setEventDate(res);
-        } catch (e) {
-            console.error(e);
-        }
-    }
-    const handleDeleteEvent = async () => {
-        dispatch(showLoader());
-        try {
-            const response = await EventRepo.deleteEvent(Number(sessionStorage.getItem("id")));
-            if (response.statusCode == 200) {
-                setTimeout(() => {
-                    sessionStorage.setItem("message", response.message);
-                    dispatch(showSuccessDialog());
-                    dispatch(hideLoader());
-                }, 1500);
-            }
-        } catch (e) {
-            alert(e);
-            sessionStorage.setItem("message", "Failed to delete event. Please try again.");
-            dispatch(hideLoader());
-            dispatch(showErrorDialog());
-        } finally {
-            setIsRefreshing(true);
-            sessionStorage.removeItem("id");
-        }
-    };
+
+
+
     return (
         <>
             <div className={`${eventCreateForm ? "" : "hidden"}`}>
@@ -78,7 +77,7 @@ export const EventRecordPage = () => {
                 <SuccessDialog />
             </div>
             <div className={`${warningDialog ? "" : "hidden"}`}>
-                <WarningDialog onConfirm={handleDeleteEvent} />
+                <WarningDialog onConfirm={eventService.handleDeleteEvent} />
             </div>
 
 
@@ -133,6 +132,8 @@ export const EventRecordPage = () => {
                                         className="flex h-10 w-full rounded-md border border-input bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10"
                                         placeholder="Search events..."
                                         type="text"
+                                        value={query}
+                                        onChange={eventService.handleQueryChange}
                                         id="search-events"
                                     />
                                 </div>
@@ -173,8 +174,8 @@ export const EventRecordPage = () => {
                     </div>
                     <div className="rounded-md border">
                         <div className="relative w-full overflow-auto">
-                            <table className="w-full caption-bottom text-sm">
-                                <thead className="[&amp;_tr]:border-b">
+                            <table className="w-full caption-bottom text-sm ">
+                                <thead className="[&amp;_tr]:border-b ">
                                     <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                                             Event Title
@@ -199,51 +200,115 @@ export const EventRecordPage = () => {
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="[&amp;_tr:last-child]:border-0">
+                                <tbody className="[&amp;_tr:last-child]:border-0 w-full">
                                     {
-                                        eventData.map((item, index) => (
-                                            <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                                <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
-                                                    {item.eventName}
-                                                </td>
-                                                <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{dayjs(item.eventStartDate).format("MMMM D, YYYY h:mm A")}</td>
-                                                <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                                                    {dayjs(item.eventEndDate).format("MMMM D, YYYY h:mm A")}
-                                                </td>
-                                                <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                                                    {item.eventLocation}
-                                                </td>
-                                                <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden lg:table-cell">
-                                                    {item.eventType}
-                                                </td>
-                                                <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                                                    <div
-                                                        className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-blue-100 text-blue-800"
-                                                    >
-                                                        {item.statusName}
-                                                    </div>
-                                                </td>
-                                                <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
-                                                    <div className='flex items-center justify-end gap-2'>
-                                                        <FaEdit className='text-green-700 hover:cursor-pointer text-lg' onClick={
-                                                            () => {
+                                        eventData.length == 0 ? (
+                                            (
+                                                <tr className="w-full">
+                                                    <td colSpan={7} className="h-28  text-center">
+                                                        <div className="flex items-center justify-center h-full">
+                                                            <NoDataPage />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )
+                                        ) : (
+                                            eventData.map((item, index) => (
+                                                <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
+                                                        {item.eventName}
+                                                    </td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{dayjs(item.eventStartDate).format("MMMM D, YYYY h:mm A")}</td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                                                        {dayjs(item.eventEndDate).format("MMMM D, YYYY h:mm A")}
+                                                    </td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                                                        {item.eventLocation}
+                                                    </td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden lg:table-cell">
+                                                        {item.eventType}
+                                                    </td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                                        <div
+                                                            className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-blue-100 text-blue-800"
+                                                        >
+                                                            {eventStatus.find(status => status.id === item.statusId)?.statusName}
+                                                        </div>
+                                                    </td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
+                                                        <div className='flex items-center justify-end gap-2'>
+                                                            <FaEdit className='text-green-700 hover:cursor-pointer text-lg' onClick={
+                                                                () => {
+                                                                    sessionStorage.setItem("id", item.id.toString());
+                                                                    dispatch(showUpdateEvent());
+
+                                                                }} />
+                                                            <FaRegTrashAlt className='text-red-700 hover:cursor-pointer text-lg' onClick={() => {
                                                                 sessionStorage.setItem("id", item.id.toString());
-                                                                dispatch(showUpdateEvent());
+                                                                dispatch(showWarningDialog());
 
                                                             }} />
-                                                        <FaRegTrashAlt className='text-red-700 hover:cursor-pointer text-lg' onClick={() => {
-                                                            sessionStorage.setItem("id", item.id.toString());
-                                                            dispatch(showWarningDialog());
-
-                                                        }} />
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )
+                                            )
+                                        )
                                     }
                                 </tbody>
                             </table>
                         </div>
+                        <div className="w-full p-4 flex items-center justify-center relative">
+                            <button className="cursor-pointer"
+                                onClick={() => {
+                                    if (pageNumber > 1) {
+                                        setPageNumber(pageNumber - 1);
+                                        setIsRefreshing(true)
+                                    } else {
+                                        sessionStorage.setItem("message", "No previous records available");
+                                        dispatch(showErrorDialog());
+                                    }
+                                }
+                                }
+                            >&laquo;</button>
+                            <span className="mx-4">{pageNumber} of {Math.ceil(eventData.length / 20)}</span>
+                            <button className="cursor-pointer"
+                                onClick={() => {
+                                    if (Math.ceil(eventData.length / 20) > pageNumber) {
+                                        setPageNumber(pageNumber + 1);
+                                        setPageIndex(eventData[eventData.length - 1].id);
+                                        setIsRefreshing(true)
+                                    } else {
+                                        sessionStorage.setItem("message", "No more records available");
+                                        dispatch(showErrorDialog());
+                                    }
+                                }}
+                            >&raquo;</button>
+
+                            <div className="absolute right-4 flex items-center gap-2">
+                                {
+                                    pages.map((page, index) => (
+                                        <span className={`p-1 ${pageNumber == page ? 'bg-green-200' : 'bg-gray-100'} w-7 text-center hover:cursor-pointer`}
+                                            onClick={() => {
+                                                if (Math.ceil(eventData.length / 20) < page) {
+                                                    sessionStorage.setItem("message", "No more records available");
+                                                    dispatch(showErrorDialog());
+                                                }else if(Math.ceil(eventData.length / 20) == page){
+
+                                                } else {
+                                                    setPageIndex(eventData[eventData.length - 1].id);
+                                                    setPageNumber(page);
+                                                    setIsRefreshing(true);
+
+                                                }
+                                            }}
+                                        >{page}</span>
+                                    ))
+                                }
+
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

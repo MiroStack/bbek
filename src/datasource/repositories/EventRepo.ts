@@ -1,8 +1,10 @@
 import { createElement } from "react";
 import axios from "../../api/axios"
 import type { ApiResponseModel } from '../models/ApiResponseModel';
-import type { EventModel } from "../models/EventModel";
+import type { EventModel } from "../models/Event/EventModel";
 import { Cookies } from '../../util/Cookies';
+import type { EventStatusModel } from "../models/Event/EventStatusModel";
+import type { PaginatedEventsModel } from "../models/Event/PaginatedEventModel";
 
 const EventRepo = {
 
@@ -104,6 +106,27 @@ const EventRepo = {
       type: response.headers["content-type"],
     });
     return URL.createObjectURL(blob);
+  },
+
+  async getEventStatuses() : Promise<ApiResponseModel<EventStatusModel[]>> {
+    const token = Cookies.getCookie("auth_token");
+    const response = await axios.get<ApiResponseModel<EventStatusModel[]>>('getAllEventStatuses', {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        }
+    });
+    return response.data;
+  },
+  async getPaginatedEvents(query:string, index:number): Promise<ApiResponseModel<PaginatedEventsModel[]>>{
+    const token = Cookies.getCookie("auth_token");
+    const response = await axios.get<ApiResponseModel<PaginatedEventsModel[]>>(`getPaginatedEvents?query=${query}&index=${index}`, {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        }
+    });
+    return response.data;
   }
 
 

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import type { EventModel } from "../../../datasource/models/EventModel";
+import type { EventModel } from "../../../datasource/models/Event/EventModel";
 import PlaceHolder from "../../assets/img/image.png"
 type EventCardProps = {
   eventModel: EventModel;
