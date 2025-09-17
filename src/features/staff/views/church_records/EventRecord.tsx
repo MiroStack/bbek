@@ -37,6 +37,7 @@ export const EventRecordPage = () => {
     const [pageNumber, setPageNumber] = useState(1);
     const [pages, setPages] = useState([1, 2, 3, 4, 5, 6, 10]);
     const [query, setQuery] = useState("");
+    const [totalPage, setTotalPage] = useState(1);
     const eventService = EventService({
         query,
         pageIndex,
@@ -56,6 +57,9 @@ export const EventRecordPage = () => {
             setIsRefreshing(false);
         }
     }, [isRefreshing]);
+    useEffect(()=>{
+       setTotalPage(Math.ceil(eventData.length / 20));
+    },[eventData])
 
 
 
@@ -271,10 +275,10 @@ export const EventRecordPage = () => {
                                 }
                                 }
                             >&laquo;</button>
-                            <span className="mx-4">{pageNumber} of {Math.ceil(eventData.length / 20)}</span>
+                            <span className="mx-4">{pageNumber} of {totalPage}</span>
                             <button className="cursor-pointer"
                                 onClick={() => {
-                                    if (Math.ceil(eventData.length / 20) > pageNumber) {
+                                    if (totalPage > pageNumber) {
                                         setPageNumber(pageNumber + 1);
                                         setPageIndex(eventData[eventData.length - 1].id);
                                         setIsRefreshing(true)
@@ -288,12 +292,12 @@ export const EventRecordPage = () => {
                             <div className="absolute right-4 flex items-center gap-2">
                                 {
                                     pages.map((page, index) => (
-                                        <span className={`p-1 ${pageNumber == page ? 'bg-green-200' : 'bg-gray-100'} w-7 text-center hover:cursor-pointer`}
+                                        <span key={index} className={`p-1 ${pageNumber == page ? 'bg-green-200' : 'bg-gray-100'} w-7 text-center hover:cursor-pointer`}
                                             onClick={() => {
-                                                if (Math.ceil(eventData.length / 20) < page) {
+                                                if (totalPage < page) {
                                                     sessionStorage.setItem("message", "No more records available");
                                                     dispatch(showErrorDialog());
-                                                }else if(Math.ceil(eventData.length / 20) == page){
+                                                }else if(totalPage == page){
 
                                                 } else {
                                                     setPageIndex(eventData[eventData.length - 1].id);
