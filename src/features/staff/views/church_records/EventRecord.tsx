@@ -35,7 +35,7 @@ export const EventRecordPage = () => {
     const [eventStatus, setEventStatuses] = useState<EventStatusModel[]>([]);
     const [isRefreshing, setIsRefreshing] = useState(true);
     const [pageNumber, setPageNumber] = useState(1);
-    const [pages, setPages] = useState([1, 2, 3, 4, 5, 6, 10]);
+    const [pages, setPages] = useState([1, 2, 3, 4, 5, 6, 7]);
     const [query, setQuery] = useState("");
     const [totalPage, setTotalPage] = useState(1);
     const eventService = EventService({
@@ -60,9 +60,9 @@ export const EventRecordPage = () => {
 
     useEffect(() => {
         setTotalPage(Math.ceil((eventData[0]?.totalRows ?? 0) / 2));
-    },[eventData]);
+    }, [eventData]);
 
-    
+
 
 
 
@@ -271,7 +271,8 @@ export const EventRecordPage = () => {
                                 onClick={() => {
                                     if (pageNumber > 1) {
                                         setPageNumber(pageNumber - 1);
-                                        setIsRefreshing(true)
+                                        setIsRefreshing(true);
+                                        setPages(pages.map(p=> p - 1))
                                     } else {
                                         sessionStorage.setItem("message", "No previous records available");
                                         dispatch(showErrorDialog());
@@ -285,6 +286,7 @@ export const EventRecordPage = () => {
                                     if (totalPage > pageNumber) {
                                         setPageNumber(pageNumber + 1);
                                         setIsRefreshing(true)
+                                        setPages(pages.map(p =>  p));
                                     } else {
                                         sessionStorage.setItem("message", "No more records available");
                                         dispatch(showErrorDialog());
@@ -300,13 +302,16 @@ export const EventRecordPage = () => {
                                                 if (totalPage < page) {
                                                     sessionStorage.setItem("message", "No more records available");
                                                     dispatch(showErrorDialog());
-                                                }else {
+                                                } else {
                                                     setPageNumber(page);
                                                     setIsRefreshing(true);
+                                                    
                                                 }
+
                                             }}
                                         >{page}</span>
                                     ))
+
                                 }
 
                             </div>
