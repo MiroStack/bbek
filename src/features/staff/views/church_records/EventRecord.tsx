@@ -59,8 +59,30 @@ export const EventRecordPage = () => {
     }, [isRefreshing]);
 
     useEffect(() => {
-        setTotalPage(Math.ceil((eventData[0]?.totalRows ?? 0) / 2));
+        setTotalPage(Math.ceil((eventData[0]?.totalRows ?? 0) / 11));
     }, [eventData]);
+
+
+
+    // Whenever pageNumber or totalPage changes, update visible pages
+    useEffect(() => {
+        const maxVisible = 5; // how many page buttons you want to show
+        let start = Math.max(1, pageNumber - Math.floor(maxVisible / 10));
+        let end = start + maxVisible - 1;
+
+        if (end > totalPage) {
+            end = totalPage;
+            start = Math.max(1, end - maxVisible + 1);
+        }
+
+        const newPages = [];
+        for (let i = start; i <= end; i++) {
+            newPages.push(i);
+        }
+        setPages(newPages);
+        console.log(pageNumber);
+    }, [pageNumber, totalPage]);
+
 
 
 
@@ -272,21 +294,18 @@ export const EventRecordPage = () => {
                                     if (pageNumber > 1) {
                                         setPageNumber(pageNumber - 1);
                                         setIsRefreshing(true);
-                                        setPages(pages.map(p=> p - 1))
                                     } else {
                                         sessionStorage.setItem("message", "No previous records available");
                                         dispatch(showErrorDialog());
                                     }
-                                }
-                                }
+                                }}
                             >&laquo;</button>
                             <span className="mx-4">{pageNumber} of {totalPage}</span>
                             <button className="cursor-pointer"
                                 onClick={() => {
-                                    if (totalPage > pageNumber) {
+                                    if (pageNumber < totalPage) {
                                         setPageNumber(pageNumber + 1);
-                                        setIsRefreshing(true)
-                                        setPages(pages.map(p =>  p));
+                                        setIsRefreshing(true);
                                     } else {
                                         sessionStorage.setItem("message", "No more records available");
                                         dispatch(showErrorDialog());
@@ -305,7 +324,7 @@ export const EventRecordPage = () => {
                                                 } else {
                                                     setPageNumber(page);
                                                     setIsRefreshing(true);
-                                                    
+
                                                 }
 
                                             }}

@@ -30,7 +30,7 @@ export const EventService = ({
     const fetchEventData = async () => {
         try {
             dispatch(showLoader());
-            const res = await EventRepo.getPaginatedEvents(query, pageNumber);
+            const res = await EventRepo.getPaginatedEvents(query, query != "" ?  1:pageNumber);
             dispatch(hideLoader());
             if (res.statusCode == 200) {
                 setEventData(res.data);
