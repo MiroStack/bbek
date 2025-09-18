@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { use, useEffect, useState } from "react"
 import type { EventModel } from "../../../../datasource/models/Event/EventModel";
 import EventRepo from "../../../../datasource/repositories/EventRepo";
 import { useDispatch } from "react-redux";
@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { Cookies } from "../../../../util/Cookies";
 import { EventService } from "../../components/events/EventService";
 import { event } from "jquery";
+
 export const EventRecordPage = () => {
     const navigate = useNavigate();
     const eventCreateForm = useAppSelector((state) => state.eventForm.value);
@@ -33,14 +34,13 @@ export const EventRecordPage = () => {
     const [eventData, setEventData] = useState<PaginatedEventsModel[]>([]);
     const [eventStatus, setEventStatuses] = useState<EventStatusModel[]>([]);
     const [isRefreshing, setIsRefreshing] = useState(true);
-    const [pageIndex, setPageIndex] = useState(1);
     const [pageNumber, setPageNumber] = useState(1);
     const [pages, setPages] = useState([1, 2, 3, 4, 5, 6, 10]);
     const [query, setQuery] = useState("");
     const [totalPage, setTotalPage] = useState(1);
     const eventService = EventService({
         query,
-        pageIndex,
+        pageNumber,
         setEventData,
         setEventStatuses,
         setIsRefreshing,
@@ -57,9 +57,13 @@ export const EventRecordPage = () => {
             setIsRefreshing(false);
         }
     }, [isRefreshing]);
-    useEffect(()=>{
-       setTotalPage(Math.ceil(eventData.length / 20));
-    },[eventData])
+
+    useEffect(() => {
+        setTotalPage(Math.ceil((eventData[0]?.totalRows ?? 0) / 2));
+    },[eventData]);
+
+    
+
 
 
 
@@ -280,7 +284,6 @@ export const EventRecordPage = () => {
                                 onClick={() => {
                                     if (totalPage > pageNumber) {
                                         setPageNumber(pageNumber + 1);
-                                        setPageIndex(eventData[eventData.length - 1].id);
                                         setIsRefreshing(true)
                                     } else {
                                         sessionStorage.setItem("message", "No more records available");
@@ -297,13 +300,9 @@ export const EventRecordPage = () => {
                                                 if (totalPage < page) {
                                                     sessionStorage.setItem("message", "No more records available");
                                                     dispatch(showErrorDialog());
-                                                }else if(totalPage == page){
-
-                                                } else {
-                                                    setPageIndex(eventData[eventData.length - 1].id);
+                                                }else {
                                                     setPageNumber(page);
                                                     setIsRefreshing(true);
-
                                                 }
                                             }}
                                         >{page}</span>

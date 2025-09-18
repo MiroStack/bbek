@@ -118,9 +118,9 @@ const EventRepo = {
     });
     return response.data;
   },
-  async getPaginatedEvents(query:string, index:number): Promise<ApiResponseModel<PaginatedEventsModel[]>>{
+  async getPaginatedEvents(query:string, page:number): Promise<ApiResponseModel<PaginatedEventsModel[]>>{
     const token = Cookies.getCookie("auth_token");
-    const response = await axios.get<ApiResponseModel<PaginatedEventsModel[]>>(`getPaginatedEvents?query=${query}&index=${index}`, {
+    const response = await axios.get<ApiResponseModel<PaginatedEventsModel[]>>(`getPaginatedEvents?query=${query}&page=${page}`, {
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`

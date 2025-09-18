@@ -9,7 +9,7 @@ import type { PaginatedEventsModel } from "../../../../datasource/models/Event/P
 import type { EventStatusModel } from "../../../../datasource/models/Event/EventStatusModel";
 interface EventServiceProps {
     query: string;
-    pageIndex: number;
+    pageNumber: number;
     setEventData: React.Dispatch<React.SetStateAction<PaginatedEventsModel[]>>;
     setEventStatuses:React.Dispatch<React.SetStateAction<EventStatusModel[]>>;
     setIsRefreshing: (isRefreshing: boolean) => void;
@@ -18,7 +18,7 @@ interface EventServiceProps {
 }
 export const EventService = ({
     query,
-    pageIndex,
+    pageNumber,
     setEventData,
     setEventStatuses,
     setIsRefreshing,
@@ -30,7 +30,7 @@ export const EventService = ({
     const fetchEventData = async () => {
         try {
             dispatch(showLoader());
-            const res = await EventRepo.getPaginatedEvents(query, pageIndex);
+            const res = await EventRepo.getPaginatedEvents(query, pageNumber);
             dispatch(hideLoader());
             if (res.statusCode == 200) {
                 setEventData(res.data);
