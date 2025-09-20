@@ -1,4 +1,4 @@
-import type { MinistryModel } from "../../../datasource/models/MinistryModel";
+import type { MinistryModel } from "../../../datasource/models/Ministry/MinistryModel";
 import PlaceHolder from "../../../assets/img/image.png"
 type MinistryCardProps = {
   ministryModel: MinistryModel;

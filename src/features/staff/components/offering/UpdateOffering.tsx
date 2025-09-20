@@ -10,9 +10,10 @@ import type { OfferingPaymentModel } from "../../../../datasource/models/Offerin
 import type { OfferingTypeModel } from "../../../../datasource/models/Offering/OfferingTypeModel";
 import type { OfferingModel } from "../../../../datasource/models/Offering/OfferingModel";
 import { hideUpdateOffering } from "../../../../datasource/redux/staff/church_record/OfferingSlice";
+import type { PaginatedOfferingModel } from "../../../../datasource/models/Offering/PaginatedOfferingModel";
 
 interface UpdateOfferingProps{
-    offeringModel?:OfferingModel | null;
+    offeringModel?:PaginatedOfferingModel | null;
     setIsRefreshing:React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -22,25 +23,23 @@ export const UpdateOffering = ({offeringModel,setIsRefreshing}:UpdateOfferingPro
     const [showPayment, setShowPayment] = useState(false);
     const [paymentMethods, setPaymentMethods] = useState<OfferingPaymentModel[]>([]);
     const [payment, setPayment] = useState("");
-
     const [showOffering, setShowOffering] = useState(false);
     const [offeringType, setOfferingType] = useState<OfferingTypeModel[]>([]);
     const [offering, setOffering] = useState("");
-
     const [memberName, setMemberName] = useState("");
     const [amount, setAmount] = useState<number>(0);
     const [date, setDate] = useState("");
     const [notes, setNotes] = useState("");
-    const [modelId, setModelId] = useState<string>("");
+    const [modelId, setModelId] = useState<number>(0);
 
     useEffect(() => {
         setMemberName(offeringModel!.memberName || "");
         setAmount(offeringModel!.amount || 0);
         setDate(offeringModel!.offeringDate || "");
         setNotes(offeringModel!.notes || "");
-        setModelId(offeringModel!.id || "");
-        setPayment(offeringModel!.paymentMethod || "")
-        setOffering(offeringModel!.offeringType || "");
+        setModelId(offeringModel!.id || 0);
+        setPayment(offeringType.find((offering)=> offering.id == offeringModel!.paymentMethod)?.offeringType ?? "Unknown")
+        setOffering(paymentMethods.find((payment)=>payment.id === offeringModel!.paymentMethod)?.paymentMethod ?? "Unknown");
         getPaymentMethodResponse();
         getOferringTypeResponse();
     }, [offeringForm])
@@ -112,7 +111,7 @@ export const UpdateOffering = ({offeringModel,setIsRefreshing}:UpdateOfferingPro
         dispatch(showLoader());
         try {
             const offeringModel: OfferingModel = {
-                id: modelId,
+                id: modelId.toString(),
                 memberName: memberName,
                 amount: amount,
                 offeringDate: date,

@@ -5,6 +5,7 @@ import type { LoginResponseModel } from '../models/LoginResponseModel';
 import type { OfferingModel } from '../models/Offering/OfferingModel';
 import type { OfferingPaymentModel } from '../models/Offering/OfferingPaymentModel';
 import type { OfferingTypeModel } from '../models/Offering/OfferingTypeModel';
+import type { PaginatedOfferingModel } from '../models/Offering/PaginatedOfferingModel';
 import type { TokenResponseModel } from '../models/TokenResponse';
 
 const OfferingRepo = {
@@ -42,9 +43,9 @@ const OfferingRepo = {
     });
     return response.data;
   },
-  async getAllOffering(): Promise<ApiResponseModel<OfferingModel[]>> {
+  async getAllOffering(query:string, page:number): Promise<ApiResponseModel<PaginatedOfferingModel[]>> {
     const token = Cookies.getCookie("auth_token");
-    const response = await axios.get('getAllOffering', {
+    const response = await axios.get(`getAllOffering?query=${query}&page=${page}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`

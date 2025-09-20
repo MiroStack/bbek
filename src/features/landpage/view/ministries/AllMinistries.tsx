@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { JoinUsSection } from "../../components/JoinUsSection"
 import { MinistriesCard } from "../../components/MinistriesCard"
-import type { MinistryModel } from "../../../../datasource/models/MinistryModel"
+import type { MinistryModel } from "../../../../datasource/models/Ministry/MinistryModel"
 import MinistryRepo from "../../../../datasource/repositories/MinistryRepo"
 import { motion } from "framer-motion"
 import { Link, useNavigate } from "react-router-dom"

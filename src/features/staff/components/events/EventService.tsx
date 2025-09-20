@@ -7,30 +7,61 @@ import type React from "react";
 import { Cookies } from "../../../../util/Cookies";
 import type { PaginatedEventsModel } from "../../../../datasource/models/Event/PaginatedEventModel";
 import type { EventStatusModel } from "../../../../datasource/models/Event/EventStatusModel";
+import { useEffect, useLayoutEffect } from "react";
 interface EventServiceProps {
     query: string;
     pageNumber: number;
+    totalPage: number;
+    eventData: PaginatedEventsModel[];
+    setTotalPage: React.Dispatch<React.SetStateAction<number>>;
+    setPages: React.Dispatch<React.SetStateAction<number[]>>;
     setEventData: React.Dispatch<React.SetStateAction<PaginatedEventsModel[]>>;
-    setEventStatuses:React.Dispatch<React.SetStateAction<EventStatusModel[]>>;
+    setEventStatuses: React.Dispatch<React.SetStateAction<EventStatusModel[]>>;
     setIsRefreshing: (isRefreshing: boolean) => void;
     setQuery: React.Dispatch<React.SetStateAction<string>>;
-  
+
 }
 export const EventService = ({
     query,
     pageNumber,
+    totalPage,
+    eventData,
+    setTotalPage,
+    setPages,
     setEventData,
     setEventStatuses,
     setIsRefreshing,
     setQuery
-}:EventServiceProps) => {
+}: EventServiceProps) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    
+    // Whenever pageNumber or totalPage changes, update visible pages
+    useEffect(() => {
+        setTotalPage(Math.ceil((eventData[0]?.totalRows ?? 0) / 11));
+    }, [eventData]);
+    useEffect(() => {
+        const maxVisible = 5; // how many page buttons you want to show
+        let start = Math.max(1, pageNumber - Math.floor(maxVisible / 10));
+        let end = start + maxVisible - 1;
+
+        if (end > totalPage) {
+            end = totalPage;
+            start = Math.max(1, end - maxVisible + 1);
+        }
+
+        const newPages = [];
+        for (let i = start; i <= end; i++) {
+            newPages.push(i);
+        }
+        setPages(newPages);
+        console.log(pageNumber);
+    }, [pageNumber, totalPage]);
 
     const fetchEventData = async () => {
         try {
             dispatch(showLoader());
-            const res = await EventRepo.getPaginatedEvents(query, query != "" ?  1:pageNumber);
+            const res = await EventRepo.getPaginatedEvents(query, query != "" ? 1 : pageNumber);
             dispatch(hideLoader());
             if (res.statusCode == 200) {
                 setEventData(res.data);

@@ -1,6 +1,4 @@
-import { use, useEffect, useState } from "react"
-import type { EventModel } from "../../../../datasource/models/Event/EventModel";
-import EventRepo from "../../../../datasource/repositories/EventRepo";
+import {  useEffect, useState } from "react"
 import { useDispatch } from "react-redux";
 import { showCreateEvent, showUpdateEvent } from "../../../../datasource/redux/staff/church_record/EventSlice";
 import { useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks";
@@ -9,38 +7,38 @@ import { Loader } from "../../../landpage/components/Loader";
 import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
 import { WarningDialog } from "../../../../component/dialog/WarningDialog";
 import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
-import { hideLoader, showErrorDialog, showLoader, showSuccessDialog, showWarningDialog } from "../../../../datasource/redux/dialog/DialogSlice";
+import { showErrorDialog, showWarningDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 import { UpdateEventForm } from "../../components/events/UpdateEventForm";
 import dayjs from "dayjs";
 import type { PaginatedEventsModel } from "../../../../datasource/models/Event/PaginatedEventModel";
 import type { EventStatusModel } from "../../../../datasource/models/Event/EventStatusModel";
 import { NoDataPage } from "../../../landpage/components/NoDataPage";
-import { useNavigate } from "react-router-dom";
-import { Cookies } from "../../../../util/Cookies";
 import { EventService } from "../../components/events/EventService";
-import { event } from "jquery";
 
 export const EventRecordPage = () => {
-    const navigate = useNavigate();
     const eventCreateForm = useAppSelector((state) => state.eventForm.value);
     const eventEditForm = useAppSelector((state) => state.eventForm.edit);
     const loaderDialog = useAppSelector((state) => state.dialog.loader);
     const errorDialog = useAppSelector((state) => state.dialog.error);
     const successDialog = useAppSelector((state) => state.dialog.success);
     const warningDialog = useAppSelector((state) => state.dialog.warning);
-
     const dispatch = useDispatch();
     const [eventData, setEventData] = useState<PaginatedEventsModel[]>([]);
     const [eventStatus, setEventStatuses] = useState<EventStatusModel[]>([]);
     const [isRefreshing, setIsRefreshing] = useState(true);
     const [pageNumber, setPageNumber] = useState(1);
     const [pages, setPages] = useState([1, 2, 3, 4, 5, 6, 7]);
-    const [query, setQuery] = useState("");
     const [totalPage, setTotalPage] = useState(1);
+    const [query, setQuery] = useState("");
+
     const eventService = EventService({
         query,
         pageNumber,
+        totalPage,
+        eventData,
+        setTotalPage,
+        setPages,
         setEventData,
         setEventStatuses,
         setIsRefreshing,
@@ -57,37 +55,6 @@ export const EventRecordPage = () => {
             setIsRefreshing(false);
         }
     }, [isRefreshing]);
-
-    useEffect(() => {
-        setTotalPage(Math.ceil((eventData[0]?.totalRows ?? 0) / 11));
-    }, [eventData]);
-
-
-
-    // Whenever pageNumber or totalPage changes, update visible pages
-    useEffect(() => {
-        const maxVisible = 5; // how many page buttons you want to show
-        let start = Math.max(1, pageNumber - Math.floor(maxVisible / 10));
-        let end = start + maxVisible - 1;
-
-        if (end > totalPage) {
-            end = totalPage;
-            start = Math.max(1, end - maxVisible + 1);
-        }
-
-        const newPages = [];
-        for (let i = start; i <= end; i++) {
-            newPages.push(i);
-        }
-        setPages(newPages);
-        console.log(pageNumber);
-    }, [pageNumber, totalPage]);
-
-
-
-
-
-
 
     return (
         <>

@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import type { EventModel } from "../../../../datasource/models/Event/EventModel";
 import dayjs from "dayjs";
-import type { MinistryModel } from "../../../../datasource/models/MinistryModel";
+import type { MinistryModel } from "../../../../datasource/models/Ministry/MinistryModel";
 
 export const LearnMoreMinistries = () => {
     const location = useLocation();

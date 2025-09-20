@@ -4,9 +4,9 @@ import {
 } from "../../../../datasource/redux/staff/church_record/MinistrySlice";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks";
-import { useEffect, useState } from "react";
+import { use, useEffect, useLayoutEffect, useState } from "react";
 import MinistryRepo from "../../../../datasource/repositories/MinistryRepo";
-import type { MinistryModel } from "../../../../datasource/models/MinistryModel";
+import type { MinistryModel } from "../../../../datasource/models/Ministry/MinistryModel";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 import { CreateMinistryForm } from "../../components/ministry/CreateMinistryForm";
 import { Loader } from "../../../landpage/components/Loader";
@@ -14,92 +14,56 @@ import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
 import { WarningDialog } from "../../../../component/dialog/WarningDialog";
 import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
 import {
-  hideLoader,
   showErrorDialog,
-  showLoader,
-  showSuccessDialog,
   showWarningDialog,
 } from "../../../../datasource/redux/dialog/DialogSlice";
 import { UpdateMinistryForm } from "../../components/ministry/UpdateMinistryForm";
+import type { PaginatedMinistryModel } from "../../../../datasource/models/Ministry/PaginatedMinistryModel";
+import type { MinistryStatusModel } from "../../../../datasource/models/Ministry/MinistryStatusModel";
+import { MinistryService } from "../../components/ministry/MinistryService";
+import { NoDataPage } from "../../../landpage/components/NoDataPage";
 
 export const MinistriesStaffPage = () => {
+  const dispatch = useDispatch();
   const ministryForm = useAppSelector((state) => state.ministryForm.value);
   const ministryEditForm = useAppSelector((state) => state.ministryForm.edit);
   const loaderDialog = useAppSelector((state) => state.dialog.loader);
   const successDialog = useAppSelector((state) => state.dialog.success);
   const warningDialog = useAppSelector((state) => state.dialog.warning);
   const errorDialog = useAppSelector((state) => state.dialog.error);
-  const [ministryData, setMinistryData] = useState<MinistryModel[]>([]);
+  const [ministryData, setMinistryData] = useState<PaginatedMinistryModel[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(true);
-  const [activeMinistry, setActiveMinistry] = useState<MinistryModel[]>([]);
+  const [activeMinistry, setActiveMinistry] = useState<PaginatedMinistryModel[]>([]);
+  const [statusList, setStatusList] = useState<MinistryStatusModel[]>([]);
   const [totalMember, setTotalMember] = useState<number>(0);
-  useEffect(() => {
-    if (isRefreshing) {
-      fetchMinistryData();
-      // console.log(ministryData);
-      setIsRefreshing(false);
-    }
-  }, [isRefreshing]);
-  const fetchMinistryData = async () => {
-    try {
-      const res = await MinistryRepo.getAllMinistry();
-      setMinistryData(res);
-      setActiveMinistry(
-        res.filter((item) => {
-          console.log(item.statusName.toLowerCase() === "active");
-          return item.statusName.toLowerCase() === "active";
-        })
-      );
-      let total = 0;
-      res.forEach((item) => {
-        total += parseInt(item.member ?? 0);
-      })
-      setTotalMember(total);
-    } catch (e) {
-
-      console.log(e);
-    }
-  };
-  const dispatch = useDispatch();
-
-  const handleDeleteMinsitry = async () => {
-    dispatch(showLoader());
-    try {
-      const response = await MinistryRepo.deleteMinistry(
-        Number(sessionStorage.getItem("id"))
-      );
-      if (response.statusCode == 200) {
-        setTimeout(() => {
-          sessionStorage.setItem("message", response.message);
-          dispatch(showSuccessDialog());
-          dispatch(hideLoader());
-        }, 1500);
-      } else {
-        sessionStorage.setItem("message", response.message);
-        dispatch(showErrorDialog());
-      }
-    } catch (e) {
-      console.error("Error deleting ministry:", e);
-      sessionStorage.setItem(
-        "message",
-        "Failed to delete ministry. Please try again."
-      );
-      dispatch(hideLoader());
-      dispatch(showErrorDialog());
-    } finally {
-      setIsRefreshing(true);
-      sessionStorage.removeItem("id");
-    }
-  };
+  const [query, setQuery] = useState<string>("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pages, setPages] = useState([1, 2, 3, 4, 5, 6, 7]);
+  const [totalPage, setTotalPage] = useState(1);
+  const ministryService = MinistryService({
+    query,
+    pageNumber,
+    ministryData,
+    totalPage,
+    statusList,
+    isRefreshing,
+    setActiveMinistry,
+    setTotalMember,
+    setPages,
+    setTotalPage,
+    setMinistryData,
+    setIsRefreshing,
+    setQuery,
+    setStatusList
+  });
 
   return (
     <>
       {ministryForm && (<CreateMinistryForm setIsRefresh={setIsRefreshing} />)}
       {ministryEditForm && (<UpdateMinistryForm setIsRefresh={setIsRefreshing} />)}
       <Loader loader={loaderDialog} />
-    
-       {successDialog && ( <SuccessDialog />)}
-      {warningDialog && (<WarningDialog onConfirm={handleDeleteMinsitry} />)}
+      {successDialog && (<SuccessDialog />)}
+      {warningDialog && (<WarningDialog onConfirm={ministryService.handleDeleteMinsitry} />)}
       {errorDialog && (<ErrorDialog2 />)}
       <div
         className={`w-100  h-auto flex flex-col items-center justify-center`}
@@ -152,6 +116,8 @@ export const MinistriesStaffPage = () => {
                   <input
                     className="flex h-10 w-full rounded-md border border-input bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10"
                     placeholder="Search ministries..."
+                    value={query}
+                    onChange={ministryService.handleQueryChange}
                     name="search-ministries-input"
                   />
                 </div>
@@ -299,56 +265,113 @@ export const MinistriesStaffPage = () => {
                     </tr>
                   </thead>
                   <tbody className="[&amp;_tr:last-child]:border-0">
-                    {ministryData.map((item, index) => (
-                      <tr
-                        key={index}
-                        className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
-                      >
-                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
-                          {item.ministryName}
-                        </td>
-                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                          {item.schedule}
-                        </td>
-                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                          {item.leader}
-                        </td>
-                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                          <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
-                            {item.statusName}
-                          </span>
-                        </td>
-                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                          {item.member}
-                        </td>
-                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <FaEdit
-                              className="text-green-700 hover:cursor-pointer text-lg"
-                              onClick={() => {
-                                sessionStorage.setItem(
-                                  "id",
-                                  item.id.toString()
-                                );
-                                dispatch(showUpdateMinistry());
-                              }}
-                            />
-                            <FaRegTrashAlt
-                              className="text-red-700 hover:cursor-pointer text-lg"
-                              onClick={() => {
-                                sessionStorage.setItem(
-                                  "id",
-                                  item.id.toString()
-                                );
-                                dispatch(showWarningDialog());
-                              }}
-                            />
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                    {
+                      ministryData.length == 0 ? (
+                        <tr className="w-full">
+                          <td colSpan={7} className="h-28  text-center">
+                            <div className="flex items-center justify-center h-full">
+                              <NoDataPage />
+                            </div>
+                          </td>
+                        </tr>
+                      ) : (ministryData.map((item, index) => (
+                        <tr
+                          key={index}
+                          className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                        >
+                          <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
+                            {item.ministryName}
+                          </td>
+                          <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                            {item.schedule}
+                          </td>
+                          <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                            {item.leader}
+                          </td>
+                          <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                            <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
+                              {statusList.find((status) => status.id === item.statusId)?.statusName ?? "Unknown"}
+                            </span>
+                          </td>
+                          <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                            {item.member}
+                          </td>
+                          <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              <FaEdit
+                                className="text-green-700 hover:cursor-pointer text-lg"
+                                onClick={() => {
+                                  sessionStorage.setItem(
+                                    "id",
+                                    item.id.toString()
+                                  );
+                                  dispatch(showUpdateMinistry());
+                                }}
+                              />
+                              <FaRegTrashAlt
+                                className="text-red-700 hover:cursor-pointer text-lg"
+                                onClick={() => {
+                                  sessionStorage.setItem(
+                                    "id",
+                                    item.id.toString()
+                                  );
+                                  dispatch(showWarningDialog());
+                                }}
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      )))
+                    }
                   </tbody>
                 </table>
+              </div>
+              <div className="w-full p-4 flex items-center justify-center relative">
+                <button className="cursor-pointer"
+                  onClick={() => {
+                    if (pageNumber > 1) {
+                      setPageNumber(pageNumber - 1);
+                      setIsRefreshing(true);
+                    } else {
+                      sessionStorage.setItem("message", "No previous records available");
+                      dispatch(showErrorDialog());
+                    }
+                  }}
+                >&laquo;</button>
+                <span className="mx-4">{pageNumber} of {totalPage}</span>
+                <button className="cursor-pointer"
+                  onClick={() => {
+                    if (pageNumber < totalPage) {
+                      setPageNumber(pageNumber + 1);
+                      setIsRefreshing(true);
+                    } else {
+                      sessionStorage.setItem("message", "No more records available");
+                      dispatch(showErrorDialog());
+                    }
+                  }}
+                >&raquo;</button>
+
+                <div className="absolute right-4 flex items-center gap-2">
+                  {
+                    pages.map((page, index) => (
+                      <span key={index} className={`p-1 ${pageNumber == page ? 'bg-green-200' : 'bg-gray-100'} w-7 text-center hover:cursor-pointer`}
+                        onClick={() => {
+                          if (totalPage < page) {
+                            sessionStorage.setItem("message", "No more records available");
+                            dispatch(showErrorDialog());
+                          } else {
+                            setPageNumber(page);
+                            setIsRefreshing(true);
+
+                          }
+
+                        }}
+                      >{page}</span>
+                    ))
+
+                  }
+
+                </div>
               </div>
             </div>
           </div>

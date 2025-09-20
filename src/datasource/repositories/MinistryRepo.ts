@@ -1,8 +1,9 @@
 import axios from "../../api/axios"
 import type { ApiResponseModel } from '../models/ApiResponseModel';
-import type { MinistryModel } from "../models/MinistryModel";
+import type { MinistryModel } from "../models/Ministry/MinistryModel";
 import { Cookies } from '../../util/Cookies';
-import { end } from "@popperjs/core";
+import type { PaginatedMinistryModel } from "../models/Ministry/PaginatedMinistryModel";
+import type { MinistryStatusModel } from "../models/Ministry/MinistryStatusModel";
 
 const MinistryRepo = {
   async saveMinistry(id: number, member: number, description: string, ministryName: string, statusName: string, leader: string, schedule: string, startTime:string, endTime:string, file: File|null, isUpdate: boolean): Promise<ApiResponseModel<any>> {
@@ -85,8 +86,35 @@ const MinistryRepo = {
       }
     );
     return response.data;
-  }
+  },
 
+  async getPaginatedMinistries(query:string, page:number):Promise<ApiResponseModel<PaginatedMinistryModel[]>>{
+    const token = Cookies.getCookie("auth_token");
+    const response = await axios.get<ApiResponseModel<PaginatedMinistryModel[]>>(
+      `getPaginatedMinistry?query=${query}&page=${page}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  },
+
+  async getMinistryStatuses():Promise<ApiResponseModel<MinistryStatusModel[]>>{
+    const token = Cookies.getCookie("auth_token");
+    const response = await axios.get<ApiResponseModel<MinistryStatusModel[]>>(
+      "getMinistryStatuses",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  }
 };
 
 export default MinistryRepo;

@@ -13,7 +13,7 @@ import EventRepo from "../../../datasource/repositories/EventRepo";
 import type { EventModel } from "../../../datasource/models/Event/EventModel";
 import dayjs from "dayjs";
 import instance from "../../../api/axios";
-import type { MinistryModel } from "../../../datasource/models/MinistryModel";
+import type { MinistryModel } from "../../../datasource/models/Ministry/MinistryModel";
 import MinistryRepo from "../../../datasource/repositories/MinistryRepo";
 import { NoDataPage } from "../components/NoDataPage";
 export const Home = (prop: any) => {
