@@ -50,7 +50,7 @@ export const GiveOnlineForm = () => {
     }
   }
 
-  return (<PayPalScriptProvider options={{ clientId: clientId }}>
+  return (<PayPalScriptProvider options={{ clientId: clientId, currency: "PHP", }}>
     <div className="rounded-lg bg-card text-card-foreground border-0 shadow-lg transform transition-all duration-500 hover:shadow-xl">
       <div className="p-6 md:p-8">
         <div className="space-y-6">
@@ -176,7 +176,7 @@ export const GiveOnlineForm = () => {
                   purchase_units: [
                     {
                       amount: {
-                        currency_code: "USD",
+                        currency_code: "PHP",
                         value: `${amount}`,
                       },
                     },
