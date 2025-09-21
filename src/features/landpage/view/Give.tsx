@@ -3,7 +3,14 @@ import BackgroundImage from "../../../assets/img/placeholder.svg";
 import { GiveInPersonCard } from "../components/GiveInPersonCard";
 import { GiveOnlineForm } from "../components/GiveOnlineForm";
 import { motion } from "framer-motion";
+import { Loader } from "../components/Loader";
+import { ErrorDialog2 } from "../../../component/dialog/ErrorDialog2";
+import { SuccessDialog } from "../../../component/dialog/SuccessDialog";
+import { useAppSelector } from "../../../datasource/redux/staff/hooks/hooks";
 export const GivePage = () => {
+  const loaderDialog = useAppSelector((state) => state.dialog.loader);
+  const errorDialog = useAppSelector((state) => state.dialog.error);
+  const successDialog = useAppSelector((state) => state.dialog.success);
   const [showForm, setShowForm] = useState(true);
   const displayForm = () => {
     setShowForm(true);
@@ -14,6 +21,16 @@ export const GivePage = () => {
 
   return (
     <>
+      <div className=''>
+        <Loader loader={loaderDialog} />
+      </div>
+      <div className={`${errorDialog ? "" : "hidden"}`}>
+        <ErrorDialog2 />
+      </div>
+      <div className={`${successDialog ? "" : "hidden"}`}>
+        <SuccessDialog />
+      </div>
+
       <div className="w-screen h-auto items-center flex flex-col justify-center">
         <motion.section
           className="w-full mt-28 flex flex-col items-center justify-center bg-cover bg-center relative">
@@ -24,7 +41,7 @@ export const GivePage = () => {
             <motion.p
               initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ duration: 0.5 }}
               className="text-lg text-gray-700 mt-4 max-w-2xl text-center">
-             Your gift changes lives. Every donation helps us share God’s Word, serve our community, and support those in need. Together, we can make a lasting impact.
+              Your gift changes lives. Every donation helps us share God’s Word, serve our community, and support those in need. Together, we can make a lasting impact.
             </motion.p>
 
             <div>
@@ -33,7 +50,7 @@ export const GivePage = () => {
             </div>
           </div>
         </motion.section>
-       
+
         {/* give content */}
         <div className="h-auto w-100 mx-5 py-5 flex flex-col items-center justify-center gap-2">
           <main className="flex-1 bg-white">

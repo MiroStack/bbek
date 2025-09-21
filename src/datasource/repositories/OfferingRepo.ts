@@ -62,6 +62,14 @@ const OfferingRepo = {
       }
     });
     return response.data;
+  },
+  async submitDonation(donationType:number, amount:number):Promise<ApiResponseModel<any>>{
+     const response = await axios.post(`submit_donation?donationType=${donationType}&amount=${amount}`, {
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    return response.data;
   }
 
 };
