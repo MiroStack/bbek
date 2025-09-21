@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
 import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
 import { WarningDialog } from "../../../../component/dialog/WarningDialog";
@@ -13,8 +13,9 @@ import dayjs from "dayjs";
 import { CreateMarriageRecord } from "../../components/marriage/CreateMarriageRecord";
 import { showCreateMarriage, showUpdateMarriage } from "../../../../datasource/redux/staff/church_record/MarriageSlice";
 import { UpdateMarriageRecord } from "../../components/marriage/UpdateMarriageRecord";
+import { NoDataPage } from "../../../landpage/components/NoDataPage";
+import { MarriageService } from "../../components/marriage/MarriageService";
 export const MarriageRecordPage = () => {
-
     const dispatch = useAppDispatch();
     const [refresh, setRefresh] = useState<boolean>(true);
     const showMarriageForm = useAppSelector((state) => state.marriageForm.value);
@@ -28,102 +29,40 @@ export const MarriageRecordPage = () => {
     const [locationRef, setLocationRef] = useState<MarriageLocationsModel[]>([]);
     const [marriageRecords, setMarriageRecords] = useState<MarriageModel[]>([]);
     const [selectedItem, setSelectedItem] = useState<MarriageModel | null>(null);
-    useEffect(() => {
+    const [query, setQuery] = useState<string>("");
+    const [pageNumber, setPageNumber] = useState(1);
+    const [pages, setPages] = useState([1, 2, 3, 4, 5, 6, 7]);
+    const [totalPage, setTotalPage] = useState(1);
+    const marriageService = MarriageService({
+        marriageRecords,
+        pageNumber,
+        totalPage,
+        query,
+        setStatusRef,
+        setTotalPage,
+        setPages,
+        setLocationRef,
+        setMarriageRecords,
+        setQuery,
+        setRefresh
+    });
+    useLayoutEffect(() => {
         if (refresh) {
-            fetchStatusesRef();
-            fetchLocationRef();
-            fetchMarriageRecords();
+            marriageService.fetchStatusesRef();
+            marriageService.fetchLocationRef();
+            marriageService.fetchMarriageRecords();
             setRefresh(false);
         }
     }, [refresh])
-    const fetchStatusesRef = async () => {
-        dispatch(showLoader());
-        const response = await MarriageRepo.getaAllMarriageStatus();
-        try {
 
-            if (response.statusCode === 200) {
-                console.log(response.data);
-                setStatusRef(response.data);
-            } else {
-                sessionStorage.setItem("message", response.message);
-                dispatch(showErrorDialog());
-            }
-        } catch (e) {
-            console.log(e);
-        } finally {
-            dispatch(hideLoader());
-        }
-    }
-    const fetchLocationRef = async () => {
-        dispatch(showLoader());
-        const response = await MarriageRepo.getaAllMarriageLocation();
-        try {
-            if (response.statusCode === 200) {
-                console.log(response.data);
-                setLocationRef(response.data);
-            } else {
-                sessionStorage.setItem("message", response.message);
-                dispatch(showErrorDialog());
-            }
-        } catch (e) {
-            console.log(e);
-        } finally {
-            dispatch(hideLoader());
-        }
-    }
-    const fetchMarriageRecords = async () => {
-        dispatch(showLoader());
-        const response = await MarriageRepo.getAllMarriage();
-        try {
-
-            if (response.statusCode === 200) {
-                console.log(response.data);
-                setMarriageRecords(response.data);
-                dispatch(hideLoader());
-            } else {
-                sessionStorage.setItem("message", response.message);
-                dispatch(showErrorDialog());
-                dispatch(hideLoader());
-            }
-        } catch (e) {
-
-        }
-        finally {
-            dispatch(hideLoader());
-        }
-    }
-    const handleDeleteMarriage = async () => {
-        dispatch(showLoader());
-        try{
-          const id = sessionStorage.getItem("id");
-            if(id){
-                const response = await MarriageRepo.deleteMarriage(Number(id));
-                if(response.statusCode === 200){
-                    sessionStorage.setItem("message", response.message);
-                    dispatch(showSuccessDialog());
-                    dispatch(hideLoader());
-                    setRefresh(true);
-                }else{
-                    sessionStorage.setItem("message", response.message);
-                    dispatch(showErrorDialog());
-                    dispatch(hideLoader());
-                }
-            }
-        }catch(e){
-
-        }finally{
-            dispatch(hideLoader());
-        }
-
-    }
     return (
 
         <>
-            {showMarriageForm && (<CreateMarriageRecord marriageStatuses={statusRef} marriageLocations={locationRef} setRefresh={setRefresh}/>)}
-            {displayUpdateMarriage && (<UpdateMarriageRecord marriageStatuses={statusRef} marriageLocations={locationRef} marriageRecord={selectedItem} setSelectedItem={setSelectedItem} setRefresh={setRefresh}/>)}
+            {showMarriageForm && (<CreateMarriageRecord marriageStatuses={statusRef} marriageLocations={locationRef} setRefresh={setRefresh} />)}
+            {displayUpdateMarriage && (<UpdateMarriageRecord marriageStatuses={statusRef} marriageLocations={locationRef} marriageRecord={selectedItem} setSelectedItem={setSelectedItem} setRefresh={setRefresh} />)}
             {successDialog && (<SuccessDialog />)}
             {errorDialog && (<ErrorDialog2 />)}
-            {warningDialog && (<WarningDialog onConfirm={handleDeleteMarriage} />)}
+            {warningDialog && (<WarningDialog onConfirm={marriageService.handleDeleteMarriage} />)}
             {loaderDialog && (<Loader loader={loaderDialog} />)}
             <div className="w-100 h-auto flex flex-col items-center justify-center">
                 <div className="p-6">
@@ -172,7 +111,8 @@ export const MarriageRecordPage = () => {
                                     <input
                                         className="flex h-10 w-full rounded-md border border-input bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10"
                                         placeholder="Search records..."
-
+                                        value={query}
+                                        onChange={marriageService.handleQueryChange}
                                     />
                                 </div>
                             </div>
@@ -210,7 +150,7 @@ export const MarriageRecordPage = () => {
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm font-medium text-gray-500">Completed</p>
-                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">{marriageRecords.filter((item)=>item.status == 3).length}</h3>
+                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">{marriageRecords.filter((item) => item.status == 3).length}</h3>
                                     </div>
                                     <div className="p-3 bg-green-100 rounded-full">
                                         <svg
@@ -236,7 +176,7 @@ export const MarriageRecordPage = () => {
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm font-medium text-gray-500">Pending Approvals</p>
-                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">{marriageRecords.filter((item)=>item.status === 1).length}</h3>
+                                        <h3 className="text-2xl font-bold text-gray-900 mt-1">{marriageRecords.filter((item) => item.status === 1).length}</h3>
                                     </div>
                                     <div className="p-3 bg-yellow-100 rounded-full">
                                         <svg
@@ -287,74 +227,127 @@ export const MarriageRecordPage = () => {
                                     </thead>
                                     <tbody className="[&amp;_tr:last-child]:border-0">
                                         {
-                                            marriageRecords.map((record, index) => (
-                                                <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">{record.groomName}</td>
-                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{record.brideName}</td>
-                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{dayjs(record.weddingDate).format("MMMM D, YYYY h:mm A")}</td>
-                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                                                        <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">{statusRef.map((item) => {
-                                                            if (item.id === record.status) {
-                                                                return item.statusName;
+
+                                            marriageRecords.length == 0 ? (<tr className="w-full">
+                                                <td colSpan={7} className="h-28  text-center">
+                                                    <div className="flex items-center justify-center h-full">
+                                                        <NoDataPage />
+                                                    </div>
+                                                </td>
+                                            </tr>) :
+                                                marriageRecords.map((record, index) => (
+                                                    <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">{record.groomName}</td>
+                                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{record.brideName}</td>
+                                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{dayjs(record.weddingDate).format("MMMM D, YYYY h:mm A")}</td>
+                                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                                            <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">{statusRef.map((item) => {
+                                                                if (item.id === record.status) {
+                                                                    return item.statusName;
+                                                                } else {
+                                                                    return null;
+                                                                }
+                                                            })}</span>
+                                                        </td>
+                                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{locationRef.map((item) => {
+                                                            if (item.id === record.location) {
+                                                                return item.locationName;
                                                             } else {
                                                                 return null;
                                                             }
-                                                        })}</span>
-                                                    </td>
-                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{locationRef.map((item) => {
-                                                        if (item.id === record.location) {
-                                                            return item.locationName;
-                                                        } else {
-                                                            return null;
-                                                        }
-                                                    })}</td>
-                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right relative">
-                                                        <div className={`${optionIndex === index ? "" : "hidden"} absolute bg-white z-10 h-28 w-36 left-[-100%] bottom-[-80%] shadow-md rounded-md `} onClick={() => setOptionIndex(-1)}>
-                                                            <ul className="flex flex-col items-start w-full">
-                                                                <li className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start">View Details</li>
-                                                                <li className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start" onClick={() => {
-                                                                    // setSelectedItem(item);
-                                                                    // dispatch(showUpdateOffering())
-                                                                    setSelectedItem(record);
-                                                                    dispatch(showUpdateMarriage());
-                                                                }}>Edit Record</li>
-                                                                <li className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start">Send Message</li>
-                                                                <li className="text-red-500 cursor-pointer hover:bg-gray-100 p-1 w-full text-start" onClick={() => {
-                                                                    sessionStorage.setItem("id", record.id.toString());
-                                                                    dispatch(showWarningDialog());
-                                                                }}>Delete Record</li>
-                                                            </ul>
-                                                        </div>
-                                                        <button
-                                                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
-                                                            type="button"
-                                                            onClick={() => { setOptionIndex(index) }}
-                                                        >
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                width="24"
-                                                                height="24"
-                                                                viewBox="0 0 24 24"
-                                                                fill="none"
-                                                                stroke="currentColor"
-                                                                strokeWidth="2"
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                className="lucide lucide-ellipsis h-4 w-4"
+                                                        })}</td>
+                                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right relative">
+                                                            <div className={`${optionIndex === index ? "" : "hidden"} absolute bg-white z-10 h-28 w-36 left-[-100%] bottom-[-80%] shadow-md rounded-md `} onClick={() => setOptionIndex(-1)}>
+                                                                <ul className="flex flex-col items-start w-full">
+                                                                    <li className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start">View Details</li>
+                                                                    <li className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start" onClick={() => {
+                                                                        // setSelectedItem(item);
+                                                                        // dispatch(showUpdateOffering())
+                                                                        setSelectedItem(record);
+                                                                        dispatch(showUpdateMarriage());
+                                                                    }}>Edit Record</li>
+                                                                    <li className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start">Send Message</li>
+                                                                    <li className="text-red-500 cursor-pointer hover:bg-gray-100 p-1 w-full text-start" onClick={() => {
+                                                                        sessionStorage.setItem("id", record.id.toString());
+                                                                        dispatch(showWarningDialog());
+                                                                    }}>Delete Record</li>
+                                                                </ul>
+                                                            </div>
+                                                            <button
+                                                                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+                                                                type="button"
+                                                                onClick={() => { setOptionIndex(index) }}
                                                             >
-                                                                <circle cx="12" cy="12" r="1"></circle>
-                                                                <circle cx="19" cy="12" r="1"></circle>
-                                                                <circle cx="5" cy="12" r="1"></circle>
-                                                            </svg>
-                                                            <span className="sr-only">Actions</span>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            ))
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    width="24"
+                                                                    height="24"
+                                                                    viewBox="0 0 24 24"
+                                                                    fill="none"
+                                                                    stroke="currentColor"
+                                                                    strokeWidth="2"
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    className="lucide lucide-ellipsis h-4 w-4"
+                                                                >
+                                                                    <circle cx="12" cy="12" r="1"></circle>
+                                                                    <circle cx="19" cy="12" r="1"></circle>
+                                                                    <circle cx="5" cy="12" r="1"></circle>
+                                                                </svg>
+                                                                <span className="sr-only">Actions</span>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                ))
                                         }
 
                                     </tbody>
                                 </table>
+                            </div>
+                            <div className="w-full p-4 flex items-center justify-center relative">
+                                <button className="cursor-pointer"
+                                    onClick={() => {
+                                        if (pageNumber > 1) {
+                                            setPageNumber(pageNumber - 1);
+                                            setRefresh(true);
+                                        } else {
+                                            sessionStorage.setItem("message", "No previous records available");
+                                            dispatch(showErrorDialog());
+                                        }
+                                    }}
+                                >&laquo;</button>
+                                <span className="mx-4">{pageNumber} of {totalPage}</span>
+                                <button className="cursor-pointer"
+                                    onClick={() => {
+                                        if (pageNumber < totalPage) {
+                                            setPageNumber(pageNumber + 1);
+                                            setRefresh(true);
+                                        } else {
+                                            sessionStorage.setItem("message", "No more records available");
+                                            dispatch(showErrorDialog());
+                                        }
+                                    }}
+                                >&raquo;</button>
+
+                                <div className="absolute right-4 flex items-center gap-2">
+                                    {
+                                        pages.map((page, index) => (
+                                            <span key={index} className={`p-1 ${pageNumber == page ? 'bg-green-200' : 'bg-gray-100'} w-7 text-center hover:cursor-pointer`}
+                                                onClick={() => {
+                                                    if (totalPage < page) {
+                                                        sessionStorage.setItem("message", "No more records available");
+                                                        dispatch(showErrorDialog());
+                                                    } else {
+                                                        setPageNumber(page);
+                                                        setRefresh(true);
+
+                                                    }
+
+                                                }}
+                                            >{page}</span>
+                                        ))
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>

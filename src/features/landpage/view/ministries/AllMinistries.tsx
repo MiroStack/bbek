@@ -8,12 +8,20 @@ import { Link, useNavigate } from "react-router-dom"
 import { IoMdFunnel } from "react-icons/io"
 import { FaCalendarDays, FaClock, FaLocationDot } from "react-icons/fa6"
 import { JoinCard } from "../../components/JoinCard"
+import { showErrorDialog } from "../../../../datasource/redux/dialog/DialogSlice"
+import { useAppDispatch } from "../../../../datasource/redux/staff/hooks/hooks"
 export const AllMinistries = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [ministryData, setMinistryData] = useState<MinistryModel[]>([]);
   const [showJoinEvent, setShowJoinEvent] = useState<boolean>(false);
   const [showSort, setShowSort] = useState(false);
-   const handleJoinEvent = () => {
+  const [query, setQuery] = useState<string>("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pages, setPages] = useState([1, 2, 3, 4, 5, 6, 7]);
+  const [totalPage, setTotalPage] = useState(1);
+  const [refresh, setIsRefreshing] = useState<boolean>(true);
+  const handleJoinEvent = () => {
     setShowJoinEvent(!showJoinEvent);
   }
   const toggleSort = () => {
@@ -21,14 +29,43 @@ export const AllMinistries = () => {
   };
   useEffect(() => {
     try {
-      getAllMinistryList();
+      if (refresh) {
+        getAllMinistryList();
+        setIsRefreshing(false);
+      }
     } catch (e) {
       console.log(e);
     }
-  }, [])
+  })
+  useEffect(() => {
+    setTotalPage(Math.ceil((ministryData[0]?.totalRows ?? 0) / 11));
+  }, [ministryData]);
+  useEffect(() => {
+    const maxVisible = 5; // how many page buttons you want to show
+    let start = Math.max(1, pageNumber - Math.floor(maxVisible / 10));
+    let end = start + maxVisible - 1;
+
+    if (end > totalPage) {
+      end = totalPage;
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    const newPages = [];
+    for (let i = start; i <= end; i++) {
+      newPages.push(i);
+    }
+    setPages(newPages);
+    console.log(pageNumber);
+  }, [pageNumber, totalPage]);
   const getAllMinistryList = async () => {
-    const data = await MinistryRepo.getAllMinistry();
+    const data = await MinistryRepo.getAllMinistry(query, pageNumber);
+    console.log(query);
+    console.log(data);
     setMinistryData(data);
+  }
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+    setIsRefreshing(true);
   }
   return (
     <>
@@ -55,27 +92,15 @@ export const AllMinistries = () => {
           </div>
         </motion.section>
 
-        {/* ministries card */}
-        {/* <div className="h-auto mx-5 py-5 flex flex-col items-center justify-center gap-2">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {
-              ministryData.map((items, index) => (
-                <MinistriesCard key={index} ministryModel={items} />
-              ))
-            }
-
-
-          </div> */}
-
-        {/* end */}
-        {/* </div> */}
-
-
         <section className="py-12">
           <div className="container mx-auto px-4">
             <div dir="ltr" data-orientation="horizontal" className="max-w-4xl mx-auto">
               <div className="flex items-center justify-between gap-2">
-                <input type="text" placeholder="Search minitries..." className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                <input type="text"
+                  placeholder="Search minitries..."
+                  value={query}
+                  onChange={handleQueryChange}
+                  className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 <div className="relative group">
                   <IoMdFunnel className="text-gray-500 text-2xl cursor-pointer hover:text-blue-500 transition-colors " onClick={toggleSort} />
                   <div className={`absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded-md shadow-lg z-10  ${showSort ? 'block' : 'hidden'}`}>
@@ -110,7 +135,7 @@ export const AllMinistries = () => {
                                 <span>{ministryData.schedule}</span>
                               </div>
                             </div>
-                             <p className="text-gray-600 mb-2">
+                            <p className="text-gray-600 mb-2">
                               {ministryData.description.length > 80 ? (
                                 <>
                                   {ministryData.description.substring(0, 80)}...
@@ -126,7 +151,7 @@ export const AllMinistries = () => {
                           </div>
                         </div>
                         <div className="w-full flex items-center justify-center gap-3 mt-2">
-                         
+
                           <motion.button
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
@@ -143,7 +168,7 @@ export const AllMinistries = () => {
                             >
                               LEARN MORE
                             </Link>
-                            
+
                           </motion.button>
                           <motion.button
                             initial={{ scale: 0 }}
@@ -161,6 +186,53 @@ export const AllMinistries = () => {
                     ))
                   }
 
+                </div>
+                <div className="w-full p-4 flex items-center justify-center relative">
+                  <button className="cursor-pointer"
+                    onClick={() => {
+                      if (pageNumber > 1) {
+                        setPageNumber(pageNumber - 1);
+                        setIsRefreshing(true);
+                      } else {
+                        sessionStorage.setItem("message", "No previous records available");
+                        dispatch(showErrorDialog());
+                      }
+                    }}
+                  >&laquo;</button>
+                  <span className="mx-4">{pageNumber} of {totalPage}</span>
+                  <button className="cursor-pointer"
+                    onClick={() => {
+                      if (pageNumber < totalPage) {
+                        setPageNumber(pageNumber + 1);
+                        setIsRefreshing(true);
+                      } else {
+                        sessionStorage.setItem("message", "No more records available");
+                        dispatch(showErrorDialog());
+                      }
+                    }}
+                  >&raquo;</button>
+
+                  <div className="absolute right-4 flex items-center gap-2">
+                    {
+                      pages.map((page, index) => (
+                        <span key={index} className={`p-1 ${pageNumber == page ? 'bg-green-200' : 'bg-gray-100'} w-7 text-center hover:cursor-pointer`}
+                          onClick={() => {
+                            if (totalPage < page) {
+                              sessionStorage.setItem("message", "No more records available");
+                              dispatch(showErrorDialog());
+                            } else {
+                              setPageNumber(page);
+                              setIsRefreshing(true);
+
+                            }
+
+                          }}
+                        >{page}</span>
+                      ))
+
+                    }
+
+                  </div>
                 </div>
               </div>
               <div data-state="inactive" data-orientation="horizontal" role="tabpanel" aria-labelledby="radix-«r0»-trigger-regular" id="radix-«r0»-content-regular" className="mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"></div>

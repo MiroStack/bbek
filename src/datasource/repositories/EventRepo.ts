@@ -1,4 +1,3 @@
-import { createElement } from "react";
 import axios from "../../api/axios"
 import type { ApiResponseModel } from '../models/ApiResponseModel';
 import type { EventModel } from "../models/Event/EventModel";
@@ -8,10 +7,10 @@ import type { PaginatedEventsModel } from "../models/Event/PaginatedEventModel";
 
 const EventRepo = {
 
-  async getAllEvent(): Promise<EventModel[]> {
+  async getAllEvent(query:string, page:number): Promise<EventModel[]> {
     const token = Cookies.getCookie("auth_token");
     const response = await axios.get<EventModel[]>(
-      "getAllEvent",
+      `getAllEvent?query=${query}&page=${page}`,
       {
         headers: {
           "Content-Type": "multipart/form-data"

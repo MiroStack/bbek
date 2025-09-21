@@ -4,36 +4,66 @@ import EventRepo from "../../../../datasource/repositories/EventRepo";
 import { motion } from "framer-motion";
 import { IoMdFunnel } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
-import image1 from "../../../../assets/img/hero2.jpg";
-import image2 from "../../../../assets/img/hero.jpg";
-import image3 from "../../../../assets/img/hero4.jpg";
-import image4 from "../../../../assets/img/hero5.jpg";
 import { FaCalendarDays, FaClock, FaLocationDot } from "react-icons/fa6";
 import dayjs from "dayjs";
 import { JoinCard } from "../../components/JoinCard";
-
+import { showErrorDialog } from "../../../../datasource/redux/dialog/DialogSlice";
+import { useAppDispatch } from "../../../../datasource/redux/staff/hooks/hooks";
 export const AllEventsPage = () => {
-  const images = [image1, image2, image3, image4];
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [eventData, setEventDate] = useState<EventModel[]>([]);
   const [showSort, setShowSort] = useState(false);
   const [showJoinEvent, setShowJoinEvent] = useState<boolean>(false);
+  const [query, setQuery] = useState<string>("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pages, setPages] = useState([1, 2, 3, 4, 5, 6, 7]);
+  const [totalPage, setTotalPage] = useState(1);
+  const [refresh, setIsRefreshing] = useState<boolean>(true);
   const handleJoinEvent = () => {
     setShowJoinEvent(!showJoinEvent);
   }
-
   const toggleSort = () => {
     setShowSort(!showSort);
   };
   useEffect(() => {
-    fetchEventData();
-  }, []);
+    if (refresh) {
+      fetchEventData();
+      setIsRefreshing(false);
+    }
+  });
+  useEffect(() => {
+    setTotalPage(Math.ceil((eventData[0]?.totalRows ?? 0) / 11));
+  }, [eventData]);
+  useEffect(() => {
+    const maxVisible = 5; // how many page buttons you want to show
+    let start = Math.max(1, pageNumber - Math.floor(maxVisible / 10));
+    let end = start + maxVisible - 1;
+
+    if (end > totalPage) {
+      end = totalPage;
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    const newPages = [];
+    for (let i = start; i <= end; i++) {
+      newPages.push(i);
+    }
+    setPages(newPages);
+    console.log(pageNumber);
+  }, [pageNumber, totalPage]);
+
   const fetchEventData = async () => {
     try {
-      const res = await EventRepo.getAllEvent();
+      const res = await EventRepo.getAllEvent(query, pageNumber);
+      console.log(res);
       setEventDate(res);
     } catch (e) { }
   };
+  const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+    setIsRefreshing(true);
+  }
   return (
     <div className="relative">
 
@@ -77,6 +107,8 @@ export const AllEventsPage = () => {
                 <input
                   type="text"
                   placeholder="Search events..."
+                  onChange={handleQueryChange}
+                  value={query}
                   className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <div className="relative group">
@@ -161,13 +193,6 @@ export const AllEventsPage = () => {
                                 </>
                               ) : event.description}
                             </p>
-                            <div className="space-y-2 text-sm flex items-center gap-2">
-                              {/* <div className=" w-[40%] bg-blue-100 text-blue-700 font-bold text-center rounded-md">
-                            <div className="text-sm">MAY</div>
-                            <div className="text-2xl">14</div>
-                            <div className="text-sm">2025</div>
-                          </div> */}
-                            </div>
                           </div>
                         </div>
                         <div className="w-full flex items-center justify-center gap-3 mt-2">
@@ -205,6 +230,53 @@ export const AllEventsPage = () => {
                     ))
                   }
                   {/* {end} */}
+                </div>
+                <div className="w-full p-4 flex items-center justify-center relative">
+                  <button className="cursor-pointer"
+                    onClick={() => {
+                      if (pageNumber > 1) {
+                        setPageNumber(pageNumber - 1);
+                        setIsRefreshing(true);
+                      } else {
+                        sessionStorage.setItem("message", "No previous records available");
+                        dispatch(showErrorDialog());
+                      }
+                    }}
+                  >&laquo;</button>
+                  <span className="mx-4">{pageNumber} of {totalPage}</span>
+                  <button className="cursor-pointer"
+                    onClick={() => {
+                      if (pageNumber < totalPage) {
+                        setPageNumber(pageNumber + 1);
+                        setIsRefreshing(true);
+                      } else {
+                        sessionStorage.setItem("message", "No more records available");
+                        dispatch(showErrorDialog());
+                      }
+                    }}
+                  >&raquo;</button>
+
+                  <div className="absolute right-4 flex items-center gap-2">
+                    {
+                      pages.map((page, index) => (
+                        <span key={index} className={`p-1 ${pageNumber == page ? 'bg-green-200' : 'bg-gray-100'} w-7 text-center hover:cursor-pointer`}
+                          onClick={() => {
+                            if (totalPage < page) {
+                              sessionStorage.setItem("message", "No more records available");
+                              dispatch(showErrorDialog());
+                            } else {
+                              setPageNumber(page);
+                              setIsRefreshing(true);
+
+                            }
+
+                          }}
+                        >{page}</span>
+                      ))
+
+                    }
+
+                  </div>
                 </div>
               </div>
               <div

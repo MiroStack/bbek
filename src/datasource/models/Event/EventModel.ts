@@ -9,4 +9,5 @@ export interface EventModel{
   offering: number;
   statusName: string;
   description: string;
+  totalRows:number;
 }

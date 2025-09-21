@@ -37,10 +37,10 @@ const MinistryRepo = {
     // console.log(token);
     return response.data;
   },
-  async getAllMinistry(): Promise<MinistryModel[]> {
+  async getAllMinistry(query:string, page:number): Promise<MinistryModel[]> {
     const token = Cookies.getCookie("auth_token");
     const response = await axios.get<MinistryModel[]>(
-      "getAllMinistry",
+      `getAllMinistry?query=${query}&page=${page}`,
       {
         headers: {
           "Content-Type": "multipart/form-data"

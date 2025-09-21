@@ -37,9 +37,10 @@ export const MarriageRepo = {
         });
         return response.data;
     },
-    async getAllMarriage(): Promise<ApiResponseModel<MarriageModel[]>> {
+    async getAllMarriage(query:string, page:number): Promise<ApiResponseModel<MarriageModel[]>> {
         const token = Cookies.getCookie("auth_token");
-        const response = await axios.get<ApiResponseModel<MarriageModel[]>>('getAllMarriageRecord', {
+        const response = await axios.get<ApiResponseModel<MarriageModel[]>>(
+            `getAllMarriageRecord?query=${query}&page=${page}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`

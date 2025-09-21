@@ -282,7 +282,7 @@ export const Home = (prop: any) => {
                             {ministry.description.substring(0, 80)}...
                             <br />
                             <Link
-                              to="/landpage/ministries/learn-more-ministry"
+                              to="/landpage/ministries/allministry"
                               state={{ ministryModel: ministry }}
                               className="text-blue-500 cursor-pointer">See more</Link>
                           </>
@@ -296,7 +296,7 @@ export const Home = (prop: any) => {
 
             </div>
 
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-300 mt-4" onClick={() => { navigate("/landpage/ministries") }}>
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-300 mt-4" onClick={() => { navigate("/landpage/ministries/allministry") }}>
               See More
             </button>
 

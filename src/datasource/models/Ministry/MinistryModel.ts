@@ -10,4 +10,5 @@ export interface MinistryModel{
     updatedDate:string;
     startTime:string;
     endTime:string;
+    totalRows:number;
 }
