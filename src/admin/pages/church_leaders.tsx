@@ -395,7 +395,7 @@ function Church_Leaders() {
                             <span>Personal Information</span>
                             <div className='d-flex w-100 flex-column gap-2'>
                                 <div className='d-flex justify-content-center'>
-                                    <img src={selectedLeader?.image || user_logo} style={{ width: 200, height: 200 }} className="logo img-fluid rounded-circle" />
+                                    <img src={baseUrl + "member/getImage?filename=" + selectedLeader?.image} style={{ width: 200, height: 200 }} className="logo img-fluid rounded-circle" />
                                 </div>
                                 <span className='text-muted text-sm'>Full Name</span>
                                 <span className=''> {selectedLeader?.name || ''}</span>

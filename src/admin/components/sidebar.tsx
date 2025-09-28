@@ -66,27 +66,6 @@ export default function Sidebar() {
                                 <span className='text-sm'>DEPARTMENT OFFICERS</span>
                             </div>
                         </Link>
-                    </div>
-                )}
-            </div>
-
-            {/* Services Submenu */}
-            <div className="d-flex flex-column gap-2">
-                <div
-                    className="d-flex gap-2"
-                    onClick={() => setShowServicesSubmenu(!showServicesSubmenu)}
-                    style={{ cursor: 'pointer' }}
-                >
-                    <div className='w-100  text-muted p-2 d-flex align-items-center me-2'>
-                        <i className="col-3 text-center fa-solid fa-lg fa-gift"></i>
-                        <span className='text-sm'>SERVICES
-                        </span>
-                        <i className={`fa-solid fa-chevron-${showServicesSubmenu ? 'up' : 'down'} ms-auto`}></i>
-                    </div>
-                </div>
-
-                {showServicesSubmenu && (
-                    <div className="ps-5 d-flex flex-column gap-1">
                         <Link to="/admin/events" className={`w-100 text-muted  ${pathname === '/admin/events' ? 'active' : ''}`}>
                             <div className='w-100 p-2 d-flex align-items-center me-2'>
                                 <i className="col-3 text-center fa-solid fa-calendar"></i>
@@ -111,6 +90,34 @@ export default function Sidebar() {
                                 <span className='text-sm'>MINISTRIES</span>
                             </div>
                         </Link>
+                        <Link to="/admin/marriage-record" className={`w-100 text-muted  ${pathname === '/admin/marriage-record' ? 'active' : ''}`}>
+                            <div className='w-100  p-2 d-flex align-items-center me-2'>
+                                <i className="col-3 text-center fa-solid fa-file-lines"></i>
+                                <span className='text-sm'>MARRIAGE RECORD</span>
+                            </div>
+                        </Link>
+                    </div>
+                )}
+            </div>
+
+            {/* Services Submenu */}
+            <div className="d-flex flex-column gap-2">
+                <div
+                    className="d-flex gap-2"
+                    onClick={() => setShowServicesSubmenu(!showServicesSubmenu)}
+                    style={{ cursor: 'pointer' }}
+                >
+                    <div className='w-100  text-muted p-2 d-flex align-items-center me-2'>
+                        <i className="col-3 text-center fa-solid fa-lg fa-gift"></i>
+                        <span className='text-sm'>SERVICES
+                        </span>
+                        <i className={`fa-solid fa-chevron-${showServicesSubmenu ? 'up' : 'down'} ms-auto`}></i>
+                    </div>
+                </div>
+
+                {showServicesSubmenu && (
+                    <div className="ps-5 d-flex flex-column gap-1">
+
                         <Link to="/admin/ministry-record" className={`w-100 text-muted  ${pathname === '/admin/ministry-record' ? 'active' : ''}`}>
                             <div className='w-100 p-2 d-flex align-items-center me-2'>
                                 <i className="col-3 text-center fa-solid fa-file-lines"></i>
@@ -135,12 +142,7 @@ export default function Sidebar() {
                                 <span className='text-sm'>MARRIAGE</span>
                             </div>
                         </Link>
-                        <Link to="/admin/marriage-record" className={`w-100 text-muted  ${pathname === '/admin/marriage-record' ? 'active' : ''}`}>
-                            <div className='w-100  p-2 d-flex align-items-center me-2'>
-                                <i className="col-3 text-center fa-solid fa-file-lines"></i>
-                                <span className='text-sm'>MARRIAGE RECORD</span>
-                            </div>
-                        </Link>
+
                     </div>
                 )}
             </div>
