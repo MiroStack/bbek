@@ -7,7 +7,10 @@ import { hideLoader, showLoader, showSuccessDialog } from '../../../../datasourc
 export const WaterBaptismPage = () => {
     const navigate = useNavigate();
     const [firstname, setFirstname] = useState("");
+    const [middleName, setMiddleName] = useState("");
     const [lastname, setLastname] = useState("");
+    const [birthdate, setBirthdate] = useState("");
+    const [address, setAddress] = useState("");
     const [email, setEmail] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [testimony, setTestimony] = useState("");
@@ -31,6 +34,15 @@ export const WaterBaptismPage = () => {
     }
     const handlePreferredDate = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPreferredDate(e.target.value);
+    }
+    const handleMiddleName = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setMiddleName(e.target.value);
+    }
+    const handleBirthDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setBirthdate(e.target.value);
+    }
+    const handleAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setAddress(e.target.value);
     }
     const handleSubmit = async () => {
         try {
@@ -360,19 +372,74 @@ export const WaterBaptismPage = () => {
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                         htmlFor="last-name"
                                                     >
+                                                        Middle Name
+                                                    </label>
+                                                    <input
+                                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
+                                                        id="middle-name"
+                                                        value={middleName}
+                                                        onChange={handleMiddleName}
+                                                        placeholder="Enter your middle name"
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div className="space-y-2">
+                                                    <label
+                                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                        htmlFor="last-name"
+                                                    >
                                                         Last Name
                                                     </label>
                                                     <input
                                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
-                                                        id="last-name"
+                                                        id="first-name"
                                                         value={lastname}
                                                         onChange={handleLastname}
                                                         placeholder="Enter your last name"
                                                         required
                                                     />
                                                 </div>
+                                                <div className="space-y-2">
+                                                    <label
+                                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                        htmlFor="birthdate"
+                                                    >
+                                                        Birthdate
+                                                    </label>
+                                                    <input
+                                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
+                                                        id="birthdate"
+                                                        value={birthdate}
+                                                        onChange={handleBirthDate}
+                                                        placeholder="Enter your birthdate"
+                                                        type='date'
+                                                        required
+                                                    />
+                                                </div>
                                             </div>
+
                                             <div className="space-y-2">
+                                                <label
+                                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                    htmlFor="address"
+                                                >
+                                                    Address
+                                                </label>
+                                                <input
+                                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
+                                                    id="address"
+                                                    value={address}
+
+                                                    onChange={handleAddress}
+                                                    placeholder="Enter your address"
+                                                    type="text"
+                                                    required
+                                                />
+                                            </div>
+                                                 <div className="space-y-2">
                                                 <label
                                                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                     htmlFor="email"
@@ -390,6 +457,7 @@ export const WaterBaptismPage = () => {
                                                     required
                                                 />
                                             </div>
+
                                             <div className="space-y-2">
                                                 <label
                                                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
