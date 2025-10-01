@@ -90,7 +90,7 @@ export const WaterBaptismPage = () => {
                 middlename: middleName,
                 lastname: lastname,
                 address: address,
-                age: 0,
+                age: age,
                 birthdate: birthdate,
                 email: email,
                 contactNo: phoneNumber,

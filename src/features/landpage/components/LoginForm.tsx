@@ -28,26 +28,25 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin }) => {
             if (loginResponse.statusCode == 200) {
                 // sessionStorage.setItem("token", loginResponse.data.token);
                 document.cookie = `auth_token=${loginResponse.data.token}; path=/; max-age=604800; secure`;
-                sessionStorage.setItem('name', loginResponse.data.fullName);
-                sessionStorage.setItem('email', loginResponse.data.email);
-                setTimeout(() => {
-                    dispatch(hideLoader());
-                    switch (loginResponse.data.role) {
-                        case "ADMIN":
-                            navigate("/admin");
-                            break;
-                        case "MEMBER":
-                            navigate("/member");
-                            break;
-                        case "STAFF":
-                            navigate("/staff");
-                            break;
-                    }
-                    closeLogin();
-                }, 1500);
+
+                // setTimeout(() => {
+                //     dispatch(hideLoader());
+                //     switch (loginResponse.data.role) {
+                //         case "ADMIN":
+                //             navigate("/admin");
+                //             break;
+                //         case "MEMBER":
+                //             navigate("/member");
+                //             break;
+                //         case "STAFF":
+                //             navigate("/staff");
+                //             break;
+                //     }
+                //     closeLogin();
+                // }, 1500);
 
             } else {
-                sessionStorage.setItem("message", "Login failed. Please check your credentials.");
+                sessionStorage.setItem("message", loginResponse.message);
                 setTimeout(() => {
                     dispatch(showErrorDialog());
                     dispatch(hideLoader());
