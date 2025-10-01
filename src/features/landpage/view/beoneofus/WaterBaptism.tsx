@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BaptismRepo from '../../../../datasource/repositories/BaptismRepo';
 import { useDispatch } from 'react-redux';
@@ -16,8 +16,8 @@ export const WaterBaptismPage = () => {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [testimony, setTestimony] = useState("");
     const [preferredDate, setPreferredDate] = useState("");
-    const [gender, setGender]= useState("");
-    const [age, setAge]= useState(0);
+    const [gender, setGender] = useState("");
+    const [age, setAge] = useState(0);
 
     const dispatch = useDispatch();
 
@@ -48,10 +48,44 @@ export const WaterBaptismPage = () => {
     const handleAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
         setAddress(e.target.value);
     }
+    const handleGender = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setGender(e.target.value);
+    }
+    useEffect(() => {
+        if (!birthdate) return;
+
+        const birth = new Date(birthdate);
+        const today = new Date();
+        if (birth == today || birth > today) {
+            alert("Invalid Dates.");
+            setBirthdate("");
+            return;
+        }
+
+        let age = today.getFullYear() - birth.getFullYear();
+        const m = today.getMonth() - birth.getMonth();
+
+        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+            age--;
+        }
+
+        setAge(age);
+    }, [birthdate]);
+
+    useEffect(() => {
+        const date1 = new Date(preferredDate);
+        const date = new Date();
+        if (date == date1 || date1 < date) {
+            alert("Invalid Dates.");
+            setPreferredDate("");
+            return;
+        }
+    }, [preferredDate]);
+
     const handleSubmit = async () => {
         try {
             dispatch(showLoader());
-            const model:RegistrationModel={
+            const model: RegistrationModel = {
                 firstname: firstname,
                 middlename: middleName,
                 lastname: lastname,
@@ -62,9 +96,10 @@ export const WaterBaptismPage = () => {
                 contactNo: phoneNumber,
                 gender: gender,
                 preferred_dt: preferredDate,
-                testimony:testimony
+                testimony: testimony
             }
             const response = await BaptismRepo.submitBaptism(model);
+            dispatch(hideLoader());
             if (response.statusCode == 200) {
                 setTimeout(() => {
                     sessionStorage.setItem("message", response.message);
@@ -85,15 +120,14 @@ export const WaterBaptismPage = () => {
 
             } else {
                 setTimeout(() => {
-                    dispatch(hideLoader());
                     alert("Failed to submit baptism request. Please try again later.");
                 }, 1500);
             }
 
         } catch (e) {
-            hideLoader();
+
         } finally {
-            hideLoader();
+
         }
     }
 
@@ -444,19 +478,18 @@ export const WaterBaptismPage = () => {
                                                 </div>
                                             </div>
 
-                                             <div className="grid grid-cols-2 gap-4">
+                                            <div className="grid grid-cols-2 gap-4">
                                                 <div className="space-y-2">
                                                     <label
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                                        htmlFor="last-name"
+                                                        htmlFor="age"
                                                     >
                                                         Age
                                                     </label>
                                                     <input
                                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
                                                         id="age"
-                                                        value={lastname}
-                                                        onChange={handleLastname}
+                                                        value={age}
                                                         placeholder="Enter your age"
                                                         type="number"
                                                         required
@@ -465,17 +498,17 @@ export const WaterBaptismPage = () => {
                                                 <div className="space-y-2">
                                                     <label
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                                        htmlFor="birthdate"
+                                                        htmlFor="gender"
                                                     >
-                                                        Birthdate
+                                                        Sex
                                                     </label>
                                                     <input
                                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
-                                                        id="birthdate"
-                                                        value={birthdate}
-                                                        onChange={handleBirthDate}
-                                                        placeholder="Enter your birthdate"
-                                                        type='date'
+                                                        id="sex"
+                                                        value={gender}
+                                                        onChange={handleGender}
+                                                        placeholder="Enter your Sex"
+                                                        type='text'
                                                         required
                                                     />
                                                 </div>
@@ -492,14 +525,13 @@ export const WaterBaptismPage = () => {
                                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
                                                     id="address"
                                                     value={address}
-
                                                     onChange={handleAddress}
                                                     placeholder="Enter your address"
                                                     type="text"
                                                     required
                                                 />
                                             </div>
-                                                 <div className="space-y-2">
+                                            <div className="space-y-2">
                                                 <label
                                                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                     htmlFor="email"
@@ -510,7 +542,6 @@ export const WaterBaptismPage = () => {
                                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
                                                     id="email"
                                                     value={email}
-
                                                     onChange={handleEmail}
                                                     placeholder="Enter your email"
                                                     type="email"
@@ -542,7 +573,7 @@ export const WaterBaptismPage = () => {
                                                     Preferred Baptism Date
                                                 </label>
                                                 <input
-                                                    type="datetime-local"
+                                                    type="date"
                                                     id="date"
                                                     onChange={handlePreferredDate}
                                                     value={preferredDate}
