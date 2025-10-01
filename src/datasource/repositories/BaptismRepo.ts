@@ -1,13 +1,10 @@
 import axios from "../../api/axios"
 import type { ApiResponseModel } from "../models/ApiResponseModel";
+import type { RegistrationModel } from "../models/User/RegistrationModel";
 const BaptismRepo = {
-    async submitBaptism(firstname: string, lastname: string, email: string, phoneNumber: string, testimony: string): Promise<ApiResponseModel<any>> {
+    async submitBaptism(model:RegistrationModel): Promise<ApiResponseModel<any>> {
         const response = await axios.post<ApiResponseModel<any>>('submitBaptism', {
-            firstname,
-            lastname,
-            email,
-            phoneNumber,
-            testimony,
+             model:model
         });
         return response.data;
     },

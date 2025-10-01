@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import BaptismRepo from '../../../../datasource/repositories/BaptismRepo';
 import { useDispatch } from 'react-redux';
 import { hideLoader, showLoader, showSuccessDialog } from '../../../../datasource/redux/dialog/DialogSlice';
+import type { RegistrationModel } from '../../../../datasource/models/User/RegistrationModel';
 export const WaterBaptismPage = () => {
     const navigate = useNavigate();
     const [firstname, setFirstname] = useState("");
@@ -15,6 +16,9 @@ export const WaterBaptismPage = () => {
     const [phoneNumber, setPhoneNumber] = useState("");
     const [testimony, setTestimony] = useState("");
     const [preferredDate, setPreferredDate] = useState("");
+    const [gender, setGender]= useState("");
+    const [age, setAge]= useState(0);
+
     const dispatch = useDispatch();
 
     const handleFirstname = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +51,20 @@ export const WaterBaptismPage = () => {
     const handleSubmit = async () => {
         try {
             dispatch(showLoader());
-            const response = await BaptismRepo.submitBaptism(firstname, lastname, email, phoneNumber, testimony);
+            const model:RegistrationModel={
+                firstname: firstname,
+                middlename: middleName,
+                lastname: lastname,
+                address: address,
+                age: 0,
+                birthdate: birthdate,
+                email: email,
+                contactNo: phoneNumber,
+                gender: gender,
+                preferred_dt: preferredDate,
+                testimony:testimony
+            }
+            const response = await BaptismRepo.submitBaptism(model);
             if (response.statusCode == 200) {
                 setTimeout(() => {
                     sessionStorage.setItem("message", response.message);
@@ -60,6 +77,12 @@ export const WaterBaptismPage = () => {
                 setPhoneNumber("");
                 setTestimony("");
                 setPreferredDate("");
+                setAddress("");
+                setBirthdate("");
+                setMiddleName("");
+                setAge(0);
+                setGender("");
+
             } else {
                 setTimeout(() => {
                     dispatch(hideLoader());
@@ -399,6 +422,43 @@ export const WaterBaptismPage = () => {
                                                         value={lastname}
                                                         onChange={handleLastname}
                                                         placeholder="Enter your last name"
+                                                        required
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <label
+                                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                        htmlFor="birthdate"
+                                                    >
+                                                        Birthdate
+                                                    </label>
+                                                    <input
+                                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
+                                                        id="birthdate"
+                                                        value={birthdate}
+                                                        onChange={handleBirthDate}
+                                                        placeholder="Enter your birthdate"
+                                                        type='date'
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+
+                                             <div className="grid grid-cols-2 gap-4">
+                                                <div className="space-y-2">
+                                                    <label
+                                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                        htmlFor="last-name"
+                                                    >
+                                                        Age
+                                                    </label>
+                                                    <input
+                                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
+                                                        id="age"
+                                                        value={lastname}
+                                                        onChange={handleLastname}
+                                                        placeholder="Enter your age"
+                                                        type="number"
                                                         required
                                                     />
                                                 </div>
