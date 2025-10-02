@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BaptismRepo from '../../../../datasource/repositories/BaptismRepo';
 import { useDispatch } from 'react-redux';
-import { hideLoader, showLoader, showSuccessDialog } from '../../../../datasource/redux/dialog/DialogSlice';
+import { hideLoader, showErrorDialog, showLoader, showSuccessDialog } from '../../../../datasource/redux/dialog/DialogSlice';
 import type { RegistrationModel } from '../../../../datasource/models/User/RegistrationModel';
 export const WaterBaptismPage = () => {
     const navigate = useNavigate();
@@ -101,11 +101,8 @@ export const WaterBaptismPage = () => {
             const response = await BaptismRepo.submitBaptism(model);
             dispatch(hideLoader());
             if (response.statusCode == 200) {
-                setTimeout(() => {
-                    sessionStorage.setItem("message", response.message);
-                    dispatch(hideLoader());
-                    dispatch(showSuccessDialog());
-                }, 1500);
+                sessionStorage.setItem("message", response.message);
+                dispatch(showSuccessDialog());
                 setFirstname("");
                 setLastname("");
                 setEmail("");
@@ -119,9 +116,8 @@ export const WaterBaptismPage = () => {
                 setGender("");
 
             } else {
-                setTimeout(() => {
-                    alert("Failed to submit baptism request. Please try again later.");
-                }, 1500);
+                sessionStorage.setItem("message", response.message);
+                dispatch(showErrorDialog());
             }
 
         } catch (e) {

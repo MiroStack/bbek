@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, use } from "react";
 import "../styles/Home.css";
 import { Link } from "react-router-dom";
-import { easeInOut, scroll } from "motion";
 import image1 from "../../../assets/img/hero2.jpg";
 import image2 from "../../../assets/img/hero.jpg";
 import image3 from "../../../assets/img/hero4.jpg";

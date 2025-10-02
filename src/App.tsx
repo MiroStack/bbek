@@ -67,6 +67,7 @@ import { EventPage } from './features/landpage/view/events/Event.tsx';
 import { LearnMoreEvent } from './features/landpage/view/events/LearnMoreEvent.tsx';
 import { LearnMoreMinistries } from './features/landpage/view/ministries/LearnMoreMinistries.tsx';
 import { MinistryPage } from './features/landpage/view/ministries/Ministry.tsx';
+import { LoaderPage } from './features/landpage/components/redirect_page/loader_page.tsx';
 
 function App() {
 
@@ -76,6 +77,7 @@ function App() {
         <ScrollToTop />
         <Routes>
           <Route path='/' element={<Navigate to="/landpage" />} />
+          <Route path="/redirect" element={<LoaderPage/>}/>
           <Route path='/landpage' element={<LandPage />}>
             <Route index element={<Home />} />
             <Route path='about' element={<AboutPage />}>
