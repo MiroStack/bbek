@@ -5,13 +5,7 @@ import { Cookies } from "../../util/Cookies.ts";
 import { useEffect, useState } from "react";
 import {  useDispatch } from 'react-redux';
 export const StaffPage = () => {
-    const token = Cookies.getCookie("auth_token");
-    const navigate = useNavigate();
-    useEffect(() => {
-        if (!token) {
-            navigate("/");
-        }
-    }, [])
+
     return (
         <div className="flex w-100">
             <SideNav />

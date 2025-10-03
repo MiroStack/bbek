@@ -24,13 +24,13 @@ export const LandPage = () => {
     const successDialog = useAppSelector((state) => state.dialog.success);
     const [showLogin, setShowLogin] = useState(false);
     const [showSide, setShowSide] = useState(false);
-    const token = Cookies.getCookie("auth_token");
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
-     const isNavigateLandpage:boolean = sessionStorage.getItem("navigateLandpage")==="true";
-   
+    const isNavigateLandpage: boolean = sessionStorage.getItem("navigateLandpage") === "true";
+    const token = Cookies.getCookie("auth_token");
     useEffect(() => {
-        
+
         if (token && !isNavigateLandpage) {
             handleToken();
         }
@@ -41,8 +41,7 @@ export const LandPage = () => {
             if (token) {
                 const loginResponse = await AuthRepo.validate(token);
                 if (loginResponse.statusCode == 200) {
-                    sessionStorage.setItem("name", loginResponse.data.fullname);
-                    sessionStorage.setItem("email", loginResponse.data.email);
+
                     switch (loginResponse.data.role) {
                         case "ADMIN":
                             navigate("/admin");

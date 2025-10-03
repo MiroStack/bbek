@@ -28,6 +28,11 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin }) => {
             if (loginResponse.statusCode == 200) {
                 // sessionStorage.setItem("token", loginResponse.data.token);
                 document.cookie = `auth_token=${loginResponse.data.token}; path=/; max-age=604800; secure`;
+                  setTimeout(() => {
+                    dispatch(hideLoader());
+                    navigate("/redirect");
+                    closeLogin();
+                }, 1500);
 
                 // setTimeout(() => {
                 //     dispatch(hideLoader());

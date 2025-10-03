@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useAppSelector } from "../../../datasource/redux/staff/hooks/hooks";
 import { KpiMetrics } from "../components/dashboard/KpiMetrics";
 import { PrayerRequest } from "../components/dashboard/PrayerRequest";
 import { QuickActions } from "../components/dashboard/QuickActions";
@@ -6,15 +8,20 @@ import { RecentService } from "../components/dashboard/RecentService";
 import { Resources } from "../components/dashboard/Resources";
 import { ServiceStatistic } from "../components/dashboard/ServiceStatistic";
 import { UpcomingEvent } from "../components/dashboard/UpcomingEvent";
+import type { UserInfoModel } from "../../../datasource/models/User/UserInfoModel";
+
 
 export const DashboardPage = () => {
+
+  const userInfo = sessionStorage.getItem("userInfo")
+  const [userInfoState, setUserInfoState] = useState<UserInfoModel>(JSON.parse(userInfo ?? "") ?? {} as UserInfoModel);
     return (<>
         <div className="h-auto items-center flex flex-col justify-center">
             <div className="p-6 bg-white">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-800">Staff Dashboard</h1>
-                        <p className="text-gray-500">Welcome back, {sessionStorage.getItem("name")}</p>
+                        <p className="text-gray-500">Welcome back, {userInfoState.firstname}</p>
                     </div>
                     <div className="mt-4 md:mt-0 flex gap-2">
                         <a className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-10 px-4 py-2 bg-green-600 hover:bg-green-700 text-white" href="/staff/services">
@@ -39,25 +46,25 @@ export const DashboardPage = () => {
                     </div>
                 </div>
                 {/* {KPI}  */}
-                <KpiMetrics/>
+                <KpiMetrics />
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="md:col-span-2 space-y-6">
                         {/* {Recent Member}  */}
-                        <RecentMember/>
+                        <RecentMember />
                         {/* {Upcoming Event}  */}
-                        <UpcomingEvent/>
+                        <UpcomingEvent />
                         {/* {Service Statistic} */}
-                        <ServiceStatistic/>
+                        <ServiceStatistic />
                     </div>
                     <div className="space-y-6">
                         {/* {Recent Service} */}
-                        <RecentService/>
+                        <RecentService />
                         {/* {Prayer Request} */}
-                        <PrayerRequest/> 
+                        <PrayerRequest />
                         {/* {Quick Actions} */}
-                        <QuickActions/>
-                       {/* {resources} */}
-                       <Resources/>
+                        <QuickActions />
+                        {/* {resources} */}
+                        <Resources />
                     </div>
                 </div>
             </div>
