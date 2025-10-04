@@ -66,7 +66,8 @@ export const CreateMarriageRecord = ({ marriageStatuses, marriageLocations, setR
                 location: location?.id || 0,
                 status: status?.id || 0,
                 email: email,
-                createdDate: ""
+                createdDate: "",
+                totalRows: 0
             }
             const response = await MarriageRepo.submitMarriage(marriageData, false);
             if (response.statusCode === 201) {

@@ -53,23 +53,6 @@ export const MarriageService = ({
     useEffect(() => {
         setTotalPage(Math.ceil((marriageRecords[0]?.totalRows ?? 0) / 11));
     }, [marriageRecords]);
-    useEffect(() => {
-        const maxVisible = 5; // how many page buttons you want to show
-        let start = Math.max(1, pageNumber - Math.floor(maxVisible / 10));
-        let end = start + maxVisible - 1;
-
-        if (end > totalPage) {
-            end = totalPage;
-            start = Math.max(1, end - maxVisible + 1);
-        }
-
-        const newPages = [];
-        for (let i = start; i <= end; i++) {
-            newPages.push(i);
-        }
-        setPages(newPages);
-        console.log(pageNumber);
-    }, [pageNumber, totalPage]);
 
     const fetchLocationRef = async () => {
         dispatch(showLoader());

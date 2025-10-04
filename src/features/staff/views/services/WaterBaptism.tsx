@@ -1,6 +1,67 @@
+import { useEffect, useState } from "react";
+import type { BaptismResponseModel } from "../../../../datasource/models/baptism/BaptismResponseModel";
+import BaptismRepo from "../../../../datasource/repositories/BaptismRepo";
+import { hideLoader, showErrorDialog, showLoader } from "../../../../datasource/redux/dialog/DialogSlice";
+import { useAppDispatch, useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks";
+import { NoDataPage } from "../../../landpage/components/NoDataPage";
+import { Pagination } from "../../components/pagination/Pagination";
+import { UpdateBaptismRecord } from "../../components/baptism/UpdateBaptismRecord";
+import { showUpdateBaptism } from "../../../../datasource/redux/staff/service/BaptismSlice";
+import { Loader } from "../../../../component/dialog/Loader";
+import dayjs from "dayjs";
+import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
+import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
+
 export const WaterBaptism_Page = () => {
+    const dispatch = useAppDispatch();
+    const editBaptism = useAppSelector((state) => state.baptism.edit);
+    const loader = useAppSelector((state) => state.dialog.loader);
+    const success = useAppSelector((state) => state.dialog.success);
+    const error = useAppSelector((state) => state.dialog.error);
+    const [baptismList, setBaptismList] = useState<BaptismResponseModel[]>([]);
+    const [isRefresh, setIsRefresh] = useState<boolean>(true);
+    const [query, setQuery] = useState<string>("");
+    const [pageNumber, setPageNumber] = useState(1);
+    const [pages, setPages] = useState([1, 2, 3, 4, 5, 6, 7]);
+    const [totalPage, setTotalPage] = useState(1);
+    const [selectedId, setSelectedId] = useState(-1);
+    useEffect(() => {
+        if (isRefresh) {
+            handleGetBaptism();
+            setIsRefresh(false);
+        }
+
+    }, [isRefresh]);
+
+    const handleGetBaptism = async () => {
+        try {
+            dispatch(showLoader());
+            const response = await BaptismRepo.getBaptism(query, pageNumber);
+            dispatch(hideLoader());
+            if (response.statusCode == 200) {
+                setBaptismList(response.data);
+            } else {
+                sessionStorage.setItem("message", response.message);
+                dispatch(showErrorDialog());
+            }
+        } catch (e) {
+
+        } finally {
+
+        }
+    }
+
+    const handleQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setQuery(e.target.value);
+        setIsRefresh(true);
+    }
     return (
         <>
+            {editBaptism && <UpdateBaptismRecord setIsRefresh={setIsRefresh}/>}
+            {loader && <Loader loader={loader} />}
+            {success && <SuccessDialog />}
+            {error && <ErrorDialog2 />}
+
             <div className="w-100 h-auto flex flex-col items-center justify-center">
                 <div className="p-6 staff-baptism-page" >
                     <div className="flex justify-between items-center mb-6 baptism-page-title" >
@@ -138,7 +199,8 @@ export const WaterBaptism_Page = () => {
                                     <input
                                         className="flex h-10 w-full rounded-md border border-input bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10"
                                         placeholder="Search baptism records..."
-                                        value=""
+                                        value={query}
+                                        onChange={handleQuery}
                                         name="search-baptism-input"
                                     />
                                 </div>
@@ -155,7 +217,7 @@ export const WaterBaptism_Page = () => {
                     </div>
                     <div className="rounded-md border baptism-records-table" >
                         <div className="relative w-full overflow-auto">
-                            <table className="w-full caption-bottom text-sm">
+                            <table className="w-full caption-bottom text-sm ">
                                 <thead className="[&amp;_tr]:border-b">
                                     <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
@@ -163,6 +225,9 @@ export const WaterBaptism_Page = () => {
                                         </th>
                                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                                             Age
+                                        </th>
+                                        <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                                            Baptism Status
                                         </th>
                                         <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                                             Baptism Date
@@ -182,90 +247,72 @@ export const WaterBaptism_Page = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="[&amp;_tr:last-child]:border-0">
-                                    <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">John Doe</td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">35</td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">6/15/2023</td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">Rev. Fresco Q. Sulapas</td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                                            Bible Baptist Ekklesia of Kawit
-                                        </td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                                            <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">Issued</span>
-                                        </td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
-                                            <button
-                                                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
-                                                type="button"
-                                                id="radix-«rbn»"
-                                                aria-haspopup="menu"
-                                                aria-expanded="false"
-                                                data-state="closed"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="24"
-                                                    height="24"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="lucide lucide-ellipsis h-4 w-4"
-                                                >
-                                                    <circle cx="12" cy="12" r="1"></circle>
-                                                    <circle cx="19" cy="12" r="1"></circle>
-                                                    <circle cx="5" cy="12" r="1"></circle>
-                                                </svg>
-                                                <span className="sr-only">Actions</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                  
-                                    <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">Emily Davis</td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">31</td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">3/5/2024</td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">Rev. Fresco Q. Sulapas</td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
-                                            Bible Baptist Ekklesia of Kawit
-                                        </td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-                                            <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">Issued</span>
-                                        </td>
-                                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right">
-                                            <button
-                                                className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
-                                                type="button"
-                                                id="radix-«rbt»"
-                                                aria-haspopup="menu"
-                                                aria-expanded="false"
-                                                data-state="closed"
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="24"
-                                                    height="24"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    className="lucide lucide-ellipsis h-4 w-4"
-                                                >
-                                                    <circle cx="12" cy="12" r="1"></circle>
-                                                    <circle cx="19" cy="12" r="1"></circle>
-                                                    <circle cx="5" cy="12" r="1"></circle>
-                                                </svg>
-                                                <span className="sr-only">Actions</span>
-                                            </button>
-                                        </td>
-                                    </tr>
+                                    {
+                                        baptismList.length == 0 ? (<tr className="w-full">
+                                            <td colSpan={7} className="h-28  text-center">
+                                                <div className="flex items-center justify-center h-full">
+                                                    <NoDataPage />
+                                                </div>
+                                            </td>
+                                        </tr>) :
+                                            baptismList.map((item, index) => (
+                                                <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
+                                                        {item.userInfoModel.firstname} {item.userInfoModel.middlename} {item.userInfoModel.lastname}</td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{item.userInfoModel.age}</td>
+                                                    <td className={` p-4 align-middle [&amp;:has([role=checkbox])]:pr-0`}>
+                                                        <span className={`${item.status == "BAPTIZED" ? 'bg-green-100' : 'bg-blue-100'} px-2 py-1 rounded-full text-xs `}>   {item.status}</span>
+                                                    </td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{item.baptismDate == null ? '--' : dayjs(item.baptismDate).format("MMMM D, YYYY h:mm A")}</td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">{item.baptismOfficiant ?? '--'}</td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                                                        {item.location ?? '--'}
+                                                    </td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                                                        <span className={`${item.certificateStatus == "ISSUED" ? 'bg-green-100' : 'bg-blue-100'} px-2 py-1 rounded-full text-xs `}>   {item.certificateStatus}</span>
+                                                    </td>
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right relative">
+                                                        <div className={`${selectedId === item.id ? "" : "hidden"} absolute bg-white z-10 h-auto w-36 left-[-100%] bottom-[-80%] shadow-md rounded-md `} onClick={() => setSelectedId(-1)}>
+                                                            <ul className="flex flex-col items-start w-full">
+                                                                <li className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start">View Details</li>
+                                                                <li className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start" onClick={() => {
+                                                                    dispatch(showUpdateBaptism(item));
+                                                                }}>Edit Record</li>
+                                                                <li className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start">Send Message</li>
+
+                                                            </ul>
+                                                        </div>
+                                                        <button
+                                                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+                                                            type="button"
+                                                            onClick={() => { setSelectedId(item.id) }}
+                                                        >
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                width="24"
+                                                                height="24"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                strokeWidth="2"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                className="lucide lucide-ellipsis h-4 w-4"
+                                                            >
+                                                                <circle cx="12" cy="12" r="1"></circle>
+                                                                <circle cx="19" cy="12" r="1"></circle>
+                                                                <circle cx="5" cy="12" r="1"></circle>
+                                                            </svg>
+                                                            <span className="sr-only">Actions</span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                    }
                                 </tbody>
                             </table>
                         </div>
+                        <Pagination pages={pages} pageNumber={pageNumber} totalPage={totalPage} setPageNumber={setPageNumber} setRefresh={setIsRefresh} setPages={setPages} />
                     </div>
                 </div>
             </div>

@@ -15,6 +15,7 @@ import { showCreateMarriage, showUpdateMarriage } from "../../../../datasource/r
 import { UpdateMarriageRecord } from "../../components/marriage/UpdateMarriageRecord";
 import { NoDataPage } from "../../../landpage/components/NoDataPage";
 import { MarriageService } from "../../components/marriage/MarriageService";
+import { Pagination } from "../../components/pagination/Pagination";
 export const MarriageRecordPage = () => {
     const dispatch = useAppDispatch();
     const [refresh, setRefresh] = useState<boolean>(true);
@@ -304,51 +305,7 @@ export const MarriageRecordPage = () => {
                                     </tbody>
                                 </table>
                             </div>
-                            <div className="w-full p-4 flex items-center justify-center relative">
-                                <button className="cursor-pointer"
-                                    onClick={() => {
-                                        if (pageNumber > 1) {
-                                            setPageNumber(pageNumber - 1);
-                                            setRefresh(true);
-                                        } else {
-                                            sessionStorage.setItem("message", "No previous records available");
-                                            dispatch(showErrorDialog());
-                                        }
-                                    }}
-                                >&laquo;</button>
-                                <span className="mx-4">{pageNumber} of {totalPage}</span>
-                                <button className="cursor-pointer"
-                                    onClick={() => {
-                                        if (pageNumber < totalPage) {
-                                            setPageNumber(pageNumber + 1);
-                                            setRefresh(true);
-                                        } else {
-                                            sessionStorage.setItem("message", "No more records available");
-                                            dispatch(showErrorDialog());
-                                        }
-                                    }}
-                                >&raquo;</button>
-
-                                <div className="absolute right-4 flex items-center gap-2">
-                                    {
-                                        pages.map((page, index) => (
-                                            <span key={index} className={`p-1 ${pageNumber == page ? 'bg-green-200' : 'bg-gray-100'} w-7 text-center hover:cursor-pointer`}
-                                                onClick={() => {
-                                                    if (totalPage < page) {
-                                                        sessionStorage.setItem("message", "No more records available");
-                                                        dispatch(showErrorDialog());
-                                                    } else {
-                                                        setPageNumber(page);
-                                                        setRefresh(true);
-
-                                                    }
-
-                                                }}
-                                            >{page}</span>
-                                        ))
-                                    }
-                                </div>
-                            </div>
+                            <Pagination pages={pages} pageNumber={pageNumber} totalPage={totalPage} setPageNumber={setPageNumber} setRefresh={setRefresh} setPages={setPages}/> 
                         </div>
                     </div>
                 </div>

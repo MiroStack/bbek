@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import {motion} from 'framer-motion';
 import { hideLoader, showErrorDialog, showLoader } from "../../../datasource/redux/dialog/DialogSlice";
 type LoginProps = {
     show: boolean;
@@ -28,7 +29,7 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin }) => {
             if (loginResponse.statusCode == 200) {
                 // sessionStorage.setItem("token", loginResponse.data.token);
                 document.cookie = `auth_token=${loginResponse.data.token}; path=/; max-age=604800; secure`;
-                  setTimeout(() => {
+                setTimeout(() => {
                     dispatch(hideLoader());
                     navigate("/redirect");
                     closeLogin();
@@ -70,7 +71,14 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin }) => {
 
     return (
         <>
-            <div className={`${show ? "flex" : "hidden"} bg-white w-[24rem] md:w-[30rem]  h-auto lg:w-[24rem] lg:h-[26rem] p-3  rounded-lg shadow-lg fixed items-center justify-center flex-col z-20 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`}>
+            <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{
+                    opacity: 1,
+                    transition: { ease: 'easeInOut', delay: 0.2 }
+                }}
+                viewport={{ once: false, amount: 0.2 }}
+                className={`${show ? "flex" : "hidden"} bg-white w-[24rem] md:w-[30rem]  h-auto lg:w-[24rem] lg:h-[26rem] p-3  rounded-lg shadow-lg fixed items-center justify-center flex-col z-20 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2`}>
                 <div className="flex flex-col space-y-1.5 text-center sm:text-left">
                     <div className="flex items-center justify-center mb-4">
                         <img
@@ -197,6 +205,6 @@ export const LoginForm: React.FC<LoginProps> = ({ show, setShowLogin }) => {
                 </button>
 
 
-            </div>
+            </motion.div>
         </>);
 }

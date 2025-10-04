@@ -16,6 +16,7 @@ import { useAppSelector } from "../../datasource/redux/staff/hooks/hooks";
 import { hideLoader, showErrorDialog, showLoader } from "../../datasource/redux/dialog/DialogSlice";
 import { ErrorDialog2 } from "../../component/dialog/ErrorDialog2";
 import { SuccessDialog } from "../../component/dialog/SuccessDialog";
+import { LoaderPage } from "./components/redirect_page/loader_page";
 
 
 export const LandPage = () => {
@@ -30,8 +31,8 @@ export const LandPage = () => {
     const isNavigateLandpage: boolean = sessionStorage.getItem("navigateLandpage") === "true";
     const token = Cookies.getCookie("auth_token");
     useEffect(() => {
-
         if (token && !isNavigateLandpage) {
+            console.log("hello");
             handleToken();
         }
     }, [])
@@ -40,27 +41,9 @@ export const LandPage = () => {
             dispatch(showLoader());
             if (token) {
                 const loginResponse = await AuthRepo.validate(token);
+                 dispatch(hideLoader())
                 if (loginResponse.statusCode == 200) {
-
-                    switch (loginResponse.data.role) {
-                        case "ADMIN":
-                            navigate("/admin");
-                            break;
-                        case "MEMBER":
-                            // navigate("/admin");
-                            navigate("/member");
-                            break;
-                        case "STAFF":
-                            navigate("/staff");
-                            break;
-                        default:
-                            navigate("/");
-                            console.error("Unknown role:", loginResponse.data.role);
-                            break;
-                    }
-                    setTimeout(() => {
-                        dispatch(hideLoader())
-                    }, 1500)
+                      navigate("/redirect")
                 }
             } else {
                 console.error("Token not found in session storage.");

@@ -28,6 +28,10 @@ export const LoaderPage = () => {
                             case "ADMIN":
                                 navigate("/admin");
                                 break;
+                            case "PRIEST":
+                                navigate("/member");
+                                break;
+
                             case "MEMBER":
                                 // navigate("/admin");
                                 navigate("/member");

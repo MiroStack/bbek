@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../datasource/redux/staff/hooks/hooks";
 import { clearUserInfo } from "../../../datasource/redux/user/UserSlice";
 import type { UserInfoModel } from "../../../datasource/models/User/UserInfoModel";
+import { hideErrorDialog, hideLoader, hideSuccessDialog } from "../../../datasource/redux/dialog/DialogSlice";
 export const Nav = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -50,6 +51,9 @@ export const Nav = () => {
           <li className="flex items-center text-sm gap-1 font-semibold text-red-600 hover:text-blue-500 cursor-pointer" onClick={() => {
             Cookies.deleteCookie("auth_token");
             dispatch(clearUserInfo());
+            dispatch(hideLoader());
+            dispatch(hideSuccessDialog());
+            dispatch(hideErrorDialog());
             navigate("/");
           }}><IoLogOut /><span>Logout</span></li>
         </ul>
