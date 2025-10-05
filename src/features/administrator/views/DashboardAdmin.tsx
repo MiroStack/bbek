@@ -1,10 +1,18 @@
 import { useState } from "react";
+import { useAppSelector } from "../../../datasource/redux/staff/hooks/hooks";
 import { KpiMetrics } from "../components/dashboard/KpiMetrics";
+import { PrayerRequest } from "../components/dashboard/PrayerRequest";
+import { QuickActions } from "../components/dashboard/QuickActions";
+import { RecentMember } from "../components/dashboard/RecentMember";
+import { RecentService } from "../components/dashboard/RecentService";
+import { Resources } from "../components/dashboard/Resources";
+import { ServiceStatistic } from "../components/dashboard/ServiceStatistic";
+import { UpcomingEvent } from "../components/dashboard/UpcomingEvent";
 import type { UserInfoModel } from "../../../datasource/models/User/UserInfoModel";
 import { Link } from "react-router-dom";
 
 
-export const DashboardPage = () => {
+export const DashboardAdminPage = () => {
 
     const userInfo = sessionStorage.getItem("userInfo")
     const [userInfoState, setUserInfoState] = useState<UserInfoModel>(JSON.parse(userInfo ?? "") ?? {} as UserInfoModel);
@@ -12,7 +20,7 @@ export const DashboardPage = () => {
         <div className="h-auto items-center flex flex-col justify-center">
             <div className="p-6 bg-gray-50 min-h-screen">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">Church Staff Dashboard</h1>
+                    <h1 className="text-3xl font-bold text-gray-900">Church Admin Dashboard</h1>
                     <p className="text-gray-600 mt-2">Welcome back {userInfoState.firstname}! Here's what's happening at BBEK Church.</p>
                 </div>
                 <KpiMetrics/>

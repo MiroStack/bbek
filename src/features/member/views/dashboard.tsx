@@ -4,8 +4,12 @@ import { QuickAction } from "../components/dashboard/QuickAction"
 import { RecentActivities } from "../components/dashboard/RecentActivities"
 import { Announcement } from "../components/dashboard/Announcement"
 import { DashboardAnalytics } from "../components/dashboard/DashboardAnalytics"
+import { useState } from "react"
+import type { UserInfoModel } from "../../../datasource/models/User/UserInfoModel"
 
 export const DashboardMemberPage = () => {
+    const userInfo = sessionStorage.getItem("userInfo")
+    const [userInfoState, setUserInfoState] = useState<UserInfoModel>(JSON.parse(userInfo ?? "") ?? {} as UserInfoModel);
     return (
         <>
             <div className="min-h-screen bg-gray-50">
@@ -14,7 +18,7 @@ export const DashboardMemberPage = () => {
                     <div className="flex justify-between items-center">
                         <div>
                             <h1 className="text-3xl font-bold text-gray-900">Member Dashboard</h1>
-                            <p className="text-gray-600 mt-1">Welcome back! Here's your church activity overview.</p>
+                            <p className="text-gray-600 mt-1">Welcome back {userInfoState.firstname}! Here's your church activity overview.</p>
                         </div>
                         <div className="flex items-center space-x-2">
                             <div

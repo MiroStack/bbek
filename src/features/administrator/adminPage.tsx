@@ -1,28 +1,18 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { SideNav } from "./components/SideNav.tsx";
 import { Nav } from "./components/Nav.tsx";
-import { Cookies } from "../../util/Cookies.ts";
 import { useEffect, useState } from "react";
+import { Cookies } from "../../util/Cookies.ts";
 import type { UserInfoModel } from "../../datasource/models/User/UserInfoModel.ts";
-export const MemberPage = () => {
-    const token = Cookies.getCookie("auth_token");
+export const AdminPage = () => {
     const navigate = useNavigate();
-    useEffect(() => {
-        if (!token) {
-            navigate("/");
-        }
-    }, [])
-
     const userInfo = sessionStorage.getItem("userInfo")
-    const [userInfoState, setUserInfoState] = useState<UserInfoModel>(JSON.parse(userInfo ?? "") ?? {} as UserInfoModel);
+        const [userInfoState, setUserInfoState] = useState<UserInfoModel>(JSON.parse(userInfo ?? "") ?? {} as UserInfoModel);
     useEffect(() => {
         if (userInfoState) {
             switch (userInfoState.role) {
-                case "MEMBER":
-                    // navigate("/admin");
-                    break;
-                case "PRIEST":
-                    // navigate("/admin");
+                case "ADMIN":
+                   // navigate("/admin");
                     break;
                 default:
                     navigate("/");

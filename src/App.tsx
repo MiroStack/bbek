@@ -2,7 +2,7 @@ import './index.css';
 import Index from './admin/index.tsx'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { LandPage } from './features/landpage/landpage.tsx';
-import { Home} from './features/landpage/view/Home.tsx'
+import { Home } from './features/landpage/view/Home.tsx'
 import { AboutPage } from './features/landpage/view/about/About.tsx';
 import { BeOneOfUsPage } from './features/landpage/view/beoneofus/BeOneOfUs.tsx';
 import { GivePage } from './features/landpage/view/Give.tsx';
@@ -35,7 +35,7 @@ import Archives from './admin/pages/archives.tsx';
 import User_Account from './admin/pages/user_account.tsx';
 import Settings from './admin/pages/settings.tsx';
 import { StaffPage } from './features/staff/staff.tsx';
-import { DashboardPage } from './features/staff/views/Dashboard.tsx';
+
 import { MemberRecordPage } from './features/staff/views/church_records/MemberRecord.tsx';
 import { EventRecordPage } from './features/staff/views/church_records/EventRecord.tsx';
 import { TithesOfferingPage } from './features/staff/views/church_records/TitheOffer.tsx';
@@ -46,7 +46,7 @@ import { MessagePage } from './features/staff/views/maintenance/message.tsx';
 import { AuditTrialPage } from './features/staff/views/maintenance/audit.tsx';
 import { WaterBaptism_Page } from './features/staff/views/services/WaterBaptism.tsx';
 import { MemberPage } from './features/member/member.tsx';
-import {DashboardMemberPage} from'./features/member/views/dashboard.tsx';
+import { DashboardMemberPage } from './features/member/views/dashboard.tsx';
 import { MinistryStaffPage } from './features/staff/views/services/MinistryStaff.tsx';
 import { AllMinistries } from './features/landpage/view/ministries/AllMinistries.tsx';
 import { MarriageServicePage } from './features/staff/views/services/MarriageService.tsx';
@@ -68,6 +68,18 @@ import { LearnMoreEvent } from './features/landpage/view/events/LearnMoreEvent.t
 import { LearnMoreMinistries } from './features/landpage/view/ministries/LearnMoreMinistries.tsx';
 import { MinistryPage } from './features/landpage/view/ministries/Ministry.tsx';
 import { LoaderPage } from './features/landpage/components/redirect_page/loader_page.tsx';
+import { AdminPage } from './features/administrator/adminPage.tsx';
+import { DashboardAdminPage } from './features/administrator/views/DashboardAdmin.tsx';
+import { MemberRecordPageAdmin } from './features/administrator/views/church_records/MemberRecord.tsx';
+import { EventRecordPageAdmin } from './features/administrator/views/church_records/EventRecord.tsx';
+import { TithesOfferingAdminPage } from './features/administrator/views/church_records/TitheOffer.tsx';
+import { MinistriesAdminPage } from './features/administrator/views/church_records/Ministries.tsx';
+import { WaterBaptismAdminPage } from './features/administrator/views/services/WaterBaptism.tsx';
+import { ChildDedicationAdminPage } from './features/administrator/views/services/ChildDedication.tsx';
+import { MarriageServiceAdminPage } from './features/administrator/views/services/MarriageService.tsx';
+import { MessageAdminPage } from './features/administrator/views/maintenance/message.tsx';
+import { AuditTrialAdminPage } from './features/administrator/views/maintenance/audit.tsx';
+import { DashboardPage } from './features/staff/views/Dashboard.tsx';
 
 function App() {
 
@@ -77,12 +89,12 @@ function App() {
         <ScrollToTop />
         <Routes>
           <Route path='/' element={<Navigate to="/landpage" />} />
-          <Route path="/redirect" element={<LoaderPage/>}/>
+          <Route path="/redirect" element={<LoaderPage />} />
           <Route path='/landpage' element={<LandPage />}>
             <Route index element={<Home />} />
             <Route path='about' element={<AboutPage />}>
               <Route index path="aboutus" element={<AboutUsPage />}></Route>
-              <Route index path ="leadersandofficers" element={<LeadersAndOfficers />}></Route>
+              <Route index path="leadersandofficers" element={<LeadersAndOfficers />}></Route>
               <Route index path="mission" element={<MissionPage />}></Route>
               <Route index path="vision" element={<VisionPage />}></Route>
               <Route index path="leadership" element={<LeadershipPage />}></Route>
@@ -95,22 +107,22 @@ function App() {
 
             <Route path='events' element={<EventPage />}>
               <Route index path="allevents" element={<AllEventsPage />}></Route>
-              <Route index path="learn-more-event" element={<LearnMoreEvent/>}></Route>
+              <Route index path="learn-more-event" element={<LearnMoreEvent />}></Route>
             </Route>
 
             <Route index path="live" element={<LivePage />} />
             <Route index path="give" element={<GivePage />} />
-           
-            <Route  path="ministries" element={<MinistryPage />}>
-                 <Route index  path="allministry" element={<AllMinistries/>}></Route>
-                <Route  path="learn-more-ministry" element={<LearnMoreMinistries/>}></Route>
+
+            <Route path="ministries" element={<MinistryPage />}>
+              <Route index path="allministry" element={<AllMinistries />}></Route>
+              <Route path="learn-more-ministry" element={<LearnMoreMinistries />}></Route>
             </Route>
 
             <Route index path="plan-your-visit" element={<PlanYourVisit />} />
           </Route>
 
           {/* Admin layout with nested routes */}
-          <Route path="/admin" element={<Index />}>
+          {/* <Route path="/admin" element={<Index />}>
             <Route index element={<Dashboard />} />
             <Route index path="member-record" element={<MemberRecord />} />
             <Route index path="church-leaders" element={<Church_Leaders />} />
@@ -129,6 +141,21 @@ function App() {
             <Route index path="archives" element={<Archives />} />
             <Route index path="user-account" element={<User_Account />} />
             <Route index path="settings" element={<Settings />} />
+          </Route> */}
+          <Route path="/admin" element={<AdminPage />}>
+            <Route index element={<DashboardAdminPage />} />
+            <Route index path="church-record/member-record" element={<MemberRecordPageAdmin />} />
+            <Route index path="church-record/event-record" element={<EventRecordPageAdmin />} />
+            <Route index path="church-record/tithe-offering" element={<TithesOfferingAdminPage />} />
+            <Route index path="church-record/ministries-record" element={<MinistriesAdminPage />} />
+            <Route index path="church-record/marriage-record" element={<MarriageRecordPage />} />
+
+            <Route index path="service/waterbaptism" element={<WaterBaptismAdminPage />} />
+            <Route index path="service/child-dedication" element={<ChildDedicationAdminPage />} />
+            <Route index path="service/marriage-record" element={<MarriageServiceAdminPage />} />
+
+            <Route index path="maintenance/message" element={<MessageAdminPage />} />
+            <Route index path="maintenance/audit-trial" element={<AuditTrialAdminPage />} />
           </Route>
 
           <Route path='/staff' element={<StaffPage />}>
@@ -149,16 +176,16 @@ function App() {
           </Route>
           <Route path='/member' element={<MemberPage />}>
             <Route index element={<DashboardMemberPage />} />
-            <Route path='my-profile' element={<MyProfile/>}/>
-            <Route path='my-certificate' element={<MyCertificate/>}/>
-            <Route path='my-donation' element={<MyDonations/>}/>
-            <Route path='my-ministries' element={<MinistriesMember/>}/>
-            <Route path='my-waterbaptism' element={<WaterBaptismMember/>}/>
-            <Route path='my-marriage' element={<MarriageMember/>}/>
-            <Route path='my-childdedication' element={<ChildDedicationMember/>}/>
-            <Route path='my-events' element={<ChurchEventsMember/>}/>
-            <Route path='my-message' element={<MessageMember/>}/>
-            <Route path='my-prayerrequest' element={<PrayerRequestMember/>}/>
+            <Route path='my-profile' element={<MyProfile />} />
+            <Route path='my-certificate' element={<MyCertificate />} />
+            <Route path='my-donation' element={<MyDonations />} />
+            <Route path='my-ministries' element={<MinistriesMember />} />
+            <Route path='my-waterbaptism' element={<WaterBaptismMember />} />
+            <Route path='my-marriage' element={<MarriageMember />} />
+            <Route path='my-childdedication' element={<ChildDedicationMember />} />
+            <Route path='my-events' element={<ChurchEventsMember />} />
+            <Route path='my-message' element={<MessageMember />} />
+            <Route path='my-prayerrequest' element={<PrayerRequestMember />} />
           </Route>
         </Routes>
       </Router>

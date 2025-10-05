@@ -1,32 +1,37 @@
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import Logo from "../../../assets/img/logobbek.jpg"
-import { FaAlignLeft } from "react-icons/fa";
 import { FaAngleDown } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { IoLogOut, IoPersonSharp, IoSettingsSharp } from "react-icons/io5";
+import { IoPersonSharp, IoSettingsSharp, IoLogOut } from "react-icons/io5";
 import { Cookies } from "../../../util/Cookies";
-import type { UserInfoModel } from "../../../datasource/models/User/UserInfoModel";
-import { useAppDispatch } from "../../../datasource/redux/staff/hooks/hooks";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../datasource/redux/staff/hooks/hooks";
 import { clearUserInfo } from "../../../datasource/redux/user/UserSlice";
+import type { UserInfoModel } from "../../../datasource/models/User/UserInfoModel";
 import { hideErrorDialog, hideLoader, hideSuccessDialog } from "../../../datasource/redux/dialog/DialogSlice";
 export const Nav = () => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const token = Cookies.getCookie("auth_token");
+  useEffect(() => {
+    if (!token) {
+      navigate("/");
+    }
+  }, [])
+  // const userInfo = useAppSelector((state) => state.userInfo.value);
+  const userInfo = sessionStorage.getItem("userInfo")
+  const [userInfoState, setUserInfoState] = useState<UserInfoModel>(userInfo == null?  {} as UserInfoModel : JSON.parse(userInfo));
   const [showSidePanel, setSidePanel] = useState(false);
   const handleToggleSidePanel = () => {
     setSidePanel(!showSidePanel);
   };
-
-  const userInfo = sessionStorage.getItem("userInfo")
-  const [userInfoState, setUserInfoState] = useState<UserInfoModel>(JSON.parse(userInfo ?? "") ?? {} as UserInfoModel);
   return (<div className="">
     <div className="flex items-center justify-start h-12 gap-1 border-b-2 relative">
       <div className="h-100  flex ml-auto items-center cursor-pointer p-2 hover:bg-gray-100 hover:rounded-md" onClick={handleToggleSidePanel}>
-        <img src={Logo} alt="logo" className="h-6 rounded-md" />
+        <img src={Logo} alt="logo" className="h-6 rounded-md cursor-pointer" />
         <div className="flex items-center p-2">
           <div className="mx-2">
-            <h4 className="text-[.7rem] font-semibold">{userInfoState.firstname} {userInfoState.lastname}</h4>
-            <p className="text-[.6rem] font-semibold text-gray-500">Member</p>
+            <h4 className="text-[.7rem] font-semibold">{`${userInfoState.firstname} ${userInfoState.lastname}`}</h4>
+            <p className="text-[.6rem] font-semibold text-gray-500">Admin</p>
           </div>
           <FaAngleDown className="font-normal text-gray-600 text-[.7rem]" />
         </div>
@@ -35,8 +40,8 @@ export const Nav = () => {
         <div className="flex items-center gap-2 p-2">
           <img src={Logo} alt="logo" className="h-6 rounded-md" />
           <div>
-            <h4 className="text-[.8rem] font-semibold">{userInfoState.firstname} {userInfoState.lastname}</h4>
-            <p className="text-[.6rem] font-semibold text-gray-500">{userInfoState.email}</p>
+            <h4 className="text-[.8rem] font-semibold">{`${userInfoState.firstname} ${userInfoState.lastname}`}</h4>
+            <p className="text-[.6rem] font-semibold text-gray-500">{`${userInfoState.email}`}</p>
           </div>
         </div>
         <hr className="my-2" />
@@ -54,7 +59,6 @@ export const Nav = () => {
         </ul>
 
       </div>
-
     </div>
 
   </div>);
