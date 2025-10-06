@@ -46,6 +46,13 @@ export const UpdateBaptismRecord = ({setIsRefresh}:UpdateBaptismRecordProps) => 
     }
 
     const handleBaptismDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+         const date1 = new Date(e.target.value);
+        const date = new Date();
+        if (date == date1 || date1 < date) {
+            alert("Invalid Dates.");
+            setBaptismDate("");
+            return;
+        }
         setBaptismDate(e.target.value);
     }
     const handleLocation = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,13 +161,13 @@ export const UpdateBaptismRecord = ({setIsRefresh}:UpdateBaptismRecordProps) => 
     }, []);
 
     useEffect(() => {
-        const date1 = new Date(baptismDate);
-        const date = new Date();
-        if (date == date1 || date1 < date) {
-            alert("Invalid Dates.");
-            setBaptismDate("");
-            return;
-        }
+        // const date1 = new Date(baptismDate);
+        // const date = new Date();
+        // if (date == date1 || date1 < date) {
+        //     alert("Invalid Dates.");
+        //     setBaptismDate("");
+        //     return;
+        // }
     }, [baptismDate]);
 
 

@@ -16,21 +16,21 @@ import type { CertificateStatusModel } from "../../../../datasource/models/bapti
 import type { BaptismScheduleModel } from "../../../../datasource/models/baptism/BaptismScheduleModel";
 import dayjs from "dayjs";
 import { useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks";
-interface UpdateBaptismRecordProps{
-    setIsRefresh:React.Dispatch<React.SetStateAction<boolean>>;
+interface UpdateBaptismRecordProps {
+    setIsRefresh: React.Dispatch<React.SetStateAction<boolean>>;
 }
-export const UpdateBaptismRecord = ({setIsRefresh}:UpdateBaptismRecordProps) => {
+export const UpdateBaptismRecord = ({ setIsRefresh }: UpdateBaptismRecordProps) => {
     const dispatch = useDispatch();
-    const baptismModel = useAppSelector((state)=>state.baptism.model);
+    const baptismModel = useAppSelector((state) => state.baptism.model);
     const [dataModel, setDataModel] = useState<BaptismResponseModel | null>(baptismModel ?? null);
     const [toggleBaptismStatus, setToggleBaptismStatus] = useState<boolean>(false);
     const [toggleCertificateStatus, setToggleCertificateStatus] = useState<boolean>(false);
     const [toggleOfficiantDropDown, setToggleOfficiantDropdown] = useState<boolean>(false);
-    const [baptismStatus, setBaptismStatus] = useState(baptismModel?.status??"IN-PROGRESS");
-    const [certificateStatus, setCertificateStatus] = useState(baptismModel?.certificateStatus??"PENDING");
-    const [baptismDate, setBaptismDate] = useState(baptismModel?.baptismDate??"");
-    const [officiant, setOfficiant] = useState(baptismModel?.baptismOfficiant??"");
-    const [location, setLocation] = useState(baptismModel?.location??"");
+    const [baptismStatus, setBaptismStatus] = useState(baptismModel?.status ?? "IN-PROGRESS");
+    const [certificateStatus, setCertificateStatus] = useState(baptismModel?.certificateStatus ?? "PENDING");
+    const [baptismDate, setBaptismDate] = useState(baptismModel?.baptismDate ?? "");
+    const [officiant, setOfficiant] = useState(baptismModel?.baptismOfficiant ?? "");
+    const [location, setLocation] = useState(baptismModel?.location ?? "");
     const [officiantList, setOfficiantList] = useState<UserAndIdModel[]>([]);
     const [statusList, setStatusList] = useState<BaptismStatusModel[]>([]);
     const [certificateStatusList, setCertificateStatusList] = useState<CertificateStatusModel[]>([]);
@@ -46,6 +46,13 @@ export const UpdateBaptismRecord = ({setIsRefresh}:UpdateBaptismRecordProps) => 
     }
 
     const handleBaptismDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const date1 = new Date(e.target.value);
+        const date = new Date();
+        if (date == date1 || date1 < date) {
+            alert("Invalid Dates.");
+            setBaptismDate("");
+            return;
+        }
         setBaptismDate(e.target.value);
     }
     const handleLocation = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +65,7 @@ export const UpdateBaptismRecord = ({setIsRefresh}:UpdateBaptismRecordProps) => 
             dispatch(hideLoader());
             if (response.statusCode == 200) {
                 setOfficiantList(response.data);
-                
+
             } else {
                 sessionStorage.setItem("message", response.message);
                 dispatch(showErrorDialog());
@@ -77,7 +84,7 @@ export const UpdateBaptismRecord = ({setIsRefresh}:UpdateBaptismRecordProps) => 
             dispatch(hideLoader());
             if (response.statusCode == 200) {
                 setStatusList(response.data);
-                
+
             } else {
                 sessionStorage.setItem("message", response.message);
                 dispatch(showErrorDialog());
@@ -108,7 +115,7 @@ export const UpdateBaptismRecord = ({setIsRefresh}:UpdateBaptismRecordProps) => 
     }
 
     const handleSubmit = async () => {
-       console.log(dataModel);
+        console.log(dataModel);
         if (!dataModel) {
             // handle the case where dataModel is null, e.g. show an error or return early
             dispatch(showErrorDialog());
@@ -131,19 +138,19 @@ export const UpdateBaptismRecord = ({setIsRefresh}:UpdateBaptismRecordProps) => 
             dispatch(showLoader());
             const response = await BaptismRepo.scheduleBaptism(model);
             dispatch(hideLoader());
-            if(response.statusCode == 200){
+            if (response.statusCode == 200) {
                 sessionStorage.setItem("message", response.message);
                 setIsRefresh(true);
                 dispatch(showSuccessDialog());
                 dispatch(hideUpdateBaptism());
-            }else{
-                 sessionStorage.setItem("message", response.message);
+            } else {
+                sessionStorage.setItem("message", response.message);
                 dispatch(showErrorDialog());
             }
         } catch (e) {
-            
+
         } finally {
-           
+
         }
     }
 
@@ -154,13 +161,13 @@ export const UpdateBaptismRecord = ({setIsRefresh}:UpdateBaptismRecordProps) => 
     }, []);
 
     useEffect(() => {
-        const date1 = new Date(baptismDate);
-        const date = new Date();
-        if (date == date1 || date1 < date) {
-            alert("Invalid Dates.");
-            setBaptismDate("");
-            return;
-        }
+        // const date1 = new Date(baptismDate);
+        // const date = new Date();
+        // if (date == date1 || date1 < date) {
+        //     alert("Invalid Dates.");
+        //     setBaptismDate("");
+        //     return;
+        // }
     }, [baptismDate]);
 
 
@@ -370,7 +377,7 @@ export const UpdateBaptismRecord = ({setIsRefresh}:UpdateBaptismRecordProps) => 
                     <button
                         className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium text-white ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-8 px-4 py-2"
                         type="button"
-                       onClick={handleSubmit}
+                        onClick={handleSubmit}
                         name="create-marriage-confirm-btn"
                     >
                         Update Record
