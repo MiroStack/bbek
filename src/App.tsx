@@ -82,6 +82,9 @@ import { AuditTrialAdminPage } from './features/administrator/views/maintenance/
 import { DashboardPage } from './features/staff/views/Dashboard.tsx';
 import { ChurchLeadersAdminPage } from './features/administrator/views/church_records/ChurchLeaders.tsx';
 import { DepartmentOfficersAdminPage } from './features/administrator/views/church_records/DepartmentOfficers.tsx';
+import {  ArchiveAdminPage } from './features/administrator/views/maintenance/archieve.tsx';
+import { UserAccountAdminPage } from './features/administrator/views/maintenance/UserAccount.tsx';
+import { SettingAdminPage } from './features/administrator/views/maintenance/setting.tsx';
 
 function App() {
 
@@ -160,6 +163,9 @@ function App() {
 
             <Route index path="maintenance/message" element={<MessageAdminPage />} />
             <Route index path="maintenance/audit-trial" element={<AuditTrialAdminPage />} />
+            <Route index path="maintenance/archive" element={<ArchiveAdminPage />} />
+             <Route index path="maintenance/user-account" element={<UserAccountAdminPage />} />
+               <Route index path="maintenance/setting" element={<SettingAdminPage />} />
           </Route>
 
           <Route path='/staff' element={<StaffPage />}>

@@ -14,6 +14,8 @@ import { IoWater } from "react-icons/io5";
 import { IoHeart } from "react-icons/io5";
 import { IoChatboxSharp } from "react-icons/io5";
 import { useState } from "react";
+import { IoIosSettings } from "react-icons/io";
+import { FaBoxArchive } from "react-icons/fa6";
 import { IoLogOutOutline } from "react-icons/io5";
 import { Cookies } from "../../../util/Cookies";
 export const SideNav = () => {
@@ -30,10 +32,10 @@ export const SideNav = () => {
   return (
     <>
       <div className="fixed overflow-y-auto overflow-x-hidden bg-white h-screen lg:w-[14rem] border border-solid border-blue-500 z-50">
-        <div className="flex items-center px-2 justify-start h-12 gap-1 relative border-b-2 cursor-pointer"  onClick={()=>{
-                           sessionStorage.setItem("navigateLandpage", "true");
-                           navigate("/")
-                         }}>
+        <div className="flex items-center px-2 justify-start h-12 gap-1 relative border-b-2 cursor-pointer" onClick={() => {
+          sessionStorage.setItem("navigateLandpage", "true");
+          navigate("/")
+        }}>
           <img src={Logo} alt="logo" className="h-6" />
           <h2 className="font-semibold text-sm">BBEK Church</h2>
           <FaAlignLeft className="text-xl absolute right-[-24px] cursor-pointer" />
@@ -81,9 +83,12 @@ export const SideNav = () => {
             <ul className={`${dropdown3 ? "" : "hidden"} w-[80%] ml-auto ease-in-out transition-all delay-100`}>
               <Link to="maintenance/message" className="flex items-center gap-2 text-sm py-2"><IoChatboxSharp /><span>Message</span></Link>
               <Link to="maintenance/audit-trial" className="flex items-center gap-2 text-sm py-2"><IoNewspaper /><span>Audit Trial</span></Link>
+              <Link to="maintenance/archive" className="flex items-center gap-2 text-sm py-2"><FaBoxArchive /><span>Archives</span></Link>
+              <Link to="maintenance/user-account" className="flex items-center gap-2 text-sm py-2"><FaUserGroup /><span>User Account</span></Link>
+              <Link to="maintenance/setting" className="flex items-center gap-2 text-sm py-2"><IoIosSettings /><span>Settings</span></Link>
             </ul>
           </div>
-         
+
         </ul>
       </div>
     </>
