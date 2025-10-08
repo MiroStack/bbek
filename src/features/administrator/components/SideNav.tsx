@@ -52,6 +52,8 @@ export const SideNav = () => {
           <div>
             <ul className={`${dropdown1 ? "" : "hidden"} w-[80%] ml-auto ease-in-out transition-all delay-100`}>
               <Link to="church-record/member-record" className="flex items-center gap-2 text-sm py-2"><FaUserGroup /><span>Member Record</span></Link>
+              <Link to="church-record/church-leaders" className="flex items-center gap-2 text-sm py-2"><FaUserGroup /><span>Church Leaders</span></Link>
+              <Link to="church-record/department-officers" className="flex items-center gap-2 text-sm py-2"><FaUserGroup /><span>Department Officers</span></Link>
               <Link to="church-record/event-record" className="flex items-center gap-2 text-sm py-2"><FaCalendar /><span>Events Records</span></Link>
               <Link to="church-record/tithe-offering" className="flex items-center gap-2 text-sm py-2"><FaGift /><span>Tithes & Offerings</span></Link>
               <Link to="church-record/ministries-record" className="flex items-center gap-2 text-sm py-2"><FaUserGroup /><span>Ministries</span></Link>

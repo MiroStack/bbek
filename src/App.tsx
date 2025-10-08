@@ -80,6 +80,8 @@ import { MarriageServiceAdminPage } from './features/administrator/views/service
 import { MessageAdminPage } from './features/administrator/views/maintenance/message.tsx';
 import { AuditTrialAdminPage } from './features/administrator/views/maintenance/audit.tsx';
 import { DashboardPage } from './features/staff/views/Dashboard.tsx';
+import { ChurchLeadersAdminPage } from './features/administrator/views/church_records/ChurchLeaders.tsx';
+import { DepartmentOfficersAdminPage } from './features/administrator/views/church_records/DepartmentOfficers.tsx';
 
 function App() {
 
@@ -144,6 +146,8 @@ function App() {
           </Route> */}
           <Route path="/admin" element={<AdminPage />}>
             <Route index element={<DashboardAdminPage />} />
+             <Route index path="church-record/church-leaders" element={<ChurchLeadersAdminPage />} />
+                <Route index path="church-record/department-officers" element={<DepartmentOfficersAdminPage />} />
             <Route index path="church-record/member-record" element={<MemberRecordPageAdmin />} />
             <Route index path="church-record/event-record" element={<EventRecordPageAdmin />} />
             <Route index path="church-record/tithe-offering" element={<TithesOfferingAdminPage />} />
