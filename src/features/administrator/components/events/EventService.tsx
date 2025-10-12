@@ -13,6 +13,7 @@ interface EventServiceProps {
     pageNumber: number;
     totalPage: number;
     eventData: PaginatedEventsModel[];
+    selectedStatus: string;
     setTotalPage: React.Dispatch<React.SetStateAction<number>>;
     setPages: React.Dispatch<React.SetStateAction<number[]>>;
     setEventData: React.Dispatch<React.SetStateAction<PaginatedEventsModel[]>>;
@@ -26,6 +27,7 @@ export const EventService = ({
     pageNumber,
     totalPage,
     eventData,
+    selectedStatus,
     setTotalPage,
     setPages,
     setEventData,
@@ -61,7 +63,7 @@ export const EventService = ({
     const fetchEventData = async () => {
         try {
             dispatch(showLoader());
-            const res = await EventRepo.getPaginatedEvents(query, query != "" ? 1 : pageNumber);
+            const res = await EventRepo.getPaginatedEvents(query,  pageNumber, selectedStatus);
             dispatch(hideLoader());
             if (res.statusCode == 200) {
                 setEventData(res.data);

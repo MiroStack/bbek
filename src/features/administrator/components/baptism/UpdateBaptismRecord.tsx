@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import type { MarriageStatusesModel } from "../../../../datasource/models/Marriage/MarriageStatusesModel";
-import type { MarriageLocationsModel } from "../../../../datasource/models/Marriage/MarriageLocationsModel";
-import { hideCreateMarriage, hideUpdateMarriage } from "../../../../datasource/redux/staff/church_record/MarriageSlice";
-import Marriage from "../../../../admin/pages/marriage";
-import { MarriageRepo } from "../../../../datasource/repositories/MarriageRepo";
-import type { MarriageModel } from "../../../../datasource/models/Marriage/MarriageModel";
 import { hideLoader, showErrorDialog, showLoader, showSuccessDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 import type { BaptismResponseModel } from "../../../../datasource/models/baptism/BaptismResponseModel";
 import { hideUpdateBaptism } from "../../../../datasource/redux/staff/service/BaptismSlice";

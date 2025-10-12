@@ -1,4 +1,4 @@
-import {  useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux";
 import { showCreateEvent, showUpdateEvent } from "../../../../datasource/redux/staff/church_record/EventSlice";
 import { useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks";
@@ -7,7 +7,7 @@ import { Loader } from "../../../landpage/components/Loader";
 import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
 import { WarningDialog } from "../../../../component/dialog/WarningDialog";
 import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
-import { showErrorDialog, showWarningDialog } from "../../../../datasource/redux/dialog/DialogSlice";
+import { showErrorDialog, showRelogin, showWarningDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 import { UpdateEventForm } from "../../components/events/UpdateEventForm";
 import dayjs from "dayjs";
@@ -15,8 +15,10 @@ import type { PaginatedEventsModel } from "../../../../datasource/models/Event/P
 import type { EventStatusModel } from "../../../../datasource/models/Event/EventStatusModel";
 import { NoDataPage } from "../../../landpage/components/NoDataPage";
 import { EventService } from "../../components/events/EventService";
+import { ReloginDialog } from "../../../../component/dialog/ReloginDialog";
 
 export const EventRecordPage = () => {
+    const reloginDialog = useAppSelector((state) => state.dialog.relogin);
     const eventCreateForm = useAppSelector((state) => state.eventForm.value);
     const eventEditForm = useAppSelector((state) => state.eventForm.edit);
     const loaderDialog = useAppSelector((state) => state.dialog.loader);
@@ -31,12 +33,15 @@ export const EventRecordPage = () => {
     const [pages, setPages] = useState([1, 2, 3, 4, 5, 6, 7]);
     const [totalPage, setTotalPage] = useState(1);
     const [query, setQuery] = useState("");
+    const [showSorting, setShowSorting] = useState(false);
+    const [selectedStatus, setSelectedStatus] = useState<string>("");
 
     const eventService = EventService({
         query,
         pageNumber,
         totalPage,
         eventData,
+        selectedStatus,
         setTotalPage,
         setPages,
         setEventData,
@@ -47,6 +52,9 @@ export const EventRecordPage = () => {
 
 
     useEffect(() => {
+        // dispatch(showRelogin())
+        console.log(reloginDialog);
+        console.log(errorDialog);
         if (isRefreshing) {
             eventService.fetchEventData();
             eventService.fetchEventStatuses();
@@ -58,6 +66,7 @@ export const EventRecordPage = () => {
 
     return (
         <>
+        {reloginDialog && <ReloginDialog/>}
             <div className={`${eventCreateForm ? "" : "hidden"}`}>
                 <CreateEventForm setIsRefreshing={setIsRefreshing} />
             </div>
@@ -134,15 +143,38 @@ export const EventRecordPage = () => {
                                         id="search-events"
                                     />
                                 </div>
-                                <div className="flex gap-2">
+                                <div className="flex gap-2 relative" >
                                     <button
                                         className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
                                         type="button"
                                         id="radix-«r8l»"
+                                        onClick={() => setShowSorting(!showSorting)}
                                         aria-haspopup="menu"
                                         aria-expanded="false"
                                         data-state="closed"
                                     >
+                                        <div className={`${showSorting ? "" : "hidden"} absolute bg-white z-10 h-auto rounded-md shadow-md bottom-[-250%] left-[-10%] flex flex-col items-center justify-center`}>
+                                            <ul className="h-full w-full flex flex-col items-center justify-center p-2" onClick={() => setShowSorting(false)}>
+                                                <li className="hover:bg-green-100 cursor-pointer w-full px-3" onClick={
+                                                    () => {
+                                                        setSelectedStatus("")
+                                                        setIsRefreshing(true);
+                                                    }
+                                                }>All</li>
+                                                {
+
+                                                    eventStatus.map((status, index) => (
+                                                        <li className="hover:bg-green-100 cursor-pointer w-full px-3"
+                                                            //  onClick={() => dispatch1({ type: OfferingTypes.all, payload: allOffering })}
+                                                            onClick={() => {
+                                                                setSelectedStatus(status.statusName)
+                                                                setIsRefreshing(true);
+                                                            }}
+                                                        >{status.statusName}</li>))
+                                                }
+
+                                            </ul>
+                                        </div>
                                         <svg
                                             xmlns="http://www.w3.org/2000/svg"
                                             width="24"
@@ -169,7 +201,7 @@ export const EventRecordPage = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="rounded-md border">
+                    <div className="rounded-md border w-full">
                         <div className="relative w-full overflow-auto">
                             <table className="w-full caption-bottom text-sm ">
                                 <thead className="[&amp;_tr]:border-b ">

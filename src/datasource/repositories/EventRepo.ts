@@ -6,11 +6,11 @@ import type { EventStatusModel } from "../models/Event/EventStatusModel";
 import type { PaginatedEventsModel } from "../models/Event/PaginatedEventModel";
 
 const EventRepo = {
-
-  async getAllEvent(query:string, page:number): Promise<EventModel[]> {
+  
+  async getAllEvent(query:string, page:number, selectedStatus:string): Promise<EventModel[]> {
     const token = Cookies.getCookie("auth_token");
     const response = await axios.get<EventModel[]>(
-      `getAllEvent?query=${query}&page=${page}`,
+      `getAllEvent?query=${query}&page=${page}&status=${selectedStatus}`,
       {
         headers: {
           "Content-Type": "multipart/form-data"
@@ -107,7 +107,7 @@ const EventRepo = {
     return URL.createObjectURL(blob);
   },
 
-  async getEventStatuses() : Promise<ApiResponseModel<EventStatusModel[]>> {
+  async getEventStatuses() {
     const token = Cookies.getCookie("auth_token");
     const response = await axios.get<ApiResponseModel<EventStatusModel[]>>('getAllEventStatuses', {
         headers: {
@@ -115,17 +115,18 @@ const EventRepo = {
             Authorization: `Bearer ${token}`
         }
     });
-    return response.data;
+    return response;
   },
-  async getPaginatedEvents(query:string, page:number): Promise<ApiResponseModel<PaginatedEventsModel[]>>{
+  async getPaginatedEvents(query:string, page:number, selectedStatus:string){
     const token = Cookies.getCookie("auth_token");
-    const response = await axios.get<ApiResponseModel<PaginatedEventsModel[]>>(`getPaginatedEvents?query=${query}&page=${page}`, {
+    const response = await axios.get<ApiResponseModel<PaginatedEventsModel[]>>(`getPaginatedEvents?query=${query}&page=${page}&status=${selectedStatus}`, {
         headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`
         }
     });
-    return response.data;
+    
+    return response;
   }
 
 

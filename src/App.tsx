@@ -1,5 +1,4 @@
 import './index.css';
-import Index from './admin/index.tsx'
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { LandPage } from './features/landpage/landpage.tsx';
 import { Home } from './features/landpage/view/Home.tsx'
@@ -7,19 +6,6 @@ import { AboutPage } from './features/landpage/view/about/About.tsx';
 import { BeOneOfUsPage } from './features/landpage/view/beoneofus/BeOneOfUs.tsx';
 import { GivePage } from './features/landpage/view/Give.tsx';
 import { LivePage } from './features/landpage/view/Live.tsx';
-import Dashboard from './admin/pages/dashboard.tsx';
-import MemberRecord from './admin/pages/member_record.tsx';
-import Church_Leaders from './admin/pages/church_leaders.tsx';
-import Department_Officers from './admin/pages/department_officers.tsx';
-import Events from './admin/pages/events.tsx';
-import TithesAndOffering from './admin/pages/tither_and_offering.tsx';
-import Inventory_Records from './admin/pages/inventory_records.tsx';
-import Ministries from './admin/pages/ministries.tsx';
-import Ministry_Record from './admin/pages/minstry_record.tsx';
-import Baptism_Record from './admin/pages/baptism_record.tsx';
-import Child_Dedication from './admin/pages/child_dedication.tsx';
-import Marriage from './admin/pages/marriage.tsx';
-import Marriage_Record from './admin/pages/marriage_record.tsx';
 import ScrollToTop from "./features/landpage/components/ScrollToTop.tsx";
 import { MissionPage } from './features/landpage/view/about/Mission.tsx';
 import { VisionPage } from './features/landpage/view/about/Vision.tsx';
@@ -28,14 +14,7 @@ import { OfficersPage } from './features/landpage/view/about/Officers.tsx';
 import { AboutUsPage } from './features/landpage/view/about/AboutUs.tsx';
 import { AllEventsPage } from './features/landpage/view/events/AllEvents.tsx';
 import { WaterBaptismPage } from './features/landpage/view/beoneofus/WaterBaptism.tsx';
-import { SendPrayerPage } from './features/landpage/view/beoneofus/SendPrayer.tsx';
-import Message from './admin/pages/message.tsx';
-import Audit_Trail from './admin/pages/audit_trail.tsx';
-import Archives from './admin/pages/archives.tsx';
-import User_Account from './admin/pages/user_account.tsx';
-import Settings from './admin/pages/settings.tsx';
 import { StaffPage } from './features/staff/staff.tsx';
-
 import { MemberRecordPage } from './features/staff/views/church_records/MemberRecord.tsx';
 import { EventRecordPage } from './features/staff/views/church_records/EventRecord.tsx';
 import { TithesOfferingPage } from './features/staff/views/church_records/TitheOffer.tsx';
@@ -60,7 +39,6 @@ import { ChildDedicationMember } from './features/member/views/services/ChildDed
 import { ChurchEventsMember } from './features/member/views/services/ChurchEvents.tsx';
 import { MessageMember } from './features/member/views/communication/Message.tsx';
 import { PrayerRequestMember } from './features/member/views/communication/PrayerRequest.tsx';
-import { Homepage } from './features/landpage/view/home/Homepage.tsx';
 import { LeadersAndOfficers } from './features/landpage/view/about/LeadersAndOfficers.tsx';
 import { PlanYourVisit } from './features/landpage/view/PlanYourVisit.tsx';
 import { EventPage } from './features/landpage/view/events/Event.tsx';
@@ -85,6 +63,7 @@ import { DepartmentOfficersAdminPage } from './features/administrator/views/chur
 import {  ArchiveAdminPage } from './features/administrator/views/maintenance/archieve.tsx';
 import { UserAccountAdminPage } from './features/administrator/views/maintenance/UserAccount.tsx';
 import { SettingAdminPage } from './features/administrator/views/maintenance/setting.tsx';
+import { SendPrayerPage } from './features/landpage/view/beoneofus/SendPrayer.tsx';
 
 function App() {
 
@@ -147,6 +126,7 @@ function App() {
             <Route index path="user-account" element={<User_Account />} />
             <Route index path="settings" element={<Settings />} />
           </Route> */}
+
           <Route path="/admin" element={<AdminPage />}>
             <Route index element={<DashboardAdminPage />} />
              <Route index path="church-record/church-leaders" element={<ChurchLeadersAdminPage />} />

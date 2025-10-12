@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BaptismRepo from '../../../../datasource/repositories/BaptismRepo';
 import { useDispatch } from 'react-redux';
@@ -82,7 +82,8 @@ export const WaterBaptismPage = () => {
         }
     }, [preferredDate]);
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
         try {
             dispatch(showLoader());
             const model: RegistrationModel = {
@@ -379,6 +380,7 @@ export const WaterBaptismPage = () => {
                             opacity: 1,
                             transition: { ease: 'easeInOut', delay: 0.2 }
                         }}
+
                         className="py-16 bg-gray-50" id='register'>
                         <div className="container mx-auto px-4">
                             <div className="max-w-2xl mx-auto">
@@ -402,14 +404,17 @@ export const WaterBaptismPage = () => {
                                         </div>
                                     </div>
                                     <div className="p-6 pt-0">
-                                        <form className="space-y-4">
+                                        <form className="space-y-4" onSubmit={handleSubmit}>
                                             <div className="grid grid-cols-2 gap-4">
                                                 <div className="space-y-2">
                                                     <label
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                         htmlFor="first-name"
                                                     >
-                                                        First Name
+                                                        {"First Name "}
+                                                        {firstname.trim() === "" && (
+                                                            <span className="text-red-500">*</span>
+                                                        )}
                                                     </label>
                                                     <input
                                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
@@ -425,7 +430,10 @@ export const WaterBaptismPage = () => {
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                         htmlFor="last-name"
                                                     >
-                                                        Middle Name
+                                                        {"Middle Name "}
+                                                         {middleName.trim() === "" && (
+                                                            <span className="text-red-500">*</span>
+                                                        )}
                                                     </label>
                                                     <input
                                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
@@ -444,7 +452,10 @@ export const WaterBaptismPage = () => {
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                         htmlFor="last-name"
                                                     >
-                                                        Last Name
+                                                        {"Last Name "}
+                                                         {lastname.trim() === "" && (
+                                                            <span className="text-red-500">*</span>
+                                                        )}
                                                     </label>
                                                     <input
                                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
@@ -460,7 +471,10 @@ export const WaterBaptismPage = () => {
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                         htmlFor="birthdate"
                                                     >
-                                                        Birthdate
+                                                         {"Birthdate "}
+                                                         {birthdate.trim() === "" && (
+                                                            <span className="text-red-500">*</span>
+                                                        )}
                                                     </label>
                                                     <input
                                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
@@ -480,7 +494,10 @@ export const WaterBaptismPage = () => {
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                         htmlFor="age"
                                                     >
-                                                        Age
+                                                        {"Age "}
+                                                         {age=== 0 && (
+                                                            <span className="text-red-500">*</span>
+                                                        )}
                                                     </label>
                                                     <input
                                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
@@ -496,7 +513,10 @@ export const WaterBaptismPage = () => {
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                         htmlFor="gender"
                                                     >
-                                                        Sex
+                                                        {"Sex "}
+                                                         {gender.trim()==="" && (
+                                                            <span className="text-red-500">*</span>
+                                                        )}
                                                     </label>
                                                     <input
                                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
@@ -515,7 +535,10 @@ export const WaterBaptismPage = () => {
                                                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                     htmlFor="address"
                                                 >
-                                                    Address
+                                                    {"Address "}
+                                                         {address.trim()==="" && (
+                                                            <span className="text-red-500">*</span>
+                                                        )}
                                                 </label>
                                                 <input
                                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
@@ -532,7 +555,10 @@ export const WaterBaptismPage = () => {
                                                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                     htmlFor="email"
                                                 >
-                                                    Email
+                                                     {"Email "}
+                                                         {email.trim()==="" && (
+                                                            <span className="text-red-500">*</span>
+                                                        )}
                                                 </label>
                                                 <input
                                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
@@ -550,7 +576,10 @@ export const WaterBaptismPage = () => {
                                                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                     htmlFor="phone"
                                                 >
-                                                    Phone Number
+                                                     {"Phone Number "}
+                                                         {address.trim()==="" && (
+                                                            <span className="text-red-500">*</span>
+                                                        )}
                                                 </label>
                                                 <input
                                                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm transition-all duration-300 focus:ring-2 focus:ring-blue-500"
@@ -566,13 +595,17 @@ export const WaterBaptismPage = () => {
                                                     className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                     htmlFor="date"
                                                 >
-                                                    Preferred Baptism Date
+                                                    {"Preferered Baptism Date "}
+                                                         {preferredDate.trim()==="" && (
+                                                            <span className="text-red-500">*</span>
+                                                        )}
                                                 </label>
                                                 <input
                                                     type="date"
-                                                    id="date"
+                                                    id="preferredDate"
                                                     onChange={handlePreferredDate}
                                                     value={preferredDate}
+                                                    placeholder="Select a date"
                                                     className="hover:cursor-pointer w-full p-2 border rounded-md transition-all duration-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                                                     required
                                                 />
@@ -594,14 +627,16 @@ export const WaterBaptismPage = () => {
                                                     required
                                                 ></textarea>
                                             </div>
+                                            <div className="flex items-center p-6 pt-0">
+                                                <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full transform transition-all duration-300 hover:scale-105"
+                                                    type='submit'>
+                                                    Submit Registration
+                                                </button>
+                                            </div>
                                         </form>
+
                                     </div>
-                                    <div className="flex items-center p-6 pt-0">
-                                        <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full transform transition-all duration-300 hover:scale-105"
-                                            onClick={handleSubmit}>
-                                            Submit Registration
-                                        </button>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>

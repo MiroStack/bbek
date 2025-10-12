@@ -20,6 +20,7 @@ export const AllEventsPage = () => {
   const [pages, setPages] = useState([1, 2, 3, 4, 5, 6, 7]);
   const [totalPage, setTotalPage] = useState(1);
   const [refresh, setIsRefreshing] = useState<boolean>(true);
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
   const handleJoinEvent = () => {
     setShowJoinEvent(!showJoinEvent);
   }
@@ -55,7 +56,7 @@ export const AllEventsPage = () => {
 
   const fetchEventData = async () => {
     try {
-      const res = await EventRepo.getAllEvent(query, pageNumber);
+      const res = await EventRepo.getAllEvent(query, pageNumber, selectedStatus);
       console.log(res);
       setEventDate(res);
     } catch (e) { }

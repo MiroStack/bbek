@@ -1,4 +1,4 @@
-import { use, useState } from "react";
+import { use, useState, type FormEvent } from "react";
 import dayjs from "dayjs";
 import { useSelector, useDispatch } from 'react-redux';
 import { hideLoader, showLoader, showSuccessDialog } from "../../../../datasource/redux/dialog/DialogSlice";
@@ -9,7 +9,7 @@ type CreateEventFormProps = {
     setIsRefreshing: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export const CreateEventForm = ({setIsRefreshing}:CreateEventFormProps) => {
-    const dispatch = useDispatch();
+       const dispatch = useDispatch();
     const [showStatus, setShowStatus] = useState(false);
     const [showEventStatus, setShowEventStatus] = useState(false);
     const [eventType, setEventType] = useState("");
@@ -65,7 +65,8 @@ export const CreateEventForm = ({setIsRefreshing}:CreateEventFormProps) => {
 
     const handleShowEventStatus = () => setShowEventStatus(showEventStatus ? false : true);
     const handleShowStatus = () => setShowStatus(showStatus ? false : true);
-    async function handleSaveEvent() {
+    async function handleSaveEvent(e:FormEvent) {
+        e.preventDefault();
         dispatch(showLoader());
         if (!file) {
             alert("Please select an image file to upload.");
@@ -123,12 +124,8 @@ export const CreateEventForm = ({setIsRefreshing}:CreateEventFormProps) => {
     }
     return (
         <>
-            <div
-                role="dialog"
-                id="radix-«r4n»"
-                aria-describedby="radix-«r4p»"
-                aria-labelledby="radix-«r4o»"
-                data-state="open"
+            <form
+                onSubmit={handleSaveEvent}
                 className="h-[32rem] overflow-y-auto bg-white fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg sm:max-w-[500px]"
             >
                 <div className="flex flex-col  text-center sm:text-left">
@@ -374,11 +371,10 @@ export const CreateEventForm = ({setIsRefreshing}:CreateEventFormProps) => {
                 <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
                     <button
                         className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium text-white ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-8 px-4 py-2"
-                        type="button"
+                        type="submit"
                         name="create-event-confirm-btn"
-                        onClick={handleSaveEvent}
                     >
-                        Create Event
+                        Save Event
                     </button>
                 </div>
                 <button
@@ -403,7 +399,7 @@ export const CreateEventForm = ({setIsRefreshing}:CreateEventFormProps) => {
                     </svg>
                     <span className="sr-only">Close</span>
                 </button>
-            </div>
+            </form>
         </>
     );
 }

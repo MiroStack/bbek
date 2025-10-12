@@ -1,5 +1,5 @@
 
-import { hideLoader, showErrorDialog, showLoader, showSuccessDialog } from "../../../../datasource/redux/dialog/DialogSlice";
+import { hideLoader, showErrorDialog, showLoader, showRelogin, showSuccessDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 import { useDispatch } from "react-redux";
 import EventRepo from "../../../../datasource/repositories/EventRepo";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +13,7 @@ interface EventServiceProps {
     pageNumber: number;
     totalPage: number;
     eventData: PaginatedEventsModel[];
+    selectedStatus: string;
     setTotalPage: React.Dispatch<React.SetStateAction<number>>;
     setPages: React.Dispatch<React.SetStateAction<number[]>>;
     setEventData: React.Dispatch<React.SetStateAction<PaginatedEventsModel[]>>;
@@ -26,6 +27,7 @@ export const EventService = ({
     pageNumber,
     totalPage,
     eventData,
+    selectedStatus,
     setTotalPage,
     setPages,
     setEventData,
@@ -61,18 +63,18 @@ export const EventService = ({
     const fetchEventData = async () => {
         try {
             dispatch(showLoader());
-            const res = await EventRepo.getPaginatedEvents(query, query != "" ? 1 : pageNumber);
+            const res = await EventRepo.getPaginatedEvents(query,  pageNumber, selectedStatus);
             dispatch(hideLoader());
-            if (res.statusCode == 200) {
-                setEventData(res.data);
-            } else if (res.statusCode == 401) {
-                alert("Session has expired. Please login again.");
-                navigate("/");
-                Cookies.deleteCookie("auth_token");
+            if (res.status == 200 && res.data.statusCode == 200) {
+                setEventData(res.data.data);
             }
+            else if (res.status == 401) {
+              
+                dispatch(showRelogin());
+            } 
             else {
-                sessionStorage.setItem("message", res.message);
-                dispatch(showErrorDialog());
+                sessionStorage.setItem("message", res.data.message);
+               // dispatch(showErrorDialog());
             }
 
         } catch (e) {
@@ -86,15 +88,13 @@ export const EventService = ({
             dispatch(showLoader());
             const res = await EventRepo.getEventStatuses();
             dispatch(hideLoader());
-            if (res.statusCode == 200) {
-                setEventStatuses(res.data);
-            } else if (res.statusCode == 401) {
-                alert("Session has expired. Please login again.");
-                navigate("/");
-                Cookies.deleteCookie("auth_token");
+            if (res.status == 200 && res.data.statusCode == 200) {
+                setEventStatuses(res.data.data);
+            } else if (res.status == 401) {
+                 dispatch(showRelogin());
             } else {
-                sessionStorage.setItem("message", res.message);
-                dispatch(showErrorDialog());
+                sessionStorage.setItem("message", res.data.message);
+               dispatch(showErrorDialog());
             }
         } catch (e) {
             console.error(e);
