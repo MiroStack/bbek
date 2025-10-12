@@ -84,7 +84,7 @@ export const SideNav = () => {
               <Link to="maintenance/message" className="flex items-center gap-2 text-sm py-2"><IoChatboxSharp /><span>Message</span></Link>
               <Link to="maintenance/audit-trial" className="flex items-center gap-2 text-sm py-2"><IoNewspaper /><span>Audit Trial</span></Link>
               <Link to="maintenance/archive" className="flex items-center gap-2 text-sm py-2"><FaBoxArchive /><span>Archives</span></Link>
-              <Link to="maintenance/user-account" className="flex items-center gap-2 text-sm py-2"><FaUserGroup /><span>User Account</span></Link>
+              {/* <Link to="maintenance/user-account" className="flex items-center gap-2 text-sm py-2"><FaUserGroup /><span>User Account</span></Link> */}
               <Link to="maintenance/setting" className="flex items-center gap-2 text-sm py-2"><IoIosSettings /><span>Settings</span></Link>
             </ul>
           </div>
