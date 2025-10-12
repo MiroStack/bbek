@@ -1,7 +1,7 @@
 
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { AiOutlineWarning } from 'react-icons/ai';
-import { useAppSelector } from "../../datasource/redux/staff/hooks/hooks.tsx";
+import { useAppSelector } from "../../datasource/redux/modules/hooks/hooks.tsx";
 import { useDispatch } from "react-redux";
 import { hideSuccessDialog, hideWarningDialog } from "../../datasource/redux/dialog/DialogSlice.ts";
 type WarningDialogProps = {

@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import ministryReducer from './staff/church_record/MinistrySlice';
+import ministryReducer from './modules/church_record/MinistrySlice';
 import dialogReducer from './dialog/DialogSlice';
-import eventReducer from './staff/church_record/EventSlice';
-import offeringReducer from './staff/church_record/OfferingSlice';
-import marriageReducer from './staff/church_record/MarriageSlice';
+import eventReducer from './modules/church_record/EventSlice';
+import offeringReducer from './modules/church_record/OfferingSlice';
+import marriageReducer from './modules/church_record/MarriageSlice';
 import UserReducer from './user/UserSlice'
-import BaptismReducer  from './staff/service/BaptismSlice';
+import BaptismReducer  from './modules/service/BaptismSlice';
 export const store = configureStore({
   reducer: {
     ministryForm: ministryReducer,

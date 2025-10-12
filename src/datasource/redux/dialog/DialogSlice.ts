@@ -47,6 +47,13 @@ const DialogSlice = createSlice({
     hideRelogin: (state) => {
       state.relogin=false;
     },
+    closeAllDialog: (state) => {
+      state.success=false;
+      state.error=false;
+      state.warning=false;
+      state.loader=false;
+      state.relogin=false;
+    }
     // increment: (state) => {
     //   state.value += 1;
     // },
@@ -58,5 +65,5 @@ const DialogSlice = createSlice({
 });
 
 // export const { increment, decrement, incrementByAmount } = SuccessDialogSlice.actions;
-export const { showSuccessDialog, hideSuccessDialog, showWarningDialog, hideWarningDialog, showErrorDialog, hideErrorDialog, showLoader, hideLoader, showRelogin, hideRelogin } = DialogSlice.actions;
+export const { showSuccessDialog, hideSuccessDialog, showWarningDialog, hideWarningDialog, showErrorDialog, hideErrorDialog, showLoader, hideLoader, showRelogin, hideRelogin, closeAllDialog } = DialogSlice.actions;
 export default DialogSlice.reducer;

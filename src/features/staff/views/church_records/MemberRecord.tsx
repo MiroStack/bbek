@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../datasource/redux/modules/hooks/hooks";
 import type { MemberModel } from "../../../../datasource/models/member/MemberModel";
-import MemberRepo from "../../../../datasource/repositories/MemberRepo";
+import {MemberRepo} from "../../../../datasource/repositories/MemberRepo";
 import { hideLoader, showErrorDialog, showLoader } from "../../../../datasource/redux/dialog/DialogSlice";
 import { Loader } from "../../../../component/dialog/Loader";
 import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
 import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
-import { Pagination } from "../../components/pagination/Pagination";
+
 import dayjs from "dayjs";
 import { NoDataPage } from "../../../landpage/components/NoDataPage";
+import { Pagination } from "../../../../component/components/pagination/Pagination";
+import { ReloginDialog } from "../../../../component/dialog/ReloginDialog";
 
 export const MemberRecordPage = () => {
     const dispatch = useAppDispatch();
+    const reloginDialog = useAppSelector((state) => state.dialog.relogin);
     const loader = useAppSelector((state) => state.dialog.loader);
     const success = useAppSelector((state) => state.dialog.success);
     const error = useAppSelector((state) => state.dialog.error);
@@ -29,18 +32,15 @@ export const MemberRecordPage = () => {
         }
 
     }, [isRefresh]);
-
+     const memberRepo = MemberRepo();
     const handleGetMembers = async () => {
         try {
             dispatch(showLoader());
-            const response = await MemberRepo.getMembers(query, pageNumber);
+            const response = await memberRepo.getMembers(query, pageNumber);
             dispatch(hideLoader());
             if (response.statusCode == 200) {
-              //  console.log(response.data);
+                //  console.log(response.data);
                 setMemberList(response.data);
-            } else {
-                sessionStorage.setItem("message", response.message);
-                dispatch(showErrorDialog());
             }
         } catch (e) {
 
@@ -55,6 +55,7 @@ export const MemberRecordPage = () => {
     }
     return (
         <>
+            {reloginDialog && <ReloginDialog />}
             {loader && <Loader loader={loader} />}
             {success && <SuccessDialog />}
             {error && <ErrorDialog2 />}
@@ -202,7 +203,7 @@ export const MemberRecordPage = () => {
                                                 <div
                                                     className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-green-100 text-green-800"
                                                 >
-                                                    {item.active? "Active" : "Inactive"}
+                                                    {item.active ? "Active" : "Inactive"}
                                                 </div>
                                             </td>
                                             <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">{dayjs(item.joinDate).format("MMMM D, YYYY")}</td>

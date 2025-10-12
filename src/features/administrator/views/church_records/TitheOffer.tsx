@@ -1,20 +1,22 @@
 import { useEffect, useReducer, useState } from "react";
 import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
 import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
-import { showCreateOffering, showUpdateOffering } from "../../../../datasource/redux/staff/church_record/OfferingSlice";
-import { useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks"
+import { showCreateOffering, showUpdateOffering } from "../../../../datasource/redux/modules/church_record/OfferingSlice";
+import { useAppSelector } from "../../../../datasource/redux/modules/hooks/hooks"
 import { Loader } from "../../../landpage/components/Loader";
-import { CreateOffering } from "../../components/offering/CreateOffering";
 import { useDispatch } from "react-redux";
 import {showErrorDialog,showWarningDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 import dayjs from "dayjs";
 import { WarningDialog } from "../../../../component/dialog/WarningDialog";
-import { UpdateOffering } from "../../components/offering/UpdateOffering";
 import type { PaginatedOfferingModel } from "../../../../datasource/models/Offering/PaginatedOfferingModel";
 import type { OfferingTypeModel } from "../../../../datasource/models/Offering/OfferingTypeModel";
 import type { OfferingPaymentModel } from "../../../../datasource/models/Offering/OfferingPaymentModel";
-import { OfferingService } from "../../components/offering/OfferingService";
 import { NoDataPage } from "../../../landpage/components/NoDataPage";
+import { OfferingService } from "../../../../component/components/offering/OfferingService";
+import { CreateOffering } from "../../../../component/components/offering/CreateOffering";
+import { UpdateOffering } from "../../../../component/components/offering/UpdateOffering";
+import { Pagination } from "../../../../component/components/pagination/Pagination";
+
 export const OfferingTypes = {
     all: "ALL",
     offering: "OFFERING",
@@ -452,53 +454,7 @@ export const TithesOfferingAdminPage = () => {
                                         </tbody>
                                     </table>
                                 </div>
-                                <div className="w-full p-4 flex items-center justify-center relative">
-                                    <button className="cursor-pointer"
-                                        onClick={() => {
-                                            if (pageNumber > 1) {
-                                                setPageNumber(pageNumber - 1);
-                                                setIsRefreshing(true);
-                                            } else {
-                                                sessionStorage.setItem("message", "No previous records available");
-                                                dispatch(showErrorDialog());
-                                            }
-                                        }}
-                                    >&laquo;</button>
-                                    <span className="mx-4">{pageNumber} of {totalPage}</span>
-                                    <button className="cursor-pointer"
-                                        onClick={() => {
-                                            if (pageNumber < totalPage) {
-                                                setPageNumber(pageNumber + 1);
-                                                setIsRefreshing(true);
-                                            } else {
-                                                sessionStorage.setItem("message", "No more records available");
-                                                dispatch(showErrorDialog());
-                                            }
-                                        }}
-                                    >&raquo;</button>
-
-                                    <div className="absolute right-4 flex items-center gap-2">
-                                        {
-                                            pages.map((page, index) => (
-                                                <span key={index} className={`p-1 ${pageNumber == page ? 'bg-green-200' : 'bg-gray-100'} w-7 text-center hover:cursor-pointer`}
-                                                    onClick={() => {
-                                                        if (totalPage < page) {
-                                                            sessionStorage.setItem("message", "No more records available");
-                                                            dispatch(showErrorDialog());
-                                                        } else {
-                                                            setPageNumber(page);
-                                                            setIsRefreshing(true);
-
-                                                        }
-
-                                                    }}
-                                                >{page}</span>
-                                            ))
-
-                                        }
-
-                                    </div>
-                                </div>
+                             <Pagination pages={pages} pageNumber={pageNumber} totalPage={totalPage} setPageNumber={setPageNumber} setRefresh={setIsRefreshing} setPages={setPages} />
                             </div>
                         </div>
                     </div>

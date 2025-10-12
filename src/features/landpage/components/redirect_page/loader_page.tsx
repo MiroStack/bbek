@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Logo from '../../../../assets/img/logobbek.jpg';
 import { motion } from "framer-motion";
 import { Cookies } from '../../../../util/Cookies';
-import { useAppDispatch } from '../../../../datasource/redux/staff/hooks/hooks';
+import { useAppDispatch } from '../../../../datasource/redux/modules/hooks/hooks';
 import AuthRepo from '../../../../datasource/repositories/AuthRepo';
 import { useNavigate } from 'react-router-dom';
 import { setUserInfo } from '../../../../datasource/redux/user/UserSlice';

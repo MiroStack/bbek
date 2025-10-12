@@ -1,20 +1,22 @@
 import { useEffect, useReducer, useState } from "react";
 import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
 import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
-import { showCreateOffering, showUpdateOffering } from "../../../../datasource/redux/staff/church_record/OfferingSlice";
-import { useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks"
+import { showCreateOffering, showUpdateOffering } from "../../../../datasource/redux/modules/church_record/OfferingSlice";
+import { useAppSelector } from "../../../../datasource/redux/modules/hooks/hooks"
 import { Loader } from "../../../landpage/components/Loader";
-import { CreateOffering } from "../../components/offering/CreateOffering";
 import { useDispatch } from "react-redux";
 import {showErrorDialog,showWarningDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 import dayjs from "dayjs";
 import { WarningDialog } from "../../../../component/dialog/WarningDialog";
-import { UpdateOffering } from "../../components/offering/UpdateOffering";
 import type { PaginatedOfferingModel } from "../../../../datasource/models/Offering/PaginatedOfferingModel";
 import type { OfferingTypeModel } from "../../../../datasource/models/Offering/OfferingTypeModel";
 import type { OfferingPaymentModel } from "../../../../datasource/models/Offering/OfferingPaymentModel";
-import { OfferingService } from "../../components/offering/OfferingService";
+
 import { NoDataPage } from "../../../landpage/components/NoDataPage";
+import { ReloginDialog } from "../../../../component/dialog/ReloginDialog";
+import { OfferingService } from "../../../../component/components/offering/OfferingService";
+import { CreateOffering } from "../../../../component/components/offering/CreateOffering";
+import { UpdateOffering } from "../../../../component/components/offering/UpdateOffering";
 export const OfferingTypes = {
     all: "ALL",
     offering: "OFFERING",
@@ -53,6 +55,7 @@ const reducer = (state: PaginatedOfferingModel[], action: ActionModel) => {
 
 
 export const TithesOfferingPage = () => {
+    const relogin = useAppSelector((state => state.dialog.relogin));
     const offeringForm = useAppSelector((state => state.offeringForm.value));
     const loaderDialog = useAppSelector((state => state.dialog.loader));
     const errorDialog = useAppSelector((state => state.dialog.error));
@@ -106,12 +109,10 @@ export const TithesOfferingPage = () => {
         }
 
     }, [allOffering]);
-
-
-
     const dispatch = useDispatch();
     return (
         <>
+            {relogin && <ReloginDialog/>}
             <div className={`${offeringForm ? '' : 'hidden'}`}>
                 <CreateOffering setIsRefreshing={setIsRefreshing} />
             </div>

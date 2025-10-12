@@ -1,7 +1,7 @@
 
 import { IoIosCheckmarkCircle } from "react-icons/io";
 
-import { useAppSelector } from "../../datasource/redux/staff/hooks/hooks.tsx";
+import { useAppSelector } from "../../datasource/redux/modules/hooks/hooks.tsx";
 import { useDispatch } from "react-redux";
 import { hideSuccessDialog } from "../../datasource/redux/dialog/DialogSlice.ts";
 export const SuccessDialog = () => {

@@ -12,7 +12,7 @@ import { SocialMediaGroups } from "./components/SocialMediaGroud";
 import { Navigation } from "./components/Navigation";
 import { WatchLive } from "./components/WacthLive";
 import { useDispatch } from "react-redux";
-import { useAppSelector } from "../../datasource/redux/staff/hooks/hooks";
+import { useAppSelector } from "../../datasource/redux/modules/hooks/hooks";
 import { hideLoader, showErrorDialog, showLoader } from "../../datasource/redux/dialog/DialogSlice";
 import { ErrorDialog2 } from "../../component/dialog/ErrorDialog2";
 import { SuccessDialog } from "../../component/dialog/SuccessDialog";

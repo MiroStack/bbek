@@ -4,7 +4,7 @@ import type { EventModel } from "../models/Event/EventModel";
 import { Cookies } from '../../util/Cookies';
 import type { EventStatusModel } from "../models/Event/EventStatusModel";
 import type { PaginatedEventsModel } from "../models/Event/PaginatedEventModel";
-import { useAppDispatch } from "../redux/staff/hooks/hooks";
+import { useAppDispatch } from "../redux/modules/hooks/hooks";
 import { showErrorDialog, showRelogin } from "../redux/dialog/DialogSlice";
 import { HandleResponse } from "./component/HandleResponse";
 

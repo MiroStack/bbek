@@ -1,7 +1,7 @@
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../../datasource/redux/staff/hooks/hooks";
-import OfferingRepo from "../../../datasource/repositories/OfferingRepo";
+import { useAppDispatch } from "../../../datasource/redux/modules/hooks/hooks";
+import {OfferingRepo} from "../../../datasource/repositories/OfferingRepo";
 import { hideLoader, showLoader, showSuccessDialog } from "../../../datasource/redux/dialog/DialogSlice";
 
 export const GiveOnlineForm = () => {
@@ -11,7 +11,7 @@ export const GiveOnlineForm = () => {
   const [donationType, setDonationType] = useState<number>(1);
   const [amount, setAmount] = useState<number>(50);
   const [showCustomAmount, setShowCustomAmount] = useState<boolean>(false);
-
+  const offeringRepo =  OfferingRepo();
 
   const handleShowCustomAmount = () => {
     setShowCustomAmount(!showCustomAmount);
@@ -37,7 +37,7 @@ export const GiveOnlineForm = () => {
   const handleDonationProcess = async () => {
     try {
       dispatch(showLoader());
-      const response = await OfferingRepo.submitDonation(donationType, amount);
+      const response = await offeringRepo.submitDonation(donationType, amount);
       dispatch(hideLoader());
       if (response.statusCode == 200) {
         sessionStorage.setItem("message", response.message);

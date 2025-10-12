@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../datasource/redux/modules/hooks/hooks";
 import type { MemberModel } from "../../../../datasource/models/member/MemberModel";
 import { hideLoader, showErrorDialog, showLoader } from "../../../../datasource/redux/dialog/DialogSlice";
-import MemberRepo from "../../../../datasource/repositories/MemberRepo";
+import {MemberRepo} from "../../../../datasource/repositories/MemberRepo";
 import { Loader } from "../../../../component/dialog/Loader";
 import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
 import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
 import { NoDataPage } from "../../../landpage/components/NoDataPage";
-import { Pagination } from "../../components/pagination/Pagination";
+
 import dayjs from "dayjs";
+import { Pagination } from "../../../../component/components/pagination/Pagination";
+import { ReloginDialog } from "../../../../component/dialog/ReloginDialog";
+
 
 export const MemberRecordPageAdmin = () => {
-
+    const reloginDialog = useAppSelector((state) => state.dialog.relogin);
     const dispatch = useAppDispatch();
     const loader = useAppSelector((state) => state.dialog.loader);
     const success = useAppSelector((state) => state.dialog.success);
@@ -23,6 +26,7 @@ export const MemberRecordPageAdmin = () => {
     const [pages, setPages] = useState([1, 2, 3, 4, 5, 6, 7]);
     const [totalPage, setTotalPage] = useState(1);
     const [selectedId, setSelectedId] = useState(-1);
+    
     useEffect(() => {
         if (isRefresh) {
             handleGetMembers();
@@ -30,18 +34,15 @@ export const MemberRecordPageAdmin = () => {
         }
 
     }, [isRefresh]);
-
+    const memberRepo = MemberRepo();
     const handleGetMembers = async () => {
         try {
             dispatch(showLoader());
-            const response = await MemberRepo.getMembers(query, pageNumber);
+            const response = await memberRepo.getMembers(query, pageNumber);
             dispatch(hideLoader());
             if (response.statusCode == 200) {
                 //  console.log(response.data);
                 setMemberList(response.data);
-            } else {
-                sessionStorage.setItem("message", response.message);
-                dispatch(showErrorDialog());
             }
         } catch (e) {
 
@@ -56,6 +57,7 @@ export const MemberRecordPageAdmin = () => {
     }
     return (
         <>
+           {reloginDialog && <ReloginDialog />}
             {loader && <Loader loader={loader} />}
             {success && <SuccessDialog />}
             {error && <ErrorDialog2 />}

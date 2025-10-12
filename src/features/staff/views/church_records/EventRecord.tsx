@@ -1,21 +1,25 @@
 import { useEffect, useState } from "react"
 import { useDispatch } from "react-redux";
-import { showCreateEvent, showUpdateEvent } from "../../../../datasource/redux/staff/church_record/EventSlice";
-import { useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks";
-import { CreateEventForm } from "../../components/events/CreateEventForm";
+import { showCreateEvent, showUpdateEvent } from "../../../../datasource/redux/modules/church_record/EventSlice";
+import { useAppSelector } from "../../../../datasource/redux/modules/hooks/hooks";
+
 import { Loader } from "../../../landpage/components/Loader";
 import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
 import { WarningDialog } from "../../../../component/dialog/WarningDialog";
 import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
 import { showErrorDialog, showRelogin, showWarningDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
-import { UpdateEventForm } from "../../components/events/UpdateEventForm";
+
 import dayjs from "dayjs";
 import type { PaginatedEventsModel } from "../../../../datasource/models/Event/PaginatedEventModel";
 import type { EventStatusModel } from "../../../../datasource/models/Event/EventStatusModel";
 import { NoDataPage } from "../../../landpage/components/NoDataPage";
-import { EventService } from "../../components/events/EventService";
+
 import { ReloginDialog } from "../../../../component/dialog/ReloginDialog";
+import { EventService } from "../../../../component/components/events/EventService";
+import { CreateEventForm } from "../../../../component/components/events/CreateEventForm";
+import { UpdateEventForm } from "../../../../component/components/events/UpdateEventForm";
+import { Pagination } from "../../../../component/components/pagination/Pagination";
 
 export const EventRecordPage = () => {
     const reloginDialog = useAppSelector((state) => state.dialog.relogin);
@@ -287,55 +291,10 @@ export const EventRecordPage = () => {
                                 </tbody>
                             </table>
                         </div>
-                        <div className="w-full p-4 flex items-center justify-center relative">
-                            <button className="cursor-pointer"
-                                onClick={() => {
-                                    if (pageNumber > 1) {
-                                        setPageNumber(pageNumber - 1);
-                                        setIsRefreshing(true);
-                                    } else {
-                                        sessionStorage.setItem("message", "No previous records available");
-                                        dispatch(showErrorDialog());
-                                    }
-                                }}
-                            >&laquo;</button>
-                            <span className="mx-4">{pageNumber} of {totalPage}</span>
-                            <button className="cursor-pointer"
-                                onClick={() => {
-                                    if (pageNumber < totalPage) {
-                                        setPageNumber(pageNumber + 1);
-                                        setIsRefreshing(true);
-                                    } else {
-                                        sessionStorage.setItem("message", "No more records available");
-                                        dispatch(showErrorDialog());
-                                    }
-                                }}
-                            >&raquo;</button>
+                        <Pagination pages={pages} pageNumber={pageNumber} totalPage={totalPage} setPageNumber={setPageNumber} setRefresh={setIsRefreshing} setPages={setPages}/> 
+                                               </div>
 
-                            <div className="absolute right-4 flex items-center gap-2">
-                                {
-                                    pages.map((page, index) => (
-                                        <span key={index} className={`p-1 ${pageNumber == page ? 'bg-green-200' : 'bg-gray-100'} w-7 text-center hover:cursor-pointer`}
-                                            onClick={() => {
-                                                if (totalPage < page) {
-                                                    sessionStorage.setItem("message", "No more records available");
-                                                    dispatch(showErrorDialog());
-                                                } else {
-                                                    setPageNumber(page);
-                                                    setIsRefreshing(true);
-
-                                                }
-
-                                            }}
-                                        >{page}</span>
-                                    ))
-
-                                }
-
-                            </div>
-                        </div>
-
-                    </div>
+                   
                 </div>
             </div>
         </>

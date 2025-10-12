@@ -13,7 +13,7 @@ import type { EventModel } from "../../../datasource/models/Event/EventModel";
 import dayjs from "dayjs";
 import instance from "../../../api/axios";
 import type { MinistryModel } from "../../../datasource/models/Ministry/MinistryModel";
-import MinistryRepo from "../../../datasource/repositories/MinistryRepo";
+import {MinistryRepo} from "../../../datasource/repositories/MinistryRepo";
 import { NoDataPage } from "../components/NoDataPage";
 export const Home = (prop: any) => {
   const navigate = useNavigate();
@@ -23,6 +23,7 @@ export const Home = (prop: any) => {
   const [upcomingMinistries, setUpcomingMinistries] = useState<MinistryModel[]>([]);
   const firstEvent = upcomingEvents[0];
   const eventrepo = EventRepo();
+  const ministryrepo = MinistryRepo();
 
   const handleEvent = async () => {
     const response = await eventrepo.getUpcomingEvents();
@@ -37,7 +38,7 @@ export const Home = (prop: any) => {
   }
 
   const handleMinistry = async () => {
-    const response = await MinistryRepo.getUpcomingMinistries();
+    const response = await ministryrepo.getUpcomingMinistries();
     if (response.statusCode == 200) {
       console.log(response.data);
       setUpcomingMinistries(response.data);

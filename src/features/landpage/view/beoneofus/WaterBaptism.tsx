@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { useEffect, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BaptismRepo from '../../../../datasource/repositories/BaptismRepo';
+import {BaptismRepo} from '../../../../datasource/repositories/BaptismRepo';
 import { useDispatch } from 'react-redux';
 import { hideLoader, showErrorDialog, showLoader, showSuccessDialog } from '../../../../datasource/redux/dialog/DialogSlice';
 import type { RegistrationModel } from '../../../../datasource/models/User/RegistrationModel';
@@ -18,7 +18,7 @@ export const WaterBaptismPage = () => {
     const [preferredDate, setPreferredDate] = useState("");
     const [gender, setGender] = useState("");
     const [age, setAge] = useState(0);
-
+    const baptismRepo = BaptismRepo();
     const dispatch = useDispatch();
 
     const handleFirstname = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -99,7 +99,7 @@ export const WaterBaptismPage = () => {
                 preferred_dt: preferredDate,
                 testimony: testimony
             }
-            const response = await BaptismRepo.submitBaptism(model);
+            const response = await baptismRepo.submitBaptism(model);
             dispatch(hideLoader());
             if (response.statusCode == 200) {
                 sessionStorage.setItem("message", response.message);

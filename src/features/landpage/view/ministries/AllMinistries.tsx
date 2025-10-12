@@ -2,17 +2,18 @@ import { useEffect, useState } from "react"
 import { JoinUsSection } from "../../components/JoinUsSection"
 import { MinistriesCard } from "../../components/MinistriesCard"
 import type { MinistryModel } from "../../../../datasource/models/Ministry/MinistryModel"
-import MinistryRepo from "../../../../datasource/repositories/MinistryRepo"
+import {MinistryRepo} from "../../../../datasource/repositories/MinistryRepo"
 import { motion } from "framer-motion"
 import { Link, useNavigate } from "react-router-dom"
 import { IoMdFunnel } from "react-icons/io"
 import { FaCalendarDays, FaClock, FaLocationDot } from "react-icons/fa6"
 import { JoinCard } from "../../components/JoinCard"
 import { showErrorDialog } from "../../../../datasource/redux/dialog/DialogSlice"
-import { useAppDispatch } from "../../../../datasource/redux/staff/hooks/hooks"
+import { useAppDispatch } from "../../../../datasource/redux/modules/hooks/hooks"
 export const AllMinistries = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const ministryRepo = MinistryRepo();
   const [ministryData, setMinistryData] = useState<MinistryModel[]>([]);
   const [showJoinEvent, setShowJoinEvent] = useState<boolean>(false);
   const [showSort, setShowSort] = useState(false);
@@ -58,7 +59,7 @@ export const AllMinistries = () => {
     console.log(pageNumber);
   }, [pageNumber, totalPage]);
   const getAllMinistryList = async () => {
-    const data = await MinistryRepo.getAllMinistry(query, pageNumber);
+    const data = await ministryRepo.getAllMinistry(query, pageNumber);
     console.log(query);
     console.log(data);
     setMinistryData(data);

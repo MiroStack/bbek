@@ -1,14 +1,12 @@
 import {
   showMinistry,
   showUpdateMinistry,
-} from "../../../../datasource/redux/staff/church_record/MinistrySlice";
+} from "../../../../datasource/redux/modules/church_record/MinistrySlice";
 import { useDispatch } from "react-redux";
-import { useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks";
+import { useAppSelector } from "../../../../datasource/redux/modules/hooks/hooks";
 import { use, useEffect, useLayoutEffect, useState } from "react";
-import MinistryRepo from "../../../../datasource/repositories/MinistryRepo";
-import type { MinistryModel } from "../../../../datasource/models/Ministry/MinistryModel";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
-import { CreateMinistryForm } from "../../components/ministry/CreateMinistryForm";
+
 import { Loader } from "../../../landpage/components/Loader";
 import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
 import { WarningDialog } from "../../../../component/dialog/WarningDialog";
@@ -17,14 +15,20 @@ import {
   showErrorDialog,
   showWarningDialog,
 } from "../../../../datasource/redux/dialog/DialogSlice";
-import { UpdateMinistryForm } from "../../components/ministry/UpdateMinistryForm";
+
 import type { PaginatedMinistryModel } from "../../../../datasource/models/Ministry/PaginatedMinistryModel";
 import type { MinistryStatusModel } from "../../../../datasource/models/Ministry/MinistryStatusModel";
-import { MinistryService } from "../../components/ministry/MinistryService";
+
 import { NoDataPage } from "../../../landpage/components/NoDataPage";
+import { ReloginDialog } from "../../../../component/dialog/ReloginDialog";
+import { MinistryService } from "../../../../component/components/ministry/MinistryService";
+import { CreateMinistryForm } from "../../../../component/components/ministry/CreateMinistryForm";
+import { UpdateMinistryForm } from "../../../../component/components/ministry/UpdateMinistryForm";
+import { Pagination } from "../../../../component/components/pagination/Pagination";
 
 export const MinistriesStaffPage = () => {
   const dispatch = useDispatch();
+  const reloginDialog = useAppSelector((state) => state.dialog.relogin);
   const ministryForm = useAppSelector((state) => state.ministryForm.value);
   const ministryEditForm = useAppSelector((state) => state.ministryForm.edit);
   const loaderDialog = useAppSelector((state) => state.dialog.loader);
@@ -59,6 +63,7 @@ export const MinistriesStaffPage = () => {
 
   return (
     <>
+    {reloginDialog && <ReloginDialog/>}
       {ministryForm && (<CreateMinistryForm setIsRefresh={setIsRefreshing} />)}
       {ministryEditForm && (<UpdateMinistryForm setIsRefresh={setIsRefreshing} />)}
       <Loader loader={loaderDialog} />
@@ -326,53 +331,8 @@ export const MinistriesStaffPage = () => {
                   </tbody>
                 </table>
               </div>
-              <div className="w-full p-4 flex items-center justify-center relative">
-                <button className="cursor-pointer"
-                  onClick={() => {
-                    if (pageNumber > 1) {
-                      setPageNumber(pageNumber - 1);
-                      setIsRefreshing(true);
-                    } else {
-                      sessionStorage.setItem("message", "No previous records available");
-                      dispatch(showErrorDialog());
-                    }
-                  }}
-                >&laquo;</button>
-                <span className="mx-4">{pageNumber} of {totalPage}</span>
-                <button className="cursor-pointer"
-                  onClick={() => {
-                    if (pageNumber < totalPage) {
-                      setPageNumber(pageNumber + 1);
-                      setIsRefreshing(true);
-                    } else {
-                      sessionStorage.setItem("message", "No more records available");
-                      dispatch(showErrorDialog());
-                    }
-                  }}
-                >&raquo;</button>
-
-                <div className="absolute right-4 flex items-center gap-2">
-                  {
-                    pages.map((page, index) => (
-                      <span key={index} className={`p-1 ${pageNumber == page ? 'bg-green-200' : 'bg-gray-100'} w-7 text-center hover:cursor-pointer`}
-                        onClick={() => {
-                          if (totalPage < page) {
-                            sessionStorage.setItem("message", "No more records available");
-                            dispatch(showErrorDialog());
-                          } else {
-                            setPageNumber(page);
-                            setIsRefreshing(true);
-
-                          }
-
-                        }}
-                      >{page}</span>
-                    ))
-
-                  }
-
-                </div>
-              </div>
+               <Pagination pages={pages} pageNumber={pageNumber} totalPage={totalPage} setPageNumber={setPageNumber} setRefresh={setIsRefreshing} setPages={setPages}/> 
+                       
             </div>
           </div>
         </div>

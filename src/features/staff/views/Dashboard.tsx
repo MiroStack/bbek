@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { KpiMetrics } from "../components/dashboard/KpiMetrics";
+
 import type { UserInfoModel } from "../../../datasource/models/User/UserInfoModel";
 import { Link } from "react-router-dom";
+import { KpiMetrics } from "../../../component/components/dashboard/KpiMetrics";
 
 
 export const DashboardPage = () => {

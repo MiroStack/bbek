@@ -2,7 +2,7 @@
 import { useDispatch } from "react-redux";
 import { hideErrorDialog} from "../../datasource/redux/dialog/DialogSlice.ts";
 import { IoIosCloseCircle } from "react-icons/io";
-import { useAppSelector } from "../../datasource/redux/staff/hooks/hooks.tsx";
+import { useAppSelector } from "../../datasource/redux/modules/hooks/hooks.tsx";
 export const ErrorDialog2 = () => {
   const errorDialog = useAppSelector((state) => state.dialog.error);
     const dispatch = useDispatch();

@@ -8,7 +8,7 @@ import { FaCalendarDays, FaClock, FaLocationDot } from "react-icons/fa6";
 import dayjs from "dayjs";
 import { JoinCard } from "../../components/JoinCard";
 import { showErrorDialog } from "../../../../datasource/redux/dialog/DialogSlice";
-import { useAppDispatch } from "../../../../datasource/redux/staff/hooks/hooks";
+import { useAppDispatch } from "../../../../datasource/redux/modules/hooks/hooks";
 export const AllEventsPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();

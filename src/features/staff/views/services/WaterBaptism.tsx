@@ -1,19 +1,24 @@
 import { useEffect, useState } from "react";
 import type { BaptismResponseModel } from "../../../../datasource/models/baptism/BaptismResponseModel";
-import BaptismRepo from "../../../../datasource/repositories/BaptismRepo";
+import { BaptismRepo } from "../../../../datasource/repositories/BaptismRepo";
 import { hideLoader, showErrorDialog, showLoader } from "../../../../datasource/redux/dialog/DialogSlice";
-import { useAppDispatch, useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../../datasource/redux/modules/hooks/hooks";
 import { NoDataPage } from "../../../landpage/components/NoDataPage";
-import { Pagination } from "../../components/pagination/Pagination";
-import { UpdateBaptismRecord } from "../../components/baptism/UpdateBaptismRecord";
-import { showUpdateBaptism } from "../../../../datasource/redux/staff/service/BaptismSlice";
+
+import { showAddBaptism, showUpdateBaptism } from "../../../../datasource/redux/modules/service/BaptismSlice";
 import { Loader } from "../../../../component/dialog/Loader";
 import dayjs from "dayjs";
 import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
 import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
+import { UpdateBaptismRecord } from "../../../../component/components/baptism/UpdateBaptismRecord";
+import { Pagination } from "../../../../component/components/pagination/Pagination";
+import { ReloginDialog } from "../../../../component/dialog/ReloginDialog";
+import { AddBaptismRecord } from "../../../../component/components/baptism/AddBaptism";
 
 export const WaterBaptism_Page = () => {
     const dispatch = useAppDispatch();
+    const addBaptism = useAppSelector((state) => state.baptism.add);
+    const reloginDialog = useAppSelector((state) => state.dialog.relogin);
     const editBaptism = useAppSelector((state) => state.baptism.edit);
     const loader = useAppSelector((state) => state.dialog.loader);
     const success = useAppSelector((state) => state.dialog.success);
@@ -25,6 +30,7 @@ export const WaterBaptism_Page = () => {
     const [pages, setPages] = useState([1, 2, 3, 4, 5, 6, 7]);
     const [totalPage, setTotalPage] = useState(1);
     const [selectedId, setSelectedId] = useState(-1);
+    const baptismRepo = BaptismRepo();
     useEffect(() => {
         if (isRefresh) {
             handleGetBaptism();
@@ -36,14 +42,11 @@ export const WaterBaptism_Page = () => {
     const handleGetBaptism = async () => {
         try {
             dispatch(showLoader());
-            const response = await BaptismRepo.getBaptism(query, pageNumber);
+            const response = await baptismRepo.getBaptism(query, pageNumber);
             dispatch(hideLoader());
             if (response.statusCode == 200) {
                 setBaptismList(response.data);
-            } else {
-                sessionStorage.setItem("message", response.message);
-                dispatch(showErrorDialog());
-            }
+            } 
         } catch (e) {
 
         } finally {
@@ -57,7 +60,9 @@ export const WaterBaptism_Page = () => {
     }
     return (
         <>
-            {editBaptism && <UpdateBaptismRecord setIsRefresh={setIsRefresh}/>}
+            {addBaptism && <AddBaptismRecord setIsRefresh={setIsRefresh} />}
+            {reloginDialog && <ReloginDialog />}
+            {editBaptism && <UpdateBaptismRecord setIsRefresh={setIsRefresh} />}
             {loader && <Loader loader={loader} />}
             {success && <SuccessDialog />}
             {error && <ErrorDialog2 />}
@@ -69,6 +74,7 @@ export const WaterBaptism_Page = () => {
                         <button
                             className="!bg-green-600 text-white hover:!bg-green-500 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
                             name="add-new-baptism-btn"
+                            onClick={()=>dispatch(showAddBaptism())}
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"

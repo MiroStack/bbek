@@ -1,14 +1,10 @@
 import {
   showMinistry,
   showUpdateMinistry,
-} from "../../../../datasource/redux/staff/church_record/MinistrySlice";
-import { useDispatch } from "react-redux";
-import { useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks";
-import { use, useEffect, useLayoutEffect, useState } from "react";
-import MinistryRepo from "../../../../datasource/repositories/MinistryRepo";
-import type { MinistryModel } from "../../../../datasource/models/Ministry/MinistryModel";
+} from "../../../../datasource/redux/modules/church_record/MinistrySlice";
+import { useAppDispatch, useAppSelector } from "../../../../datasource/redux/modules/hooks/hooks";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
-import { CreateMinistryForm } from "../../components/ministry/CreateMinistryForm";
+
 import { Loader } from "../../../landpage/components/Loader";
 import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
 import { WarningDialog } from "../../../../component/dialog/WarningDialog";
@@ -17,14 +13,22 @@ import {
   showErrorDialog,
   showWarningDialog,
 } from "../../../../datasource/redux/dialog/DialogSlice";
-import { UpdateMinistryForm } from "../../components/ministry/UpdateMinistryForm";
+
 import type { PaginatedMinistryModel } from "../../../../datasource/models/Ministry/PaginatedMinistryModel";
 import type { MinistryStatusModel } from "../../../../datasource/models/Ministry/MinistryStatusModel";
-import { MinistryService } from "../../components/ministry/MinistryService";
+
 import { NoDataPage } from "../../../landpage/components/NoDataPage";
+import { useState } from "react";
+import { ReloginDialog } from "../../../../component/dialog/ReloginDialog";
+import { MinistryService } from "../../../../component/components/ministry/MinistryService";
+import { CreateMinistryForm } from "../../../../component/components/ministry/CreateMinistryForm";
+import { UpdateMinistryForm } from "../../../../component/components/ministry/UpdateMinistryForm";
+
 
 export const MinistriesAdminPage = () => {
-  const dispatch = useDispatch();
+
+  const dispatch = useAppDispatch();
+  const reloginDialog = useAppSelector((state) => state.dialog.relogin);
   const ministryForm = useAppSelector((state) => state.ministryForm.value);
   const ministryEditForm = useAppSelector((state) => state.ministryForm.edit);
   const loaderDialog = useAppSelector((state) => state.dialog.loader);
@@ -59,6 +63,7 @@ export const MinistriesAdminPage = () => {
 
   return (
     <>
+      {reloginDialog && <ReloginDialog/>}
       {ministryForm && (<CreateMinistryForm setIsRefresh={setIsRefreshing} />)}
       {ministryEditForm && (<UpdateMinistryForm setIsRefresh={setIsRefreshing} />)}
       <Loader loader={loaderDialog} />

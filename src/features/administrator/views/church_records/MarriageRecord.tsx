@@ -3,21 +3,24 @@ import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
 import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
 import { WarningDialog } from "../../../../component/dialog/WarningDialog";
 import type { MarriageStatusesModel } from "../../../../datasource/models/Marriage/MarriageStatusesModel";
-import { useAppDispatch, useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks";
-import { MarriageRepo } from "../../../../datasource/repositories/MarriageRepo"
+import { useAppDispatch, useAppSelector } from "../../../../datasource/redux/modules/hooks/hooks";
 import { Loader } from "../../../landpage/components/Loader";
 import type { MarriageLocationsModel } from "../../../../datasource/models/Marriage/MarriageLocationsModel";
 import type { MarriageModel } from "../../../../datasource/models/Marriage/MarriageModel";
 import { hideLoader, showErrorDialog, showLoader, showSuccessDialog, showWarningDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 import dayjs from "dayjs";
-import { CreateMarriageRecord } from "../../components/marriage/CreateMarriageRecord";
-import { showCreateMarriage, showUpdateMarriage } from "../../../../datasource/redux/staff/church_record/MarriageSlice";
-import { UpdateMarriageRecord } from "../../components/marriage/UpdateMarriageRecord";
+import { showCreateMarriage, showUpdateMarriage } from "../../../../datasource/redux/modules/church_record/MarriageSlice";
 import { NoDataPage } from "../../../landpage/components/NoDataPage";
-import { MarriageService } from "../../components/marriage/MarriageService";
-import { Pagination } from "../../components/pagination/Pagination";
+import { MarriageService } from "../../../../component/components/marriage/MarriageService";
+import { CreateMarriageRecord } from "../../../../component/components/marriage/CreateMarriageRecord";
+import { UpdateMarriageRecord } from "../../../../component/components/marriage/UpdateMarriageRecord";
+import { Pagination } from "../../../../component/components/pagination/Pagination";
+import { ReloginDialog } from "../../../../component/dialog/ReloginDialog";
+
+
 export const MarriageRecordPageAdmin = () => {
     const dispatch = useAppDispatch();
+    const reloginDialog = useAppSelector((state) => state.dialog.relogin);
     const [refresh, setRefresh] = useState<boolean>(true);
     const showMarriageForm = useAppSelector((state) => state.marriageForm.value);
     const displayUpdateMarriage = useAppSelector((state) => state.marriageForm.edit);
@@ -59,6 +62,7 @@ export const MarriageRecordPageAdmin = () => {
     return (
 
         <>
+            {reloginDialog && <ReloginDialog/>}
             {showMarriageForm && (<CreateMarriageRecord marriageStatuses={statusRef} marriageLocations={locationRef} setRefresh={setRefresh} />)}
             {displayUpdateMarriage && (<UpdateMarriageRecord marriageStatuses={statusRef} marriageLocations={locationRef} marriageRecord={selectedItem} setSelectedItem={setSelectedItem} setRefresh={setRefresh} />)}
             {successDialog && (<SuccessDialog />)}

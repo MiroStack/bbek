@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Loader } from "../components/Loader";
 import { ErrorDialog2 } from "../../../component/dialog/ErrorDialog2";
 import { SuccessDialog } from "../../../component/dialog/SuccessDialog";
-import { useAppSelector } from "../../../datasource/redux/staff/hooks/hooks";
+import { useAppSelector } from "../../../datasource/redux/modules/hooks/hooks";
 export const GivePage = () => {
   const loaderDialog = useAppSelector((state) => state.dialog.loader);
   const errorDialog = useAppSelector((state) => state.dialog.error);

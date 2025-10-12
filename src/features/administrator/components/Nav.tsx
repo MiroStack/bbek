@@ -4,14 +4,16 @@ import { FaAngleDown } from "react-icons/fa";
 import { IoPersonSharp, IoSettingsSharp, IoLogOut } from "react-icons/io5";
 import { Cookies } from "../../../util/Cookies";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../datasource/redux/staff/hooks/hooks";
+import { useAppDispatch, useAppSelector } from "../../../datasource/redux/modules/hooks/hooks";
 import { clearUserInfo } from "../../../datasource/redux/user/UserSlice";
 import type { UserInfoModel } from "../../../datasource/models/User/UserInfoModel";
-import { hideErrorDialog, hideLoader, hideSuccessDialog } from "../../../datasource/redux/dialog/DialogSlice";
+import { LogoutFunction } from "../../../component/function/LogoutFunction";
+
 export const Nav = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const token = Cookies.getCookie("auth_token");
+  const logoutFunc = LogoutFunction();
   useEffect(() => {
     if (!token) {
       navigate("/");
@@ -19,11 +21,15 @@ export const Nav = () => {
   }, [])
   // const userInfo = useAppSelector((state) => state.userInfo.value);
   const userInfo = sessionStorage.getItem("userInfo")
-  const [userInfoState, setUserInfoState] = useState<UserInfoModel>(userInfo == null?  {} as UserInfoModel : JSON.parse(userInfo));
+  const [userInfoState, setUserInfoState] = useState<UserInfoModel>(userInfo == null ? {} as UserInfoModel : JSON.parse(userInfo));
   const [showSidePanel, setSidePanel] = useState(false);
   const handleToggleSidePanel = () => {
     setSidePanel(!showSidePanel);
   };
+  function hideAllDialog(): any {
+    throw new Error("Function not implemented.");
+  }
+
   return (<div className="">
     <div className="flex items-center justify-start h-12 gap-1 border-b-2 relative">
       <div className="h-100  flex ml-auto items-center cursor-pointer p-2 hover:bg-gray-100 hover:rounded-md" onClick={handleToggleSidePanel}>
@@ -48,14 +54,7 @@ export const Nav = () => {
         <ul className='flex flex-col gap-2'>
           <li className="flex items-center text-sm gap-1 font-semibold text-gray-600 hover:text-blue-500 cursor-pointer"><IoPersonSharp /> <span>My Account</span></li>
           <li className="flex items-center text-sm gap-1 font-semibold text-gray-600 hover:text-blue-500 cursor-pointer"><IoSettingsSharp /> <span>Settings</span></li>
-          <li className="flex items-center text-sm gap-1 font-semibold text-red-600 hover:text-blue-500 cursor-pointer" onClick={() => {
-            Cookies.deleteCookie("auth_token");
-            dispatch(clearUserInfo());
-            dispatch(hideLoader());
-            dispatch(hideSuccessDialog());
-            dispatch(hideErrorDialog());
-            navigate("/");
-          }}><IoLogOut /><span>Logout</span></li>
+          <li className="flex items-center text-sm gap-1 font-semibold text-red-600 hover:text-blue-500 cursor-pointer" onClick={() => logoutFunc.logout()}><IoLogOut /><span>Logout</span></li>
         </ul>
 
       </div>

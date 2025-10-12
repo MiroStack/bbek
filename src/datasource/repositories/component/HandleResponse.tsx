@@ -1,4 +1,4 @@
-import { useAppDispatch } from "../../redux/staff/hooks/hooks";
+import { useAppDispatch } from "../../redux/modules/hooks/hooks";
 import { showErrorDialog, showRelogin } from "../../redux/dialog/DialogSlice";
 export const HandleResponse = () => {
       const dispatch = useAppDispatch();

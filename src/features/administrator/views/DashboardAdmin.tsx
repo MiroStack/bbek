@@ -1,15 +1,7 @@
 import { useState } from "react";
-import { useAppSelector } from "../../../datasource/redux/staff/hooks/hooks";
-import { KpiMetrics } from "../components/dashboard/KpiMetrics";
-import { PrayerRequest } from "../components/dashboard/PrayerRequest";
-import { QuickActions } from "../components/dashboard/QuickActions";
-import { RecentMember } from "../components/dashboard/RecentMember";
-import { RecentService } from "../components/dashboard/RecentService";
-import { Resources } from "../components/dashboard/Resources";
-import { ServiceStatistic } from "../components/dashboard/ServiceStatistic";
-import { UpcomingEvent } from "../components/dashboard/UpcomingEvent";
 import type { UserInfoModel } from "../../../datasource/models/User/UserInfoModel";
 import { Link } from "react-router-dom";
+import { KpiMetrics } from "../../../component/components/dashboard/KpiMetrics";
 
 
 export const DashboardAdminPage = () => {
