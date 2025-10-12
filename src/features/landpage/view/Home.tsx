@@ -8,7 +8,7 @@ import image4 from "../../../assets/img/hero5.jpg";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaCalendar } from "react-icons/fa6";
-import EventRepo from "../../../datasource/repositories/EventRepo";
+import {EventRepo} from "../../../datasource/repositories/EventRepo";
 import type { EventModel } from "../../../datasource/models/Event/EventModel";
 import dayjs from "dayjs";
 import instance from "../../../api/axios";
@@ -22,9 +22,10 @@ export const Home = (prop: any) => {
   const [upcomingEvents, setUpcomingEvents] = useState<EventModel[]>([]);
   const [upcomingMinistries, setUpcomingMinistries] = useState<MinistryModel[]>([]);
   const firstEvent = upcomingEvents[0];
+  const eventrepo = EventRepo();
 
   const handleEvent = async () => {
-    const response = await EventRepo.getUpcomingEvents();
+    const response = await eventrepo.getUpcomingEvents();
     if (response.statusCode == 200) {
       console.log(response.data);
       setUpcomingEvents(response.data);

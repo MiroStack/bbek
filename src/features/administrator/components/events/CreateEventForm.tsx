@@ -3,13 +3,14 @@ import dayjs from "dayjs";
 import { useSelector, useDispatch } from 'react-redux';
 import { hideLoader, showLoader, showSuccessDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 import { hideCreateEvent } from "../../../../datasource/redux/staff/church_record/EventSlice";
-import EventRepo from "../../../../datasource/repositories/EventRepo";
+import { EventRepo } from "../../../../datasource/repositories/EventRepo";
 type CreateEventFormProps = {
 
     setIsRefreshing: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export const CreateEventForm = ({setIsRefreshing}:CreateEventFormProps) => {
        const dispatch = useDispatch();
+       const repo = EventRepo();
     const [showStatus, setShowStatus] = useState(false);
     const [showEventStatus, setShowEventStatus] = useState(false);
     const [eventType, setEventType] = useState("");
@@ -74,7 +75,7 @@ export const CreateEventForm = ({setIsRefreshing}:CreateEventFormProps) => {
             return;
         }
         try {
-            const response = await EventRepo.saveEvent(
+            const response = await repo.saveEvent(
                 "0", 
                 eventName,
                 eventType,

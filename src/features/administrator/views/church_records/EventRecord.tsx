@@ -15,9 +15,11 @@ import type { PaginatedEventsModel } from "../../../../datasource/models/Event/P
 import type { EventStatusModel } from "../../../../datasource/models/Event/EventStatusModel";
 import { NoDataPage } from "../../../landpage/components/NoDataPage";
 import { EventService } from "../../components/events/EventService";
+import { ReloginDialog } from "../../../../component/dialog/ReloginDialog";
 
 
 export const EventRecordPageAdmin = () => {
+    const reloginDialog = useAppSelector((state) => state.dialog.relogin);
     const eventCreateForm = useAppSelector((state) => state.eventForm.value);
         const eventEditForm = useAppSelector((state) => state.eventForm.edit);
         const loaderDialog = useAppSelector((state) => state.dialog.loader);
@@ -64,6 +66,7 @@ export const EventRecordPageAdmin = () => {
     
         return (
             <>
+               {reloginDialog && <ReloginDialog/>}
                 <div className={`${eventCreateForm ? "" : "hidden"}`}>
                     <CreateEventForm setIsRefreshing={setIsRefreshing} />
                 </div>

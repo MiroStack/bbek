@@ -1,13 +1,13 @@
 
 import { hideLoader, showErrorDialog, showLoader, showRelogin, showSuccessDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 import { useDispatch } from "react-redux";
-import EventRepo from "../../../../datasource/repositories/EventRepo";
 import { useNavigate } from "react-router-dom";
 import type React from "react";
 import { Cookies } from "../../../../util/Cookies";
 import type { PaginatedEventsModel } from "../../../../datasource/models/Event/PaginatedEventModel";
 import type { EventStatusModel } from "../../../../datasource/models/Event/EventStatusModel";
 import { useEffect, useLayoutEffect } from "react";
+import { EventRepo } from "../../../../datasource/repositories/EventRepo";
 interface EventServiceProps {
     query: string;
     pageNumber: number;
@@ -37,7 +37,8 @@ export const EventService = ({
 }: EventServiceProps) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    
+    const repo = EventRepo();
+
     // Whenever pageNumber or totalPage changes, update visible pages
     useEffect(() => {
         setTotalPage(Math.ceil((eventData[0]?.totalRows ?? 0) / 11));
@@ -63,18 +64,15 @@ export const EventService = ({
     const fetchEventData = async () => {
         try {
             dispatch(showLoader());
-            const res = await EventRepo.getPaginatedEvents(query,  pageNumber, selectedStatus);
+            const res = await repo.getPaginatedEvents(query, pageNumber, selectedStatus);
             dispatch(hideLoader());
-            if (res.status == 200 && res.data.statusCode == 200) {
-                setEventData(res.data.data);
+            if (res.statusCode == 200) {
+                setEventData(res.data);
             }
-            else if (res.status == 401) {
-              
-                dispatch(showRelogin());
-            } 
+            
             else {
-                sessionStorage.setItem("message", res.data.message);
-               // dispatch(showErrorDialog());
+              //  sessionStorage.setItem("message", res.message);
+                //dispatch(showErrorDialog());
             }
 
         } catch (e) {
@@ -86,16 +84,15 @@ export const EventService = ({
     const fetchEventStatuses = async () => {
         try {
             dispatch(showLoader());
-            const res = await EventRepo.getEventStatuses();
+            const res = await repo.getEventStatuses();
             dispatch(hideLoader());
-            if (res.status == 200 && res.data.statusCode == 200) {
-                setEventStatuses(res.data.data);
-            } else if (res.status == 401) {
-                 dispatch(showRelogin());
-            } else {
-                sessionStorage.setItem("message", res.data.message);
-               dispatch(showErrorDialog());
+            if (res.statusCode == 200) {
+                setEventStatuses(res.data);
             }
+            //  else {
+            //     sessionStorage.setItem("message", res.message);
+            //    dispatch(showErrorDialog());
+            // }
         } catch (e) {
             console.error(e);
         } finally {
@@ -106,7 +103,7 @@ export const EventService = ({
     const handleDeleteEvent = async () => {
         dispatch(showLoader());
         try {
-            const response = await EventRepo.deleteEvent(Number(sessionStorage.getItem("id")));
+            const response = await repo.deleteEvent(Number(sessionStorage.getItem("id")));
             if (response.statusCode == 200) {
                 setTimeout(() => {
                     sessionStorage.setItem("message", response.message);

@@ -2,7 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useDispatch } from 'react-redux';
 import { hideLoader, showErrorDialog, showLoader, showSuccessDialog } from "../../../../datasource/redux/dialog/DialogSlice";
 import { hideUpdateEvent } from "../../../../datasource/redux/staff/church_record/EventSlice";
-import EventRepo from "../../../../datasource/repositories/EventRepo";
+import {EventRepo} from "../../../../datasource/repositories/EventRepo";
 import { useAppSelector } from "../../../../datasource/redux/staff/hooks/hooks";
 type UpdateEventFormProps = {
 
@@ -23,6 +23,7 @@ export const UpdateEventForm = ({ setIsRefreshing }: UpdateEventFormProps) => {
     const [description, setDescription] = useState("");
     const [eventName, setEventName] = useState("");
     const [file, setFile] = useState<File | null>(null);
+    const repo = EventRepo();
 
     useEffect(() => {
         if(updateEventForm) {
@@ -32,7 +33,7 @@ export const UpdateEventForm = ({ setIsRefreshing }: UpdateEventFormProps) => {
     const getEventData = async () => {
         dispatch(showLoader());
         try {
-            const response = await EventRepo.getEvent(parseInt(sessionStorage.getItem("id") || "0"));
+            const response = await repo.getEvent(parseInt(sessionStorage.getItem("id") || "0"));
             if (response.statusCode === 200) {
                 setEventName(response.data.eventName);
                 setEventType(response.data.eventType);
@@ -45,11 +46,7 @@ export const UpdateEventForm = ({ setIsRefreshing }: UpdateEventFormProps) => {
                 setDescription(response.data.description);
                 setFile(null); // Reset file input
                 dispatch(hideLoader());
-            } else {
-                sessionStorage.setItem("message", response.message);
-                dispatch(showErrorDialog());
-                dispatch(hideLoader());
-            }
+            } 
         } catch (e) {
             console.error("Error fetching event data:", e);
             dispatch(hideLoader());
@@ -104,7 +101,7 @@ export const UpdateEventForm = ({ setIsRefreshing }: UpdateEventFormProps) => {
         e.preventDefault();
         dispatch(showLoader());
         try {
-            const response = await EventRepo.saveEvent(
+            const response = await repo.saveEvent(
                 sessionStorage.getItem("id") || "0",
                 eventName,
                 eventType,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { EventModel } from "../../../../datasource/models/Event/EventModel";
-import EventRepo from "../../../../datasource/repositories/EventRepo";
+import {EventRepo} from "../../../../datasource/repositories/EventRepo";
 import { motion } from "framer-motion";
 import { IoMdFunnel } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
@@ -21,6 +21,7 @@ export const AllEventsPage = () => {
   const [totalPage, setTotalPage] = useState(1);
   const [refresh, setIsRefreshing] = useState<boolean>(true);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const repo = EventRepo();
   const handleJoinEvent = () => {
     setShowJoinEvent(!showJoinEvent);
   }
@@ -56,7 +57,7 @@ export const AllEventsPage = () => {
 
   const fetchEventData = async () => {
     try {
-      const res = await EventRepo.getAllEvent(query, pageNumber, selectedStatus);
+      const res = await repo.getAllEvent(query, pageNumber, selectedStatus);
       console.log(res);
       setEventDate(res);
     } catch (e) { }
