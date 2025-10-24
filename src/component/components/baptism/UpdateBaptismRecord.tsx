@@ -44,7 +44,7 @@ export const UpdateBaptismRecord = ({setIsRefresh}:UpdateBaptismRecordProps) => 
     const handleBaptismDate = (e: React.ChangeEvent<HTMLInputElement>) => {
          const date1 = new Date(e.target.value);
         const date = new Date();
-        if (date == date1 || date1 < date) {
+        if (date1 < date) {
             alert("Invalid Dates.");
             setBaptismDate("");
             return;
@@ -183,6 +183,7 @@ export const UpdateBaptismRecord = ({setIsRefresh}:UpdateBaptismRecordProps) => 
                             Baptism Status
                         </label>
                         <button
+                            type="button"
                             onClick={handleBaptismDropDown}
                             className="flex h-8 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1"
                             id="new-status"
@@ -241,6 +242,7 @@ export const UpdateBaptismRecord = ({setIsRefresh}:UpdateBaptismRecordProps) => 
                             Baptism Officiant
                         </label>
                         <button
+                            type="button"
                             onClick={handleOfficiantDropdown}
                             className="flex h-8 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1"
                             id="new-status"
