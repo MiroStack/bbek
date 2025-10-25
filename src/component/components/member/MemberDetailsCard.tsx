@@ -10,6 +10,7 @@ import { hideLoader, showLoader } from "../../../datasource/redux/dialog/DialogS
 import { Loader } from "../../dialog/Loader";
 import { SuccessDialog } from "../../dialog/SuccessDialog";
 import { ErrorDialog2 } from "../../dialog/ErrorDialog2";
+import { EditMemberDetails } from "./EditMemberDetails";
 
 export const MemberDetailsCard = () => {
   const dialog = useAppSelector((state)=>state.dialog);
@@ -18,6 +19,7 @@ export const MemberDetailsCard = () => {
  
   const [memberDetails, setMemberDetails]= useState<MemberDetailsModel>();
   const memberRepo = MemberRepo();
+  const [editDetails, setEditDetails] = useState<boolean>(false);
 
   useEffect(()=>{
     fetchMemberDetails();
@@ -44,7 +46,8 @@ export const MemberDetailsCard = () => {
           {dialog.success && <SuccessDialog/>}
           {dialog.error && <ErrorDialog2/>}
           {memberDetails ? (
-            <ViewMemberDetails memberDetails={memberDetails} />
+             !editDetails? 
+            <ViewMemberDetails memberDetails={memberDetails} setEditDetails={setEditDetails} />:<EditMemberDetails memberDetails={memberDetails} setEditDetails={setEditDetails}/>
           ) : (
             <Loader loader={dialog.loader}/>
           )}
