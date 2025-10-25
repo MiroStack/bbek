@@ -6,6 +6,7 @@ import offeringReducer from './modules/church_record/OfferingSlice';
 import marriageReducer from './modules/church_record/MarriageSlice';
 import UserReducer from './user/UserSlice'
 import BaptismReducer  from './modules/service/BaptismSlice';
+import MemberReducer from './modules/church_record/MemberSlice'
 export const store = configureStore({
   reducer: {
     ministryForm: ministryReducer,
@@ -14,7 +15,8 @@ export const store = configureStore({
     offeringForm: offeringReducer,
     marriageForm:marriageReducer,
     userInfo:UserReducer,
-    baptism:BaptismReducer
+    baptism:BaptismReducer,
+    member:MemberReducer
     // ... other reducers
   },
 });
