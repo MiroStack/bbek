@@ -1,9 +1,12 @@
 import axios from "../../api/axios";
+import type { EditMemberDetails } from "../../component/components/member/EditMemberDetails";
 import { Cookies } from "../../util/Cookies";
 import type { ApiResponseModel } from "../models/ApiResponseModel";
 import type { AddBaptismRequestModel } from "../models/baptism/AddBaptismRequestModel";
+import type { DepartmentModel } from "../models/member/DepartmentModel";
 import type { MemberDetailsModel } from "../models/member/MemberDetailsModel";
 import type { MemberModel } from "../models/member/MemberModel";
+import type { PositionModel } from "../models/member/PositionModel";
 import { HandleResponse } from "./component/HandleResponse";
 
 export const MemberRepo = () => {
@@ -43,8 +46,8 @@ export const MemberRepo = () => {
       return handleResponse.commonResponse(response);
     },
 
-      async getMemberDetails(
-      memberId:number
+    async getMemberDetails(
+      memberId: number
     ): Promise<ApiResponseModel<MemberDetailsModel>> {
       const token = Cookies.getCookie("auth_token");
       const response = await axios.get<ApiResponseModel<MemberDetailsModel>>(
@@ -59,6 +62,49 @@ export const MemberRepo = () => {
       return handleResponse.commonResponse(response);
     },
 
-    
+    async departments(): Promise<ApiResponseModel<DepartmentModel[]>> {
+      const token = Cookies.getCookie("auth_token");
+      const response = await axios.get<ApiResponseModel<DepartmentModel[]>>(
+        `departments`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return handleResponse.commonResponse(response);
+    },
+
+    async positions(): Promise<ApiResponseModel<PositionModel[]>> {
+      const token = Cookies.getCookie("auth_token");
+      const response = await axios.get<ApiResponseModel<PositionModel[]>>(
+        `positions`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return handleResponse.commonResponse(response);
+    },
+
+    async EditMemberDetails(
+      model: MemberDetailsModel
+    ): Promise<ApiResponseModel<PositionModel>> {
+      const token = Cookies.getCookie("auth_token");
+      const response = await axios.post<ApiResponseModel<PositionModel>>(
+        `editMemberDetails`,
+        model,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return handleResponse.commonResponse(response);
+    },
   };
 };

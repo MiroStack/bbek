@@ -2,9 +2,13 @@ import { FaPen, FaUser } from "react-icons/fa";
 
 import dayjs from "dayjs";
 import type { MemberDetailsModel } from "../../../datasource/models/member/MemberDetailsModel";
+import type { DepartmentModel } from "../../../datasource/models/member/DepartmentModel";
+import type { PositionModel } from "../../../datasource/models/member/PositionModel";
 
 export const ViewMemberDetails = (props: {
   memberDetails: MemberDetailsModel;
+  departmentList: DepartmentModel[];
+  positionList:PositionModel[];
   setEditDetails: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   return (
@@ -225,13 +229,13 @@ export const ViewMemberDetails = (props: {
                       <h4 className="text-sm font-medium text-gray-500">
                         Department
                       </h4>
-                      <p>{props.memberDetails?.emergencyContactPerson}</p>
+                      <p>{props.departmentList.find((item)=>item.id==props.memberDetails?.departmentId)?.departmentName}</p>
                     </div>
                     <div>
                       <h4 className="text-sm font-medium text-gray-500">
                         Position
                       </h4>
-                      <p>{props.memberDetails?.relationshipToContactPerson}</p>
+                      <p>{props.positionList.find((item)=>item.id==props.memberDetails.positionId)?.positionName}</p>
                     </div>
                   </div>
                 </div>

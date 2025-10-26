@@ -259,6 +259,11 @@ function App() {
             />
             <Route
               index
+              path="church-record/member-record/view-details/:memberId"
+              element={<MemberDetailsCard />}
+              />
+            <Route
+              index
               path="church-record/tithe-offering"
               element={<TithesOfferingPage />}
             />
