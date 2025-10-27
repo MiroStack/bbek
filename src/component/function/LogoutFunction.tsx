@@ -5,6 +5,7 @@ import { closeAllDialog } from "../../datasource/redux/dialog/DialogSlice";
 import { Cookies } from "../../util/Cookies";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../datasource/redux/modules/hooks/hooks";
+import { hideAllMember } from "../../datasource/redux/modules/church_record/MemberSlice";
 export const LogoutFunction = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -16,6 +17,7 @@ export const LogoutFunction = () => {
             dispatch(closeAllDialog());
             dispatch(hideAllEventForm());
             dispatch(hideAllMinistryForm());
+            dispatch(hideAllMember());
             sessionStorage.clear();
             navigate("/");
         }

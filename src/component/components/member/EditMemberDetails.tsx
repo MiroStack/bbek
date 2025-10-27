@@ -203,10 +203,10 @@ export const EditMemberDetails = (props: {
             <div className="pt-4">
               <button
                 onClick={() => props.setEditDetails(false)}
-                className="inline-flex items-center text-white justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-red-500 text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
+                className="inline-flex items-center text-white justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-gray-400 text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
               >
                 <FaArrowLeft className="h-4 w-4 mr-2" />
-                Cancel
+                Back
               </button>
             </div>
           </div>
@@ -272,9 +272,9 @@ export const EditMemberDetails = (props: {
                     Baptism Date
                   </h4>
                   <input
-                    type="date"
+                    type="dateTime-local"
                     name="baptismDate"
-                    value={dayjs(formData.baptismDate).format("YYYY-MM-DD")}
+                    value={formData.baptismDate}
                     onChange={handleChange}
                     className="border rounded w-full p-2"
                   />
@@ -286,14 +286,14 @@ export const EditMemberDetails = (props: {
                   id="new-status"
                 >
                   <span className="">
-                    {props.memberDetails.baptismOfficiant}
+                    {officiant}
                   </span>
                   <div
                     className={`${
                       toggleOfficiantDropDown ? "" : "hidden"
                     } absolute bg-white w-100 border  top-[150%] left-[50%]  -translate-y-1/2 -translate-x-1/2 z-10`}
                   >
-                    <ul className="flex flex-col items-start px-3 w-100">
+                    <ul className="flex flex-col justify-content-center items-center w-100">
                       {props.officiantList.map((officiant) => (
                         <li
                           key={officiant.id}
@@ -351,7 +351,7 @@ export const EditMemberDetails = (props: {
                       toggleDepartmentDropDown ? "" : "hidden"
                     } absolute bg-white w-100 border  top-[150%] left-[50%] -translate-y-1/2 -translate-x-1/2 z-10`}
                   >
-                    <ul className="flex flex-col items-start px-3 w-100">
+                    <ul className="flex flex-col justify-content-center items-center px-3 w-100">
                       {props.departmentList.map((department) => (
                         <li
                           key={department.id}
@@ -399,7 +399,7 @@ export const EditMemberDetails = (props: {
                       togglePositionDropDown ? "" : "hidden"
                     } absolute bg-white w-100 border  top-[150%] left-[50%] -translate-y-1/2 -translate-x-1/2 z-10`}
                   >
-                    <ul className="flex flex-col items-start px-3 w-100">
+                    <ul className="flex flex-col justify-content-center items-center  px-3 w-100">
                       {props.positionList.map((position) => (
                         <li
                           key={position.id}

@@ -21,6 +21,7 @@ import { BaptismRepo } from "../../../datasource/repositories/BaptismRepo";
 import type { UserAndIdModel } from "../../../datasource/models/User/UserAndIdModel";
 import type { DepartmentModel } from "../../../datasource/models/member/DepartmentModel";
 import type { PositionModel } from "../../../datasource/models/member/PositionModel";
+import { ReloginDialog } from "../../dialog/ReloginDialog";
 
 export const MemberDetailsCard = () => {
   const dialog = useAppSelector((state) => state.dialog);
@@ -94,6 +95,7 @@ export const MemberDetailsCard = () => {
 
   return (
     <>
+      {dialog.relogin && <ReloginDialog/>}
       {dialog.success && <SuccessDialog />}
       {dialog.error && <ErrorDialog2 />}
       {memberDetails ? (

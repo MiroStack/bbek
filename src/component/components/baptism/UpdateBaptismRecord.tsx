@@ -115,7 +115,7 @@ export const UpdateBaptismRecord = ({setIsRefresh}:UpdateBaptismRecordProps) => 
             id: dataModel.id,
             certificationId: certificateStatusList.find((item) => item.statusName == certificateStatus)?.id ?? 0,
             baptismStatusId: statusList.find((item) => item.statusName == baptismStatus)?.id ?? 0,
-            baptismDate: baptismDate,
+            baptismDate: dayjs(baptismDate).format("YYYY-MM-DDTHH:mm:ss"),
             location: location,
             baptismOfficiantId: officiantList.find((item) => item.fullName == officiant)?.id ?? 0,
             baptismOfficiant: officiant,
@@ -148,15 +148,16 @@ export const UpdateBaptismRecord = ({setIsRefresh}:UpdateBaptismRecordProps) => 
         fetchCertificateStatuses();
     }, []);
 
-    useEffect(() => {
-        // const date1 = new Date(baptismDate);
-        // const date = new Date();
-        // if (date == date1 || date1 < date) {
-        //     alert("Invalid Dates.");
-        //     setBaptismDate("");
-        //     return;
-        // }
-    }, [baptismDate]);
+    // useEffect(() => {
+    //     // const date1 = new Date(baptismDate);
+    //     // const date = new Date();
+    //     // if (date == date1 || date1 < date) {
+    //     //     alert("Invalid Dates.");
+    //     //     setBaptismDate("");
+    //     //     return;
+    //     // }
+    //     console.log(baptismDate);
+    // }, [baptismDate]);
 
 
     return (
