@@ -224,7 +224,7 @@ export const MemberRecordPageAdmin = () => {
                           <div
                             className={`${
                               optionIndex === index ? "" : "hidden"
-                            } absolute bg-white z-10 w-36 left-[-100%] bottom-[-80%] shadow-md rounded-md `}
+                            } absolute bg-white z-10 w-36 left-[-100%] bottom-[0%] shadow-md rounded-md `}
                             onClick={() => setOptionIndex(-1)}
                           >
                             <ul className="flex flex-col items-start w-full">
@@ -240,7 +240,7 @@ export const MemberRecordPageAdmin = () => {
                             </ul>
                           </div>
                           <button
-                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+                            className=" inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
                             type="button"
                             onClick={() => {
                               setOptionIndex(index);

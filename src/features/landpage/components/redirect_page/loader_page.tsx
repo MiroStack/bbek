@@ -34,13 +34,15 @@ export const LoaderPage = () => {
 
                             case "MEMBER":
                                 // navigate("/admin");
-                                navigate("/member");
+                                sessionStorage.setItem("isMember", "true");
+                                navigate("/");
                                 break;
                             case "STAFF":
                                 navigate("/staff");
                                 break;
                             default:
                                 navigate("/");
+                                sessionStorage.clear();
                                 console.error("Unknown role:", loginResponse.data.role);
                                 break;
                         }

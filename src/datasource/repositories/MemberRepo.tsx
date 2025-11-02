@@ -123,5 +123,21 @@ export const MemberRepo = () => {
       });
       return handleResponse.commonResponse(response);
     },
+
+    async getPaginatedDepartmentMembers(
+      query: string,
+      page: number
+    ): Promise<ApiResponseModel<PaginatedUserProfile[]>> {
+      const token = Cookies.getCookie("auth_token");
+      const response = await axios.get<
+        ApiResponseModel<PaginatedUserProfile[]>
+      >(`ListOfDepartmentMember?query=${query}&page=${page}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return handleResponse.commonResponse(response);
+    },
   };
 };

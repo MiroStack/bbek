@@ -69,7 +69,7 @@ import { ArchiveAdminPage } from "./features/administrator/views/maintenance/arc
 import { UserAccountAdminPage } from "./features/administrator/views/maintenance/UserAccount.tsx";
 import { SettingAdminPage } from "./features/administrator/views/maintenance/setting.tsx";
 import { SendPrayerPage } from "./features/landpage/view/beoneofus/SendPrayer.tsx";
-import {MemberDetailsCard} from "./component/components/member/MemberDetailsCard.tsx";
+import { MemberDetailsCard } from "./component/components/member/MemberDetailsCard.tsx";
 
 function App() {
   return (
@@ -176,7 +176,17 @@ function App() {
               path="church-record/member-record"
               element={<MemberRecordPageAdmin />}
             />
-              <Route
+            <Route
+              index
+              path="church-record/church-leaders/view-details/:memberId"
+              element={<MemberDetailsCard />}
+            />
+             <Route
+              index
+              path="church-record/department-officers/view-details/:memberId"
+              element={<MemberDetailsCard />}
+            />
+            <Route
               index
               path="church-record/member-record/view-details/:memberId"
               element={<MemberDetailsCard />}
@@ -261,7 +271,8 @@ function App() {
               index
               path="church-record/member-record/view-details/:memberId"
               element={<MemberDetailsCard />}
-              />
+            />
+
             <Route
               index
               path="church-record/tithe-offering"

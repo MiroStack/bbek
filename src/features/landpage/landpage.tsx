@@ -29,9 +29,10 @@ export const LandPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const isNavigateLandpage: boolean = sessionStorage.getItem("navigateLandpage") === "true";
+    const isMemberLandpage : boolean = sessionStorage.getItem("isMember")==="true";
     const token = Cookies.getCookie("auth_token");
     useEffect(() => {
-        if (token && !isNavigateLandpage) {
+        if (token && !isNavigateLandpage && !isMemberLandpage) {
             console.log("hello");
             handleToken();
         }

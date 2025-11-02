@@ -78,7 +78,7 @@ export const ChurchLeadersAdminPage = () => {
         <div className="p-6">
           <div className=" flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Church Leaders</h1>
-            <button
+            {/* <button
             //   onClick={() => dispatch(showAddMember())}
               className="!bg-green-600 text-white hover:!bg-green-500 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
             >
@@ -100,7 +100,7 @@ export const ChurchLeadersAdminPage = () => {
                 <line x1="22" x2="16" y1="11" y2="11"></line>
               </svg>
               Add New Leaders
-            </button>
+            </button> */}
           </div>
           <div className="rounded-lg border bg-card text-card-foreground shadow-sm mb-6">
             <div className="p-6">
@@ -228,7 +228,7 @@ export const ChurchLeadersAdminPage = () => {
                           <div
                             className={`${
                               optionIndex === index ? "" : "hidden"
-                            } absolute bg-white z-10 w-36 left-[-100%] bottom-[-80%] shadow-md rounded-md `}
+                            } absolute bg-white z-10 w-36 left-[-100%] bottom-[-0%] shadow-md rounded-md `}
                             onClick={() => setOptionIndex(-1)}
                           >
                             <ul className="flex flex-col items-start w-full">
