@@ -7,6 +7,7 @@ import type { DepartmentModel } from "../models/member/DepartmentModel";
 import type { MemberDetailsModel } from "../models/member/MemberDetailsModel";
 import type { MemberModel } from "../models/member/MemberModel";
 import type { PositionModel } from "../models/member/PositionModel";
+import type { PaginatedUserProfile } from "../models/User/PaginatedUserProfile";
 import { HandleResponse } from "./component/HandleResponse";
 
 export const MemberRepo = () => {
@@ -104,6 +105,22 @@ export const MemberRepo = () => {
           },
         }
       );
+      return handleResponse.commonResponse(response);
+    },
+
+    async getPaginatedPriestMembers(
+      query: string,
+      page: number
+    ): Promise<ApiResponseModel<PaginatedUserProfile[]>> {
+      const token = Cookies.getCookie("auth_token");
+      const response = await axios.get<
+        ApiResponseModel<PaginatedUserProfile[]>
+      >(`ListOfPriest?query=${query}&page=${page}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return handleResponse.commonResponse(response);
     },
   };

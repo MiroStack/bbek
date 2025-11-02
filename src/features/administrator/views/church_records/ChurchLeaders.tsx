@@ -1,9 +1,291 @@
+
+
+import { useEffect, useState } from "react";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../../datasource/redux/modules/hooks/hooks";
+import type { MemberModel } from "../../../../datasource/models/member/MemberModel";
+import {
+  hideLoader,
+  showErrorDialog,
+  showLoader,
+} from "../../../../datasource/redux/dialog/DialogSlice";
+import { MemberRepo } from "../../../../datasource/repositories/MemberRepo";
+import { Loader } from "../../../../component/dialog/Loader";
+import { SuccessDialog } from "../../../../component/dialog/SuccessDialog";
+import { ErrorDialog2 } from "../../../../component/dialog/ErrorDialog2";
+import { NoDataPage } from "../../../landpage/components/NoDataPage";
+
+import dayjs from "dayjs";
+import { Pagination } from "../../../../component/components/pagination/Pagination";
+import { ReloginDialog } from "../../../../component/dialog/ReloginDialog";
+import { AddMemberRecord } from "../../../../component/components/member/AddMember";
+import { showAddMember } from "../../../../datasource/redux/modules/church_record/MemberSlice";
+import { useNavigate } from "react-router-dom";
+import type { PaginatedUserProfile } from "../../../../datasource/models/User/PaginatedUserProfile";
+
 export const ChurchLeadersAdminPage = () => {
-    return (
-        <div className="w-100 h-auto flex flex-col items-center justify-center">
-            <div className="p-6"><div className="flex justify-between items-center mb-6"><h1 className="text-2xl font-bold">Church Leaders</h1><button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:rd:" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-plus h-4 w-4 mr-2"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>Add New Leader</button></div><div className="rounded-lg border bg-card text-card-foreground shadow-sm mb-6"><div className="p-6"><div className="flex flex-col md:flex-row gap-4 justify-between"><div className="relative w-full md:w-1/3"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-search absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-            <input className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10" placeholder="Search leaders..." value=""/>
-            </div><div className="flex gap-2"><button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">Export CSV</button></div></div></div></div><div className="rounded-md border"><div className="relative w-full overflow-auto"><table className="w-full caption-bottom text-sm"><thead className="[&amp;_tr]:border-b"><tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"><th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Name</th><th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Position</th><th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">Email</th><th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">Phone</th><th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">Join Date</th><th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">Status</th><th className="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 text-right">Actions</th></tr></thead><tbody className="[&amp;_tr:last-child]:border-0"><tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"><td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">Rev. Rodolfo Mojica</td><td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">Sending Pastor</td><td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">rodolfo.mojica@example.com</td><td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">+63 912 345 6789</td><td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">1/10/2015</td><td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">Active</span></td><td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right"><button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10" name="action" type="button" id="radix-:rg:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-ellipsis h-4 w-4"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg><span className="sr-only">Actions</span></button></td></tr><tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"><td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">Rev. Fresco Q. Sulapas</td><td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">Senior Pastor</td><td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">fresco.sulapas@example.com</td><td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">+63 912 345 6790</td><td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">3/15/2016</td><td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0"><span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">Active</span></td><td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right"><button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10" name="action" type="button" id="radix-:ri:" aria-haspopup="menu" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-ellipsis h-4 w-4"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg><span className="sr-only">Actions</span></button></td></tr></tbody></table></div></div></div>
+  const navigate = useNavigate();
+  const reloginDialog = useAppSelector((state) => state.dialog.relogin);
+  const memberslice = useAppSelector((state) => state.member);
+  const dispatch = useAppDispatch();
+  const loader = useAppSelector((state) => state.dialog.loader);
+  const success = useAppSelector((state) => state.dialog.success);
+  const error = useAppSelector((state) => state.dialog.error);
+  const [memberList, setMemberList] = useState<PaginatedUserProfile[]>([]);
+  const [isRefresh, setIsRefresh] = useState<boolean>(true);
+  const [query, setQuery] = useState<string>("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pages, setPages] = useState([1, 2, 3, 4, 5, 6, 7]);
+  const [totalPage, setTotalPage] = useState(1);
+  const [selectedId, setSelectedId] = useState(-1);
+  const [optionIndex, setOptionIndex] = useState<number>(-1);
+
+  useEffect(() => {
+    if (isRefresh) {
+      handleGetMembers();
+      setIsRefresh(false);
+    }
+  }, [isRefresh]);
+  const memberRepo = MemberRepo();
+  const handleGetMembers = async () => {
+    try {
+      dispatch(showLoader());
+      const response = await memberRepo.getPaginatedPriestMembers(query, pageNumber);
+      dispatch(hideLoader());
+      if (response.statusCode == 200) {
+         console.log(response.data);
+        setMemberList(response.data);
+      }
+    } catch (e) {
+    } finally {
+    }
+  };
+
+  const handleQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+    setIsRefresh(true);
+  };
+  return (
+    <>
+      {memberslice.add && <AddMemberRecord setIsRefresh={setIsRefresh} />}
+      {reloginDialog && <ReloginDialog />}
+      {loader && <Loader loader={loader} />}
+      {success && <SuccessDialog />}
+      {error && <ErrorDialog2 />}
+      <div className="w-100 h-auto flex flex-col items-center justify-center">
+        <div className="p-6">
+          <div className=" flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold">Church Leaders</h1>
+            <button
+            //   onClick={() => dispatch(showAddMember())}
+              className="!bg-green-600 text-white hover:!bg-green-500 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-user-plus h-4 w-4 mr-2"
+              >
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <line x1="19" x2="19" y1="8" y2="14"></line>
+                <line x1="22" x2="16" y1="11" y2="11"></line>
+              </svg>
+              Add New Leaders
+            </button>
+          </div>
+          <div className="rounded-lg border bg-card text-card-foreground shadow-sm mb-6">
+            <div className="p-6">
+              <div className="flex flex-col md:flex-row gap-4 justify-between">
+                <div className="relative w-full md:w-1/3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-search absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"
+                  >
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.3-4.3"></path>
+                  </svg>
+                  <input
+                    className="flex h-10 w-full rounded-md border border-input bg-background py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 pl-10"
+                    placeholder="Search members..."
+                    onChange={handleQuery}
+                    value={query}
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                    type="button"
+                    id="radix-«r6c»"
+                    aria-haspopup="menu"
+                    aria-expanded="false"
+                    data-state="closed"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="lucide lucide-filter h-4 w-4 mr-2"
+                    >
+                      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                    Filter by Status
+                  </button>
+                  <button
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                    name="export-members-csv-btn"
+                  >
+                    Export CSV
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-md border">
+            <div className="relative w-full overflow-auto">
+              <table className="w-full caption-bottom text-sm">
+                <thead className="[&amp;_tr]:border-b">
+                  <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                    <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                      Name
+                    </th>
+                    <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                      Age
+                    </th>
+                    <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                      Address
+                    </th>
+                    <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden lg:table-cell">
+                      Email
+                    </th>
+                    <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                      Active
+                    </th>
+                    <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                      Join Date
+                    </th>
+                    <th className="h-12 px-4 align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0 text-right">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="[&amp;_tr:last-child]:border-0">
+                  {memberList.length == 0 ? (
+                    <tr className="w-full">
+                      <td colSpan={7} className="h-28  text-center">
+                        <div className="flex items-center justify-center h-full">
+                          <NoDataPage />
+                        </div>
+                      </td>
+                    </tr>
+                  ) : (
+                    memberList.map((item, index) => (
+                      <tr key={item.id} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
+                          {item.firstname} {item.middlename} {item.lastname}
+                        </td>
+                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                          {item.age}
+                        </td>
+                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                          {item.address}
+                        </td>
+                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden lg:table-cell">
+                          {item.email}
+                        </td>
+                          
+                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                          <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent hover:bg-primary/80 bg-green-100 text-green-800">
+                            {item.isActive ? "Active" : "Inactive"}
+                          </div>
+                        </td>
+                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 hidden md:table-cell">
+                          {dayjs(item.joinDate).format("MMMM D, YYYY")}
+                        </td>
+                        <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 text-right relative">
+                          <div
+                            className={`${
+                              optionIndex === index ? "" : "hidden"
+                            } absolute bg-white z-10 w-36 left-[-100%] bottom-[-80%] shadow-md rounded-md `}
+                            onClick={() => setOptionIndex(-1)}
+                          >
+                            <ul className="flex flex-col items-start w-full">
+                              <li
+                                className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start"
+                                onClick={() => navigate(`view-details/${item.id}`)}
+                              >
+                                View Details
+                              </li>
+                              <li className="cursor-pointer hover:bg-gray-100 p-1 w-full text-start">
+                                Send Message
+                              </li>
+                            </ul>
+                          </div>
+                          <button
+                            className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 hover:bg-accent hover:text-accent-foreground h-10 w-10"
+                            type="button"
+                            onClick={() => {
+                              setOptionIndex(index);
+                            }}
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="lucide lucide-ellipsis h-4 w-4"
+                            >
+                              <circle cx="12" cy="12" r="1"></circle>
+                              <circle cx="19" cy="12" r="1"></circle>
+                              <circle cx="5" cy="12" r="1"></circle>
+                            </svg>
+                            <span className="sr-only">Actions</span>
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <Pagination
+              pages={pages}
+              pageNumber={pageNumber}
+              totalPage={totalPage}
+              setPageNumber={setPageNumber}
+              setRefresh={setIsRefresh}
+              setPages={setPages}
+            />
+          </div>
         </div>
-    )
-}
+      </div>
+    </>
+  );
+};

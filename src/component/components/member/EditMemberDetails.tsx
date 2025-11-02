@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { FaArrowLeft, FaPen, FaUser } from "react-icons/fa";
 import dayjs from "dayjs";
 import type { MemberDetailsModel } from "../../../datasource/models/member/MemberDetailsModel";
@@ -8,14 +8,16 @@ import type { UserAndIdModel } from "../../../datasource/models/User/UserAndIdMo
 import { MemberRepo } from "../../../datasource/repositories/MemberRepo";
 import {
   useAppDispatch,
-  useAppSelector,
+
 } from "../../../datasource/redux/modules/hooks/hooks";
 import {
   hideLoader,
+  showErrorDialog,
   showLoader,
   showSuccessDialog,
 } from "../../../datasource/redux/dialog/DialogSlice";
 import type { UserInfoModel } from "../../../datasource/models/User/UserInfoModel";
+
 
 export const EditMemberDetails = (props: {
   memberDetails: MemberDetailsModel;
@@ -27,7 +29,6 @@ export const EditMemberDetails = (props: {
 }) => {
   // Initialize local state for editable fields
   const dispatch = useAppDispatch();
-  const dialogs = useAppSelector((state) => state.dialog);
   const userInfoModel: UserInfoModel =
     JSON.parse(sessionStorage.getItem("userInfo")?? "") ;
 
@@ -97,7 +98,11 @@ export const EditMemberDetails = (props: {
         sessionStorage.setItem("message", response.message);
         dispatch(showSuccessDialog());
       }
-    } catch (e) {}
+    } catch (e) {
+            console.log(e); 
+            sessionStorage.setItem("message", "Something went wrong. Please try again.");
+            dispatch(showErrorDialog());
+    }
     // TODO: call API or update function here
   };
 
@@ -241,7 +246,8 @@ export const EditMemberDetails = (props: {
                 <div>
                   <h4 className="text-sm font-medium text-gray-500">Phone</h4>
                   <input
-                    type="text"
+                    type="tel"
+                    maxLength={11}
                     name="contactNo"
                     value={formData.contactNo}
                     onChange={handleChange}
