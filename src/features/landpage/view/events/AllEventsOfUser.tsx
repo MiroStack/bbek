@@ -14,10 +14,10 @@ import {
   showSuccessDialog,
 } from "../../../../datasource/redux/dialog/DialogSlice";
 import { useAppDispatch } from "../../../../datasource/redux/modules/hooks/hooks";
-export const AllEventsPage = () => {
+export const AllEventsOfUser = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [eventData, setEventDate] = useState<EventModel[]>([]);
+  const [eventData, setEventData] = useState<EventModel[]>([]);
   const [showSort, setShowSort] = useState(false);
   const [showJoinEvent, setShowJoinEvent] = useState<boolean>(false);
   const [query, setQuery] = useState<string>("");
@@ -41,7 +41,7 @@ export const AllEventsPage = () => {
       fetchEventData();
       setIsRefreshing(false);
     }
-  },[refresh, pageNumber]);
+  }, [refresh, pageNumber]);
   useEffect(() => {
     setTotalPage(Math.ceil((eventData[0]?.totalRows ?? 0) / 11));
   }, [eventData]);
@@ -65,9 +65,15 @@ export const AllEventsPage = () => {
 
   const fetchEventData = async () => {
     try {
-      const res = await repo.getAllEvent(query, pageNumber, selectedStatus);
-      console.log(res);
-      setEventDate(res);
+      const res = await repo.getAllUserEvents(
+        query,
+        pageNumber,
+        selectedStatus
+      );
+      if (res.statusCode == 200) {
+        console.log(res);
+        setEventData(res.data);
+      }
     } catch (e) {}
   };
 
@@ -103,7 +109,7 @@ export const AllEventsPage = () => {
               transition={{ duration: 0.2 }}
               className="text-4xl font-bold text-blue-500"
             >
-              Events
+              My Events
             </motion.h2>
             <motion.p
               initial={{ scale: 0 }}
@@ -239,9 +245,11 @@ export const AllEventsPage = () => {
                           whileTap={{ scale: 0.95 }}
                           transition={{ duration: 0.2 }}
                           className="bg-gray-400  w-36 h-12  text-white rounded-md text-sm  border border-gray-100"
-                          onClick={()=>{
-                            
-                            isMemberLandPage?joinEvent(event.id):handleJoinEvent()}}
+                          onClick={() => {
+                            isMemberLandPage
+                              ? joinEvent(event.id)
+                              : handleJoinEvent();
+                          }}
                         >
                           JOIN US
                         </motion.button>

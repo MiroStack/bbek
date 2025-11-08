@@ -62,7 +62,7 @@ export const Navigation = ({ setShowLogin, setShowSide }: NavProps) => {
     const isMember: boolean = sessionStorage.getItem("isMember") === "true";
     setIsMemberLandpage(isMember);
     fetchDepartmentList();
-    
+
     setIsNavigateLandpage(isNavigate);
     const onScroll = () => {
       const scrollY = window.scrollY;
@@ -77,7 +77,6 @@ export const Navigation = ({ setShowLogin, setShowSide }: NavProps) => {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
 
   const displayLogin = () => {
     setShow(true);
@@ -131,12 +130,12 @@ export const Navigation = ({ setShowLogin, setShowSide }: NavProps) => {
             className="font-semibold hover:text-blue-400 active:text-blue-600 cursor-pointer"
             onClick={() => navigate("/")}
           >
-            HOME
+            Home
           </li>
 
           <div className="relative group">
             <li className="font-semibold hover:text-blue-400 active:text-blue-600 cursor-pointer">
-              ABOUT
+              About
             </li>
             <div className="hidden group-hover:block fixed mt-18 bg-white text-black rounded p-3">
               <ul className="flex flex-col gap-2 text-sm font-normal">
@@ -151,27 +150,49 @@ export const Navigation = ({ setShowLogin, setShowSide }: NavProps) => {
             className="font-semibold hover:text-blue-400 active:text-blue-600 cursor-pointer"
             onClick={() => navigate("/landpage/give")}
           >
-            GIVE
+            Give
           </li>
-          <li
-            className="font-semibold hover:text-blue-400 active:text-blue-600 cursor-pointer"
-            onClick={() => navigate("/landpage/events/allevents")}
-          >
-            EVENT
-          </li>
+       
           <div className="relative group">
             <li className="font-semibold hover:text-blue-400 active:text-blue-600 cursor-pointer">
-              MINISTRY
+              Event
             </li>
             <div className="hidden group-hover:block fixed mt-18 bg-white text-black rounded p-3">
               <ul className="flex flex-col gap-2 text-sm font-normal">
-                   {isMemberLandPage?(<Link
-                      key={0}
-                      to={`ministries/ministry/0`}
-                      className="hover:text-blue-500"
-                    >
-                      My Ministry
-                    </Link>):null}
+                {isMemberLandPage ? (
+                  <Link
+                    
+                    to={`/landpage/events/my-events`}
+                    className="hover:text-blue-500"
+                  >
+                    My Events
+                  </Link>
+                ) : null}
+                  <Link
+                   
+                    to={`/landpage/events/allevents`}
+                    className="hover:text-blue-500"
+                  >
+                    All Events
+                  </Link>
+              </ul>
+            </div>
+          </div>
+          <div className="relative group">
+            <li className="font-semibold hover:text-blue-400 active:text-blue-600 cursor-pointer">
+              Ministry
+            </li>
+            <div className="hidden group-hover:block fixed mt-18 bg-white text-black rounded p-3">
+              <ul className="flex flex-col gap-2 text-sm font-normal">
+                {isMemberLandPage ? (
+                  <Link
+                    key={0}
+                    to={`ministries/ministry/0`}
+                    className="hover:text-blue-500"
+                  >
+                    My Ministry
+                  </Link>
+                ) : null}
                 {departmentList.map((dept) =>
                   dept.departmentName == "NONE" ? null : (
                     <Link
@@ -207,7 +228,7 @@ export const Navigation = ({ setShowLogin, setShowSide }: NavProps) => {
             <div
               className={`${
                 showSidePanel ? "absolute" : "hidden"
-              } bottom-[-500%] right-2 h-auto w-52 shadow-md bg-white  flex flex-col p-2 rounded-md z-10`}
+              } bottom-[-400%] right-2 h-auto w-52 shadow-md bg-white  flex flex-col p-2 rounded-md z-10`}
               onClick={handleToggleSidePanel}
             >
               <div className="flex items-center gap-2 p-2">

@@ -70,6 +70,7 @@ import { UserAccountAdminPage } from "./features/administrator/views/maintenance
 import { SettingAdminPage } from "./features/administrator/views/maintenance/setting.tsx";
 import { SendPrayerPage } from "./features/landpage/view/beoneofus/SendPrayer.tsx";
 import { MemberDetailsCard } from "./component/components/member/MemberDetailsCard.tsx";
+import { AllEventsOfUser } from "./features/landpage/view/events/AllEventsOfUser.tsx";
 
 function App() {
   return (
@@ -112,6 +113,7 @@ function App() {
 
             <Route path="events" element={<EventPage />}>
               <Route index path="allevents" element={<AllEventsPage />}></Route>
+               <Route index path="my-events" element={<AllEventsOfUser />}></Route>
               <Route
                 index
                 path="learn-more-event"

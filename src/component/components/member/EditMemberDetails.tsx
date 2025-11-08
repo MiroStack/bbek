@@ -344,7 +344,7 @@ export const EditMemberDetails = (props: {
               <h3 className="text-lg font-medium mb-4">
                 Department and Position
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button
                   type="button"
                   onClick={handleDepartmentDropdown}
@@ -357,7 +357,7 @@ export const EditMemberDetails = (props: {
                       toggleDepartmentDropDown ? "" : "hidden"
                     } absolute bg-white w-100 border  top-[150%] left-[50%] -translate-y-1/2 -translate-x-1/2 z-10`}
                   >
-                    <ul className="flex flex-col justify-content-center items-center px-3 w-100">
+                    <ul className="flex flex-col  px-3 w-100">
                       {props.departmentList.map((department) => (
                         <li
                           key={department.id}
@@ -399,13 +399,13 @@ export const EditMemberDetails = (props: {
                   className="flex relative h-8 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&amp;&gt;span]:line-clamp-1"
                   id="new-status"
                 >
-                  <span className="">{position}</span>
+                  <span className="text-start">{position}</span>
                   <div
                     className={`${
                       togglePositionDropDown ? "" : "hidden"
                     } absolute bg-white w-100 border  top-[150%] left-[50%] -translate-y-1/2 -translate-x-1/2 z-10`}
                   >
-                    <ul className="flex flex-col justify-content-center items-center  px-3 w-100">
+                    <ul className="flex flex-col   px-3 w-100">
                       {props.positionList.map((position) => (
                         <li
                           key={position.id}

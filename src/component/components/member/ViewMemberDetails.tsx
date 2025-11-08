@@ -224,7 +224,7 @@ export const ViewMemberDetails = (props: {
                   <h3 className="text-lg font-medium mb-4">
                     Department and Position
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <h4 className="text-sm font-medium text-gray-500">
                         Department

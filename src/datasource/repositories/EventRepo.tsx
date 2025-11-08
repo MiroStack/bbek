@@ -1,25 +1,27 @@
-import axios from "../../api/axios"
-import type { ApiResponseModel } from '../models/ApiResponseModel';
+import axios from "../../api/axios";
+import type { ApiResponseModel } from "../models/ApiResponseModel";
 import type { EventModel } from "../models/Event/EventModel";
-import { Cookies } from '../../util/Cookies';
+import { Cookies } from "../../util/Cookies";
 import type { EventStatusModel } from "../models/Event/EventStatusModel";
 import type { PaginatedEventsModel } from "../models/Event/PaginatedEventModel";
 import { useAppDispatch } from "../redux/modules/hooks/hooks";
 import { showErrorDialog, showRelogin } from "../redux/dialog/DialogSlice";
 import { HandleResponse } from "./component/HandleResponse";
 
-
 export const EventRepo = () => {
-
   const handleResponse = HandleResponse();
   return {
-    async getAllEvent(query: string, page: number, selectedStatus: string): Promise<EventModel[]> {
+    async getAllEvent(
+      query: string,
+      page: number,
+      selectedStatus: string
+    ): Promise<EventModel[]> {
       const token = Cookies.getCookie("auth_token");
       const response = await axios.get<EventModel[]>(
         `getAllEvent?query=${query}&page=${page}&status=${selectedStatus}`,
         {
           headers: {
-            "Content-Type": "multipart/form-data"
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -27,7 +29,20 @@ export const EventRepo = () => {
       // console.log(token);
       return response.data;
     },
-    async saveEvent(id: string, eventName: string, eventType: string, eventStartDate: string, eventEndDate: string, eventLocation: string, attendance: string, offering: string, statusName: string, isUpdate: boolean, description: string, file: File | null): Promise<ApiResponseModel<EventModel>> {
+    async saveEvent(
+      id: string,
+      eventName: string,
+      eventType: string,
+      eventStartDate: string,
+      eventEndDate: string,
+      eventLocation: string,
+      attendance: string,
+      offering: string,
+      statusName: string,
+      isUpdate: boolean,
+      description: string,
+      file: File | null
+    ): Promise<ApiResponseModel<EventModel>> {
       const token = Cookies.getCookie("auth_token");
       // Only append file if it's not null
 
@@ -47,14 +62,13 @@ export const EventRepo = () => {
         formData.append("file", file);
       }
 
-
       const response = await axios.post<ApiResponseModel<EventModel>>(
         "saveEvent",
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -84,7 +98,7 @@ export const EventRepo = () => {
           },
         }
       );
-       return handleResponse.commonResponse(response);
+      return handleResponse.commonResponse(response);
     },
 
     async getUpcomingEvents(): Promise<ApiResponseModel<EventModel[]>> {
@@ -115,27 +129,89 @@ export const EventRepo = () => {
 
     async getEventStatuses(): Promise<ApiResponseModel<EventStatusModel[]>> {
       const token = Cookies.getCookie("auth_token");
-      const response = await axios.get<ApiResponseModel<EventStatusModel[]>>('getAllEventStatuses', {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+      const response = await axios.get<ApiResponseModel<EventStatusModel[]>>(
+        "getAllEventStatuses",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
       return handleResponse.commonResponse(response);
     },
-    async getPaginatedEvents(query: string, page: number, selectedStatus: string): Promise<ApiResponseModel<PaginatedEventsModel[]>> {
+    async getPaginatedEvents(
+      query: string,
+      page: number,
+      selectedStatus: string
+    ): Promise<ApiResponseModel<PaginatedEventsModel[]>> {
       const token = Cookies.getCookie("auth_token");
-      const response = await axios.get<ApiResponseModel<PaginatedEventsModel[]>>(`getPaginatedEvents?query=${query}&page=${page}&status=${selectedStatus}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+      const response = await axios.get<
+        ApiResponseModel<PaginatedEventsModel[]>
+      >(
+        `getPaginatedEvents?query=${query}&page=${page}&status=${selectedStatus}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
       return handleResponse.commonResponse(response);
+    },
+    async joinEvent(eventId: number): Promise<ApiResponseModel<any>> {
+      const token = Cookies.getCookie("auth_token");
+      const response = await axios.post<ApiResponseModel<any>>(
+        `joinEvent?eventId=${eventId}`,
+        null,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return handleResponse.commonResponse(response);
+    },
+    async getAllUserEvents(
+      query: string,
+      page: number,
+      selectedStatus: string
+    ): Promise<ApiResponseModel<EventModel[]>> {
+      const token = Cookies.getCookie("auth_token");
+      const response = await axios.get<ApiResponseModel<EventModel[]>>(
+        `eventsOfUser?query=${query}&page=${page}&status=${selectedStatus}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-    }
-  }
+      // console.log(token);
+      return handleResponse.commonResponse(response);
+    },
 
+    async viewAllMemberOfEvent(
+      query: string,
+      page: number,
+      selectedStatus: string,
+      eventId: number
+    ): Promise<ApiResponseModel<EventModel[]>> {
+      const token = Cookies.getCookie("auth_token");
+      const response = await axios.get<ApiResponseModel<EventModel[]>>(
+        `viewMembersOfEvent?query=${query}&page=${page}&status=${selectedStatus}$eventId=${eventId} `,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
+      // console.log(token);
+      return handleResponse.commonResponse(response);
+    },
+  };
 };
-
