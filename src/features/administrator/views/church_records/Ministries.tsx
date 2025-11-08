@@ -73,7 +73,7 @@ export const MinistriesAdminPage = () => {
       <div
         className={`w-100  h-auto flex flex-col items-center justify-center`}
       >
-        <div className="w-[80%] p-6 staff-ministries-page">
+        <div className="w-100 p-6 staff-ministries-page">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Ministries</h1>
             <button
@@ -258,6 +258,9 @@ export const MinistriesAdminPage = () => {
                       <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                         Leader
                       </th>
+                       <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
+                        Department
+                      </th>
                       <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
                         Status
                       </th>
@@ -292,6 +295,9 @@ export const MinistriesAdminPage = () => {
                           </td>
                           <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                             {item.leader}
+                          </td>
+                           <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
+                            {item.departmentName}
                           </td>
                           <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
                             <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">

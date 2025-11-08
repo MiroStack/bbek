@@ -4,8 +4,21 @@ import { Link, useNavigate } from "react-router-dom";
 import type { UserInfoModel } from "../../../datasource/models/User/UserInfoModel";
 import { IoLogOut, IoPersonSharp, IoSettingsSharp } from "react-icons/io5";
 import { LogoutFunction } from "../../../component/function/LogoutFunction";
-import { FaAngleDown, FaHandPaper, FaServicestack, FaUserCircle } from "react-icons/fa";
+import {
+  FaAngleDown,
+  FaHandPaper,
+  FaServicestack,
+  FaUserCircle,
+} from "react-icons/fa";
 import { FaMessage, FaUpwork } from "react-icons/fa6";
+import type { DepartmentModel } from "../../../datasource/models/member/DepartmentModel";
+import { MemberRepo } from "../../../datasource/repositories/MemberRepo";
+import {
+  hideLoader,
+  showLoader,
+} from "../../../datasource/redux/dialog/DialogSlice";
+import { useAppDispatch } from "../../../datasource/redux/modules/hooks/hooks";
+import { hide } from "@popperjs/core";
 type NavProps = {
   setShowLogin: React.Dispatch<React.SetStateAction<boolean>>;
   setShowSide: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,13 +26,16 @@ type NavProps = {
 export const Navigation = ({ setShowLogin, setShowSide }: NavProps) => {
   const setSide = setShowSide;
   const setShow = setShowLogin;
+  const dispatch = useAppDispatch();
   const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
   const [isNavigateLandpage, setIsNavigateLandpage] = useState<boolean>(false);
-  const [isMemberLandPage, setIsMemberLandpage] = useState<boolean>(false);
+  const [departmentList, setDepartmentList] = useState<DepartmentModel[]>([]);
   const textColor = scrolled ? "text-black" : "text-white";
   const logoutFunc = LogoutFunction();
   const userInfo = sessionStorage.getItem("userInfo");
+  const [isMemberLandPage, setIsMemberLandpage] = useState<boolean>(false);
+  const memberRepo = MemberRepo();
   const [userInfoState, setUserInfoState] = useState<UserInfoModel>(
     userInfo == null ? ({} as UserInfoModel) : JSON.parse(userInfo)
   );
@@ -27,13 +43,26 @@ export const Navigation = ({ setShowLogin, setShowSide }: NavProps) => {
   const handleToggleSidePanel = () => {
     setSidePanel(!showSidePanel);
   };
+  const fetchDepartmentList = async () => {
+    try {
+      dispatch(showLoader());
+
+      const response = await memberRepo.departments();
+      dispatch(hideLoader());
+
+      if (response.statusCode == 200) {
+        setDepartmentList(response.data);
+      }
+    } catch (e) {}
+  };
 
   useEffect(() => {
     const isNavigate: boolean =
       sessionStorage.getItem("navigateLandpage") === "true";
     const isMember: boolean = sessionStorage.getItem("isMember") === "true";
-
     setIsMemberLandpage(isMember);
+    fetchDepartmentList();
+    
     setIsNavigateLandpage(isNavigate);
     const onScroll = () => {
       const scrollY = window.scrollY;
@@ -48,6 +77,8 @@ export const Navigation = ({ setShowLogin, setShowSide }: NavProps) => {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+
   const displayLogin = () => {
     setShow(true);
     setShowSide(false);
@@ -128,12 +159,33 @@ export const Navigation = ({ setShowLogin, setShowSide }: NavProps) => {
           >
             EVENT
           </li>
-          <li
-            className="font-semibold hover:text-blue-400 active:text-blue-600 cursor-pointer"
-            onClick={() => navigate("/landpage/ministries/allministry")}
-          >
-            MINISTRY
-          </li>
+          <div className="relative group">
+            <li className="font-semibold hover:text-blue-400 active:text-blue-600 cursor-pointer">
+              MINISTRY
+            </li>
+            <div className="hidden group-hover:block fixed mt-18 bg-white text-black rounded p-3">
+              <ul className="flex flex-col gap-2 text-sm font-normal">
+                   {isMemberLandPage?(<Link
+                      key={0}
+                      to={`ministries/ministry/0`}
+                      className="hover:text-blue-500"
+                    >
+                      My Ministry
+                    </Link>):null}
+                {departmentList.map((dept) =>
+                  dept.departmentName == "NONE" ? null : (
+                    <Link
+                      key={dept.id}
+                      to={`ministries/ministry/${dept.id}`}
+                      className="hover:text-blue-500"
+                    >
+                      {dept.departmentName}
+                    </Link>
+                  )
+                )}
+              </ul>
+            </div>
+          </div>
         </ul>
         {isMemberLandPage ? (
           <div className="flex items-center justify-start h-12 gap-1  relative">
@@ -141,14 +193,12 @@ export const Navigation = ({ setShowLogin, setShowSide }: NavProps) => {
               className="h-100  flex ml-auto items-center cursor-pointer p-2 hover:bg-gray-100 hover:rounded-md"
               onClick={handleToggleSidePanel}
             >
-              <FaUserCircle
-                className="h-8 text-blue-500 rounded-md cursor-pointer"
-              />
+              <FaUserCircle className="h-8 text-blue-500 rounded-md cursor-pointer" />
               <div className="flex items-center p-2">
                 <div className="mx-2">
                   <h4 className="text-[.7rem] font-semibold">{`${userInfoState.firstname} ${userInfoState.lastname}`}</h4>
                   <p className="text-[.6rem] font-semibold text-gray-500">
-                    Admin
+                    {`${userInfoState.role}`}
                   </p>
                 </div>
                 <FaAngleDown className="font-normal text-gray-600 text-[.7rem]" />

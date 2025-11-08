@@ -125,7 +125,7 @@ function App() {
             <Route path="ministries" element={<MinistryPage />}>
               <Route
                 index
-                path="allministry"
+                path="ministry/:departmentId"
                 element={<AllMinistries />}
               ></Route>
               <Route

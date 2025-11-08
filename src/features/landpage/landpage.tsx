@@ -13,76 +13,90 @@ import { Navigation } from "./components/Navigation";
 import { WatchLive } from "./components/WacthLive";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../datasource/redux/modules/hooks/hooks";
-import { hideLoader, showErrorDialog, showLoader } from "../../datasource/redux/dialog/DialogSlice";
+import {
+  hideLoader,
+  showErrorDialog,
+  showLoader,
+} from "../../datasource/redux/dialog/DialogSlice";
 import { ErrorDialog2 } from "../../component/dialog/ErrorDialog2";
 import { SuccessDialog } from "../../component/dialog/SuccessDialog";
 import { LoaderPage } from "./components/redirect_page/loader_page";
-
+import { MemberRepo } from "../../datasource/repositories/MemberRepo";
+import type { DepartmentModel } from "../../datasource/models/member/DepartmentModel";
+import { ReloginDialog } from "../../component/dialog/ReloginDialog";
 
 export const LandPage = () => {
-    const loaderDialog = useAppSelector((state) => state.dialog.loader);
-    const errorDialog = useAppSelector((state) => state.dialog.error);
-    const successDialog = useAppSelector((state) => state.dialog.success);
-    const [showLogin, setShowLogin] = useState(false);
-    const [showSide, setShowSide] = useState(false);
+  const dialogs = useAppSelector((state) => state.dialog);
+  const loaderDialog = useAppSelector((state) => state.dialog.loader);
+  const errorDialog = useAppSelector((state) => state.dialog.error);
+  const successDialog = useAppSelector((state) => state.dialog.success);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showSide, setShowSide] = useState(false);
 
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const isNavigateLandpage: boolean = sessionStorage.getItem("navigateLandpage") === "true";
-    const isMemberLandpage : boolean = sessionStorage.getItem("isMember")==="true";
-    const token = Cookies.getCookie("auth_token");
-    useEffect(() => {
-        if (token && !isNavigateLandpage && !isMemberLandpage) {
-            console.log("hello");
-            handleToken();
-        }
-    }, [])
-    async function handleToken() {
-        try {
-            dispatch(showLoader());
-            if (token) {
-                const loginResponse = await AuthRepo.validate(token);
-                 dispatch(hideLoader())
-                if (loginResponse.statusCode == 200) {
-                      navigate("/redirect")
-                }
-            } else {
-                console.error("Token not found in session storage.");
-                setTimeout(() => {
-                    dispatch(hideLoader())
-                    dispatch(showErrorDialog())
-                    navigate("/");
-                }, 1500)
-            }
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isNavigateLandpage: boolean =
+    sessionStorage.getItem("navigateLandpage") === "true";
+  const isMemberLandpage: boolean =
+    sessionStorage.getItem("isMember") === "true";
+  const token = Cookies.getCookie("auth_token");
 
-
-        } catch (e) {
-            Cookies.deleteCookie("auth_token");
-            dispatch(hideLoader())
-        } finally {
-            dispatch(hideLoader())
-        }
+  useEffect(() => {
+    if (token && !isNavigateLandpage && !isMemberLandpage) {
+      console.log("hello");
+      handleToken();
     }
+ 
+  }, []);
+  async function handleToken() {
+    try {
+      dispatch(showLoader());
+      if (token) {
+        const loginResponse = await AuthRepo.validate(token);
+        dispatch(hideLoader());
+        if (loginResponse.statusCode == 200) {
+          navigate("/redirect");
+        }
+      } else {
+        console.error("Token not found in session storage.");
+        setTimeout(() => {
+          dispatch(hideLoader());
+          dispatch(showErrorDialog());
+          navigate("/");
+        }, 1500);
+      }
+    } catch (e) {
+      Cookies.deleteCookie("auth_token");
+      dispatch(hideLoader());
+    } finally {
+      dispatch(hideLoader());
+    }
+  }
 
-    return (
-        <div className={`relative`}>
-            {/* <Nav setShowLogin={setShowLogin} setShowSide={setShowSide} /> */}
-            <Navigation setShowLogin={setShowLogin} setShowSide={setShowSide} />
-            <Outlet />
-            <Footer />
-            <LoginForm show={showLogin} setShowLogin={setShowLogin} />
-            <SideNav side={showSide} setShowSide={setShowSide} setShowLogin={setShowLogin} />
-            <div className=''>
-                <Loader loader={loaderDialog} />
-            </div>
-            <div className={`${errorDialog ? "" : "hidden"}`}>
-                <ErrorDialog2 />
-            </div>
-            <div className={`${successDialog ? "" : "hidden"}`}>
-                <SuccessDialog />
-            </div>
-            <SocialMediaGroups />
-            <WatchLive />
-        </div>
-    );
-}
+  return (
+    <div className={`relative`}>
+      {/* <Nav setShowLogin={setShowLogin} setShowSide={setShowSide} /> */}
+      {dialogs.relogin && <ReloginDialog/>}
+      <Navigation setShowLogin={setShowLogin} setShowSide={setShowSide} />
+      <Outlet />
+      <Footer />
+      <LoginForm show={showLogin} setShowLogin={setShowLogin} />
+      <SideNav
+        side={showSide}
+        setShowSide={setShowSide}
+        setShowLogin={setShowLogin}
+      />
+      <div className="">
+        <Loader loader={loaderDialog} />
+      </div>
+      <div className={`${errorDialog ? "" : "hidden"}`}>
+        <ErrorDialog2 />
+      </div>
+      <div className={`${successDialog ? "" : "hidden"}`}>
+        <SuccessDialog />
+      </div>
+      <SocialMediaGroups />
+      <WatchLive />
+    </div>
+  );
+};

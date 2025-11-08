@@ -70,7 +70,7 @@ export const MemberRepo = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            // Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -84,7 +84,7 @@ export const MemberRepo = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            // Authorization: `Bearer ${token}`,
           },
         }
       );

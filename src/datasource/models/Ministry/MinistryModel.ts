@@ -5,6 +5,7 @@ export interface MinistryModel{
     statusName:string;
     ministryName:string;
     description:string;
+    department:string;
     member:string;
     createdDate:string;
     updatedDate:string;

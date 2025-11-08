@@ -12,4 +12,5 @@ export interface PaginatedMinistryModel{
     startTime:string;
     endTime:string;
     totalRows:number;
+    departmentName:string;
 }
