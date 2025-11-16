@@ -30,7 +30,6 @@ export const UpdateMinistryForm = ({
     useState<boolean>(false);
   const [department, setDepartment] = useState("");
   const [departmentList, setDepartmentList] = useState<DepartmentModel[]>([]);
-  const [member, setMember] = useState(0);
   const [file, setFile] = useState<File | null>(null);
   const [days] = useState<string[]>([
     "Monday",
@@ -59,7 +58,6 @@ export const UpdateMinistryForm = ({
       dispatch(hideLoader());
       if (response.statusCode == 200) {
         setDepartmentList(response.data);
-        
       }
     } catch (e) {}
   };
@@ -68,7 +66,7 @@ export const UpdateMinistryForm = ({
     fetchDepartmentList();
   }, []);
 
-   const handleDepartmentDropdown = () => {
+  const handleDepartmentDropdown = () => {
     setToggleDepartmentDropdown(!toggleDepartmentDropDown);
   };
 
@@ -90,10 +88,7 @@ export const UpdateMinistryForm = ({
   const handleSetDescription = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setDescription(e.target.value);
   };
-  const handleSetMember = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    setMember(isNaN(value) ? 0 : value);
-  };
+
   const handleSetFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setFile(e.target.files[0]);
@@ -122,7 +117,6 @@ export const UpdateMinistryForm = ({
         setDepartment(data.department);
         setDescription(data.description);
         setStatus(data.statusName);
-        setMember(parseInt(data.member.toString()));
       }
     } catch (e) {
       console.error("Error fetching ministry data:", e);
@@ -135,12 +129,11 @@ export const UpdateMinistryForm = ({
     try {
       const response = await ministryRepo.saveMinistry(
         parseInt(sessionStorage.getItem("id") || "0"),
-        member,
         description,
+        department,
         ministryName,
         status,
         leader,
-        department,
         schedule,
         startTime,
         endTime,
@@ -159,7 +152,6 @@ export const UpdateMinistryForm = ({
         setLeader("");
         setDescription("");
         setStatus("Pending");
-        setMember(0);
         setFile(null);
         // Show success dialog after a short delay
         setTimeout(() => {
@@ -310,24 +302,7 @@ export const UpdateMinistryForm = ({
               required
             />
           </div>
-          <div className="grid gap-2">
-            <label
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              htmlFor="new-leader"
-            >
-              Member Population
-            </label>
-            <input
-              className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              id="member"
-              type="number"
-              value={member}
-              onChange={handleSetMember}
-              min="0"
-              required
-              name="ministry-member-input"
-            />
-          </div>
+
           <div className="grid gap-2">
             <label
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

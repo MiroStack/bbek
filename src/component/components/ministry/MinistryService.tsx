@@ -7,6 +7,7 @@ import type { PaginatedMinistryModel } from "../../../datasource/models/Ministry
 import type { MinistryStatusModel } from "../../../datasource/models/Ministry/MinistryStatusModel";
 import { MinistryRepo } from "../../../datasource/repositories/MinistryRepo";
 import { hideLoader, showErrorDialog, showLoader, showSuccessDialog } from "../../../datasource/redux/dialog/DialogSlice";
+import type { TotalMinistryModel } from "../../../datasource/models/Ministry/TotalMinistryModel";
 interface MinistryServiceProps {
     query: string;
     pageNumber: number;
@@ -22,6 +23,7 @@ interface MinistryServiceProps {
     setIsRefreshing: React.Dispatch<React.SetStateAction<boolean>>;
     setQuery: React.Dispatch<React.SetStateAction<string>>;
     setStatusList: React.Dispatch<React.SetStateAction<MinistryStatusModel[]>>;
+    setTotalMinistryModel: React.Dispatch<React.SetStateAction<TotalMinistryModel>>;
 }
 export const MinistryService = (
     {
@@ -38,7 +40,8 @@ export const MinistryService = (
         setMinistryData,
         setIsRefreshing,
         setQuery,
-        setStatusList
+        setStatusList,
+        setTotalMinistryModel
     }: MinistryServiceProps
 
 ) => {
@@ -47,12 +50,14 @@ export const MinistryService = (
     useEffect(() => {
         if (isRefreshing) {
             fetchStatusList();
+           
+            fetchTotalMinistriesAndMembers();
             setIsRefreshing(false);
         }
     }, [isRefreshing]);
 
     useEffect(() => {
-       fetchMinistryData();
+        fetchMinistryData();
     }, [statusList])
 
 
@@ -106,6 +111,21 @@ export const MinistryService = (
             dispatch(hideLoader());
         }
     };
+
+    const fetchTotalMinistriesAndMembers = async ()=>{
+        try {
+            dispatch(showLoader());
+            const res = await ministryRepo.getTotalMinistryAndMembers();
+            dispatch(hideLoader());
+            if (res.statusCode == 200) {
+                setTotalMinistryModel(res.data);
+            } 
+        } catch (e) {
+            console.log(e);
+        } finally {
+            dispatch(hideLoader());
+        }
+    }
 
     const fetchStatusList = async () => {
         try {

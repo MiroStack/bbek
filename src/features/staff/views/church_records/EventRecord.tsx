@@ -20,8 +20,10 @@ import { EventService } from "../../../../component/components/events/EventServi
 import { CreateEventForm } from "../../../../component/components/events/CreateEventForm";
 import { UpdateEventForm } from "../../../../component/components/events/UpdateEventForm";
 import { Pagination } from "../../../../component/components/pagination/Pagination";
+import { useNavigate } from "react-router-dom";
 
 export const EventRecordPage = () => {
+   const navigate = useNavigate();
     const reloginDialog = useAppSelector((state) => state.dialog.relogin);
     const eventCreateForm = useAppSelector((state) => state.eventForm.value);
     const eventEditForm = useAppSelector((state) => state.eventForm.edit);
@@ -56,10 +58,9 @@ export const EventRecordPage = () => {
 
 
     useEffect(() => {
-        // dispatch(showRelogin())
-        console.log(reloginDialog);
-        console.log(errorDialog);
+        console.log("isRefreshing:", isRefreshing);
         if (isRefreshing) {
+
             eventService.fetchEventData();
             eventService.fetchEventStatuses();
             // fetchEventStatuses();
@@ -70,7 +71,7 @@ export const EventRecordPage = () => {
 
     return (
         <>
-        {reloginDialog && <ReloginDialog/>}
+            {reloginDialog && <ReloginDialog />}
             <div className={`${eventCreateForm ? "" : "hidden"}`}>
                 <CreateEventForm setIsRefreshing={setIsRefreshing} />
             </div>
@@ -247,8 +248,8 @@ export const EventRecordPage = () => {
                                             )
                                         ) : (
                                             eventData.map((item, index) => (
-                                                <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium">
+                                                <tr key={index} className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted hover:cursor-pointer">
+                                                    <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0 font-medium" onClick={()=>navigate(`event-member/${item.id}`)}>
                                                         {item.eventName}
                                                     </td>
                                                     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">{dayjs(item.eventStartDate).format("MMMM D, YYYY h:mm A")}</td>
@@ -291,10 +292,9 @@ export const EventRecordPage = () => {
                                 </tbody>
                             </table>
                         </div>
-                        <Pagination pages={pages} pageNumber={pageNumber} totalPage={totalPage} setPageNumber={setPageNumber} setRefresh={setIsRefreshing} setPages={setPages}/> 
-                                               </div>
+                        <Pagination pages={pages} pageNumber={pageNumber} totalPage={totalPage} setPageNumber={setPageNumber} setRefresh={setIsRefreshing} setPages={setPages} />
 
-                   
+                    </div>
                 </div>
             </div>
         </>

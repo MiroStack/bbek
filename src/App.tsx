@@ -71,6 +71,11 @@ import { SettingAdminPage } from "./features/administrator/views/maintenance/set
 import { SendPrayerPage } from "./features/landpage/view/beoneofus/SendPrayer.tsx";
 import { MemberDetailsCard } from "./component/components/member/MemberDetailsCard.tsx";
 import { AllEventsOfUser } from "./features/landpage/view/events/AllEventsOfUser.tsx";
+import { MinistryMemberAdminPage } from "./features/administrator/views/church_records/MinistryMembers.tsx";
+import { EventMemberAdminPage } from "./features/administrator/views/church_records/EventMembers.tsx";
+import { EventMemberStaffPage } from "./features/staff/views/church_records/EventMembers.tsx";
+import { MinistryMemberStaffPage } from "./features/staff/views/church_records/MinistryMembers.tsx";
+import { Service } from "./features/landpage/view/service/Service.tsx";
 
 function App() {
   return (
@@ -113,7 +118,11 @@ function App() {
 
             <Route path="events" element={<EventPage />}>
               <Route index path="allevents" element={<AllEventsPage />}></Route>
-               <Route index path="my-events" element={<AllEventsOfUser />}></Route>
+              <Route
+                index
+                path="my-events"
+                element={<AllEventsOfUser />}
+              ></Route>
               <Route
                 index
                 path="learn-more-event"
@@ -137,6 +146,7 @@ function App() {
             </Route>
 
             <Route index path="plan-your-visit" element={<PlanYourVisit />} />
+             <Route path="services" element={<Service />}></Route>
           </Route>
 
           {/* Admin layout with nested routes */}
@@ -183,7 +193,7 @@ function App() {
               path="church-record/church-leaders/view-details/:memberId"
               element={<MemberDetailsCard />}
             />
-             <Route
+            <Route
               index
               path="church-record/department-officers/view-details/:memberId"
               element={<MemberDetailsCard />}
@@ -200,6 +210,11 @@ function App() {
             />
             <Route
               index
+              path="church-record/event-record/event-member/:eventId"
+              element={<EventMemberAdminPage />}
+            />
+            <Route
+              index
               path="church-record/tithe-offering"
               element={<TithesOfferingAdminPage />}
             />
@@ -207,6 +222,11 @@ function App() {
               index
               path="church-record/ministries-record"
               element={<MinistriesAdminPage />}
+            />
+            <Route
+              index
+              path="church-record/ministries-record/ministry-member/:ministryId"
+              element={<MinistryMemberAdminPage />}
             />
             <Route
               index
@@ -274,6 +294,11 @@ function App() {
               path="church-record/member-record/view-details/:memberId"
               element={<MemberDetailsCard />}
             />
+            <Route
+              index
+              path="church-record/event-record/event-member/:eventId"
+              element={<EventMemberStaffPage />}
+            />
 
             <Route
               index
@@ -284,6 +309,11 @@ function App() {
               index
               path="church-record/ministries-record"
               element={<MinistriesStaffPage />}
+            />
+            <Route
+              index
+              path="church-record/ministries-record/ministry-member/:ministryId"
+              element={<MinistryMemberStaffPage />}
             />
             <Route
               index

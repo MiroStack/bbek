@@ -7,6 +7,7 @@ import type { PaginatedEventsModel } from "../models/Event/PaginatedEventModel";
 import { useAppDispatch } from "../redux/modules/hooks/hooks";
 import { showErrorDialog, showRelogin } from "../redux/dialog/DialogSlice";
 import { HandleResponse } from "./component/HandleResponse";
+import type { EventMemberModel } from "../models/Event/EventMemberModel";
 
 export const EventRepo = () => {
   const handleResponse = HandleResponse();
@@ -213,5 +214,61 @@ export const EventRepo = () => {
       // console.log(token);
       return handleResponse.commonResponse(response);
     },
+    
+    async getMembersPerEvent(
+      eventId: number,
+      query:string,
+      page:number
+    ): Promise<ApiResponseModel<EventMemberModel[]>> {
+      const token = Cookies.getCookie("auth_token");
+      const response = await axios.get<ApiResponseModel<EventMemberModel[]>>(
+        `getMembersPerEvent?eventId=${eventId}&query=${query}&page=${page}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // console.log(token);
+      return handleResponse.commonResponse(response);
+    },
+
+     async viewTotalMemberPerEvent(
+      eventId: number,
+
+    ): Promise<ApiResponseModel<number>> {
+      const token = Cookies.getCookie("auth_token");
+      const response = await axios.get<ApiResponseModel<number>>(
+        `viewTotalMemberPerEvent?eventId=${eventId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // console.log(token);
+      return handleResponse.commonResponse(response);
+    },
+
+    async updateMemberEventJoinApplication(
+      id: number,
+      statusName: string): Promise<ApiResponseModel<number>> {
+      const token = Cookies.getCookie("auth_token");
+      const response = await axios.put<ApiResponseModel<number>>(
+        `updateMemberEventJoinApplication?pivotId=${id}&statusName=${statusName}`,
+        null,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // console.log(token);
+      return handleResponse.commonResponse(response);
+    },
+  
   };
 };

@@ -5,13 +5,14 @@ import { Cookies } from "../../util/Cookies";
 import type { PaginatedMinistryModel } from "../models/Ministry/PaginatedMinistryModel";
 import type { MinistryStatusModel } from "../models/Ministry/MinistryStatusModel";
 import { HandleResponse } from "./component/HandleResponse";
+import type { MinistryMemberModel } from "../models/Ministry/MinistryMemberModel";
+import type { TotalMinistryModel } from "../models/Ministry/TotalMinistryModel";
 
 export const MinistryRepo = () => {
   const handleResponse = HandleResponse();
   return {
     async saveMinistry(
       id: number,
-      member: number,
       description: string,
       department: string,
       ministryName: string,
@@ -27,20 +28,16 @@ export const MinistryRepo = () => {
       const token = Cookies.getCookie("auth_token");
       // Append each field individually for @RequestParam
       formData.append("id", id.toString());
-      formData.append("member", member.toString());
-      formData.append("description", description);
       formData.append("ministryName", ministryName);
-      formData.append("statusName", statusName);
-      formData.append("leader", leader);
-      formData.append("department", department);
-      formData.append("schedule", schedule);
+      formData.append("scheduleDay", schedule);
       formData.append("startTime", startTime);
       formData.append("endTime", endTime);
-
-      formData.append("isUpdate", isUpdate.toString());
-      if (file!) {
-        formData.append("file", file);
-      }
+      formData.append("ministryLeader", leader);
+      formData.append("department", department);
+      formData.append("status", statusName);
+      formData.append("update", isUpdate.toString());
+      formData.append("description", description);
+      formData.append("ministryImage", file ? file : new Blob());
 
       const response = await axios.post<ApiResponseModel<any>>(
         "saveMinistry",
@@ -122,7 +119,7 @@ export const MinistryRepo = () => {
         `ministriesOfUser?query=${query}&page=${page}`,
         {
           headers: {
-           "Content-Type": "application/json",
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         }
@@ -218,5 +215,68 @@ export const MinistryRepo = () => {
       );
       return handleResponse.commonResponse(response);
     },
+
+    async viewMembersOfMinistries(
+      ministryId: number,
+      query: string,
+      page: number
+    ): Promise<ApiResponseModel<MinistryMemberModel[]>> {
+      const token = Cookies.getCookie("auth_token");
+      const response = await axios.get<ApiResponseModel<any>>(
+        `viewMembersOfMinistries?ministryId=${ministryId}&query=${query}&page=${page}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return handleResponse.commonResponse(response);
+    },
+    async viewTotalMembersPerMinistry(
+      ministryId: number
+    ): Promise<ApiResponseModel<number>> {
+      const token = Cookies.getCookie("auth_token");
+      const response = await axios.get<ApiResponseModel<number>>(
+        `viewTotalMembersPerMinistry?ministryId=${ministryId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return handleResponse.commonResponse(response);
+    },
+    async getTotalMinistryAndMembers(
+    ): Promise<ApiResponseModel<TotalMinistryModel>> {
+      const token = Cookies.getCookie("auth_token");
+      const response = await axios.get<ApiResponseModel<TotalMinistryModel>>(
+        `getTotalMinistryAndMembers`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return handleResponse.commonResponse(response);
+    },
+    async updateMemberApplication(pivotId: number, statusName: string): Promise<ApiResponseModel<any>> {
+      const token = Cookies.getCookie("auth_token");
+      const response = await axios.put<ApiResponseModel<any>>(
+        `updateMemberApplication?pivotId=${pivotId}&statusName=${statusName}`,
+        null,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return handleResponse.commonResponse(response);
+    }
+   
+
   };
 };

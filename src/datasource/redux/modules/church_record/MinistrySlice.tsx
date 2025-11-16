@@ -4,16 +4,19 @@ import { createSlice } from '@reduxjs/toolkit';
 interface MinistryFormState {
   value: boolean;
   edit:boolean;
+  memberApplicationEdit:boolean;
 }
 const initialState: MinistryFormState = {
   value: false,
-  edit:false
+  edit:false,
+  memberApplicationEdit:false
 };
 const ministrySlice = createSlice({
   name: 'showCreateMinistry',
   initialState: {
     value: initialState.value,
-    edit:initialState.edit
+    edit:initialState.edit,
+    memberApplicationEdit:initialState.memberApplicationEdit
   },
   reducers: {
     showMinistry: (state) => {
@@ -28,8 +31,16 @@ const ministrySlice = createSlice({
     hideUpdateMinistry: (state) => {
       state.edit=false;
     },
+    showUpdateMemberApplication: (state) => {
+      state.memberApplicationEdit=true;  
+    },
+    hideUpdateMemberApplication: (state) => {
+      state.memberApplicationEdit=false;
+    },
     hideAllMinistryForm:(state)=>{
-      state = initialState;
+      state.value=false;
+      state.edit=false;
+      state.memberApplicationEdit=false;
     }
 
     // incrementByAmount: (state, action) => {
@@ -39,5 +50,5 @@ const ministrySlice = createSlice({
 });
 
 // export const { increment, decrement, incrementByAmount } = ministrySlice.actions;
-export const { showMinistry, hideMinistry, showUpdateMinistry, hideUpdateMinistry, hideAllMinistryForm } = ministrySlice.actions;
+export const { showMinistry, hideMinistry, showUpdateMinistry, hideUpdateMinistry, hideAllMinistryForm,hideUpdateMemberApplication,showUpdateMemberApplication } = ministrySlice.actions;
 export default ministrySlice.reducer;

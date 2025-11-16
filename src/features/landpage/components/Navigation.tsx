@@ -152,7 +152,7 @@ export const Navigation = ({ setShowLogin, setShowSide }: NavProps) => {
           >
             Give
           </li>
-       
+
           <div className="relative group">
             <li className="font-semibold hover:text-blue-400 active:text-blue-600 cursor-pointer">
               Event
@@ -161,20 +161,18 @@ export const Navigation = ({ setShowLogin, setShowSide }: NavProps) => {
               <ul className="flex flex-col gap-2 text-sm font-normal">
                 {isMemberLandPage ? (
                   <Link
-                    
                     to={`/landpage/events/my-events`}
                     className="hover:text-blue-500"
                   >
                     My Events
                   </Link>
                 ) : null}
-                  <Link
-                   
-                    to={`/landpage/events/allevents`}
-                    className="hover:text-blue-500"
-                  >
-                    All Events
-                  </Link>
+                <Link
+                  to={`/landpage/events/allevents`}
+                  className="hover:text-blue-500"
+                >
+                  All Events
+                </Link>
               </ul>
             </div>
           </div>
@@ -207,6 +205,9 @@ export const Navigation = ({ setShowLogin, setShowSide }: NavProps) => {
               </ul>
             </div>
           </div>
+          <Link to={'services'} className="font-semibold hover:text-blue-400 active:text-blue-600 cursor-pointer">
+            Services
+          </Link>
         </ul>
         {isMemberLandPage ? (
           <div className="flex items-center justify-start h-12 gap-1  relative">
